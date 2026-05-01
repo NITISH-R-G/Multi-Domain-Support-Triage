@@ -2,6 +2,8 @@
 
 Terminal agent that reads `support_tickets/support_tickets.csv`, retrieves grounded snippets from the offline `data/` corpus (**BM25 + TF‑IDF fusion + lexical rerank**), applies risk-based escalation rules + taxonomy mapping, and writes predictions to `support_tickets/output.csv`.
 
+**Design rationale & decision flowchart:** [`../docs/decisions.md`](../docs/decisions.md).
+
 ## Setup
 
 ```bash
@@ -71,12 +73,20 @@ python run_eval.py --offline --report-quality
 
 `eval_sample.py` reports exact match on routing columns and **fuzzy stats on `response`** (normalized exact, token F1, character overlap). Use them to catch regressions on free-text answers; the official holdout is still scored by the platform.
 
+Compare any gold CSV to predictions (e.g. internal dev labels with `Justification`):
+
+```bash
+python compare_outputs.py --gold ../path/to/gold.csv --pred ../support_tickets/output.csv
+```
+
 ### Tests
 
 ```bash
 cd code
 python -m pytest tests -q
 ```
+
+CI (GitHub Actions) runs the same **pytest** + **`run_eval.py --offline`** on each push/PR.
 
 ## Architecture
 

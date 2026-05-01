@@ -16,6 +16,7 @@ from postprocess import finalize_decision
 from retrieve import BM25Index, CACHE_PATH, rerank_hits, should_escalate_low_retrieval
 from risk import assess_risk
 from taxonomy import looks_like_invalid_small_talk
+from ticket_hints import maybe_append_multi_topic_justification
 
 random.seed(SEED)
 np.random.seed(SEED)
@@ -83,6 +84,7 @@ def process_row(row: pd.Series, index: BM25Index) -> dict[str, Any]:
             },
             low_retrieval=False,
         )
+        decision = maybe_append_multi_topic_justification(decision, issue=issue, subject=subject)
         return _validate_row(decision)
 
     hit = assess_risk(issue, subject)
@@ -112,6 +114,7 @@ def process_row(row: pd.Series, index: BM25Index) -> dict[str, Any]:
         decision=decision,
         low_retrieval=low,
     )
+    decision = maybe_append_multi_topic_justification(decision, issue=issue, subject=subject)
     return _validate_row(decision)
 
 

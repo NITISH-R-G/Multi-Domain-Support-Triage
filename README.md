@@ -4,7 +4,7 @@ Starter repository for the **HackerRank Orchestrate** 24-hour hackathon (May 1�
 
 Build a terminal-based AI agent that triages real support tickets across three product ecosystems; **HackerRank**, **Claude**, and **Visa** — using only the support corpus shipped in this repo.
 
-Read [`problem_statement.md`](./problem_statement.md) for the full task spec, input/output schema, and allowed values, and [`evalutation_criteria.md`](./evalutation_criteria.md) for how submissions are scored.
+Read [`problem_statement.md`](./problem_statement.md) for the full task spec, input/output schema, and allowed values, and [`evaluation_criteria.md`](./evaluation_criteria.md) for how submissions are scored.
 
 ---
 
@@ -28,6 +28,7 @@ Read [`problem_statement.md`](./problem_statement.md) for the full task spec, in
 ├── AGENTS.md                       # Rules for AI coding tools + transcript logging
 ├── problem_statement.md            # Full task description and I/O schema
 ├── README.md                       # You are here
+├── docs/                           # design notes (e.g. decisions.md)
 ├── code/                           # Participant agent (see code/README.md)
 │   ├── main.py                     # CLI entry: reads CSV, writes predictions
 │   ├── retrieve.py                 # Hybrid retrieval + reranking
@@ -91,7 +92,9 @@ python -m venv .venv
 # source .venv/bin/activate     # macOS / Linux
 pip install -r code/requirements.txt
 cd code
-set ORCHESTRATE_DISABLE_LLM=1   # optional: fully offline run
+# Optional: fully offline run (no LLM API)
+set ORCHESTRATE_DISABLE_LLM=1   # Windows cmd
+# export ORCHESTRATE_DISABLE_LLM=1   # macOS / Linux
 python main.py
 ```
 
@@ -141,4 +144,4 @@ Results will be announced on May 15, 2026
 
 Submissions are scored across four dimensions: agent design (your `code/`), the AI Judge interview, output accuracy on `support_tickets/output.csv`, and AI fluency from your chat transcript.
 
-See [`evalutation_criteria.md`](./evalutation_criteria.md) for the full rubric.
+See [`evaluation_criteria.md`](./evaluation_criteria.md) for the full rubric. Design notes for this repo’s agent: [`docs/decisions.md`](./docs/decisions.md).
