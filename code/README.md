@@ -43,10 +43,10 @@ If `OPENAI_API_KEY` is unset (or `ORCHESTRATE_DISABLE_LLM=1`), the agent uses an
 
 ## Run
 
-From the **repository root** (recommended — avoids import/`cwd` confusion):
+From the **repository root** (recommended — avoids shadowing Python’s stdlib `code` module on Linux):
 
 ```bash
-python -m code
+python code/main.py
 ```
 
 Or from the `code/` directory:
@@ -54,6 +54,8 @@ Or from the `code/` directory:
 ```bash
 python main.py
 ```
+
+(`python -m code` is unreliable because it may load the **stdlib** `code` module instead of this folder.)
 
 Options:
 

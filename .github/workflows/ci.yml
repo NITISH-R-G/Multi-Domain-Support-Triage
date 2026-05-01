@@ -18,8 +18,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r code/requirements.txt
 
-      - name: Module CLI (--help from repo root)
-        run: python -m code --help
+      # Do not use `python -m code` here: on Linux it often resolves to the *stdlib* `code`
+      # module instead of this repo's `code/` package.
+      - name: CLI help smoke test
+        working-directory: code
+        run: python main.py --help
 
       - name: Pytest
         working-directory: code

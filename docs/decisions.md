@@ -58,7 +58,7 @@ The public sample is **too small** to separate these variants on routing accurac
 
 ## Related files
 
-- Entry point: `code/main.py` (or **`python -m code`** from repo root)
+- Entry point: `code/main.py` or **`python code/main.py`** from repo root (avoid `python -m code`: stdlib shadowing on Linux)
 - Retrieval: `code/retrieve.py`
 - Grounding: `code/grounding.py`, `code/postprocess.py`
 - Official rubric: [`../evaluation_criteria.md`](../evaluation_criteria.md)

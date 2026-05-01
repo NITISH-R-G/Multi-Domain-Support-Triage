@@ -10,7 +10,7 @@
 ## Minute 0:00–0:30 — Happy path (grounded reply)
 
 1. Point to **`support_tickets/sample_support_tickets.csv`** — realistic ticket.
-2. Run from repo root: **`python -m code --limit 1`** (or `scripts/run_agent.sh`) writing to a temp output.
+2. Run from repo root: **`python code/main.py --limit 1`** (or `scripts/run_agent.sh`) writing to a temp output.
 3. Open row: show **`status=replied`**, **`justification`** citing retrieval path/score language.
 
 **Say:** “Answers are composed from retrieved chunks only in offline mode.”

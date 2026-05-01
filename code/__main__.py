@@ -1,4 +1,6 @@
-"""CLI entry when invoked as ``python -m code`` from the repository root.
+"""CLI entry when invoked as ``python -m code`` from the repository root (Windows-friendly;
+on Linux ``python -m code`` may load the stdlib ``code`` module — use ``python code/main.py``).
+
 
 ``main.py`` uses absolute imports (``from config import …``) assuming ``code/`` is on
 ``sys.path``. Running ``python -m code`` sets the cwd on ``sys.path``, not ``code/``,

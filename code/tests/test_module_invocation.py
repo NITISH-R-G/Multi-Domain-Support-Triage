@@ -1,17 +1,17 @@
-"""Ensure ``python -m code`` works from repository root (no ``cd code``)."""
+"""CLI ``--help`` works when launched from ``code/`` (same as CI)."""
 from __future__ import annotations
 
 import subprocess
 import sys
 from pathlib import Path
 
-_REPO = Path(__file__).resolve().parents[2]
+_CODE_DIR = Path(__file__).resolve().parents[1]
 
 
-def test_python_m_code_help_from_repo_root() -> None:
+def test_main_py_help_from_code_directory() -> None:
     r = subprocess.run(
-        [sys.executable, "-m", "code", "--help"],
-        cwd=str(_REPO),
+        [sys.executable, "main.py", "--help"],
+        cwd=str(_CODE_DIR),
         capture_output=True,
         text=True,
     )

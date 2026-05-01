@@ -12,9 +12,12 @@ From the **repository root** (after `pip install -r code/requirements.txt`):
 
 | Shell | Command |
 |-------|---------|
-| **Any** | `python -m code` — same as `python code/main.py` with correct imports |
+| **Any (recommended)** | `python code/main.py` — avoids shadowing the stdlib `code` module |
+| **Any** | `cd code` then `python main.py` |
 | **bash / zsh** | `./scripts/run_agent.sh` or `bash scripts/run_agent.sh` |
 | **PowerShell** | `pwsh -File scripts/run_agent.ps1` |
+
+**Note:** `python -m code` can invoke the **standard library** `code` module on Linux instead of this repo’s package—prefer `python code/main.py` or the scripts above.
 
 Optional offline-only: set `ORCHESTRATE_DISABLE_LLM=1`, then run one of the above. Full CLI flags are in [`code/README.md`](./code/README.md).
 
@@ -109,7 +112,7 @@ pip install -r code/requirements.txt
 # Optional: fully offline run (no LLM API)
 set ORCHESTRATE_DISABLE_LLM=1   # Windows cmd
 # export ORCHESTRATE_DISABLE_LLM=1   # macOS / Linux
-python -m code
+python code/main.py
 ```
 
 This writes `support_tickets/output.csv`. **Regression:** `cd code` then `python run_eval.py --offline` (compares to `sample_support_tickets.csv`).
