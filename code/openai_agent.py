@@ -9,7 +9,6 @@ from typing import Any, Literal
 from pathlib import Path
 
 from dotenv import load_dotenv
-from openai import OpenAI
 
 from config import OPENAI_MODEL
 from retrieve import Retrieved, format_context
@@ -90,6 +89,15 @@ def decide_with_openai(
     force_escalate_reason: str | None,
     low_retrieval: bool,
 ) -> dict[str, Any]:
+    # Allow forcing offline-only mode even if OPENAI_API_KEY exists.
+    if os.environ.get("ORCHESTRATE_DISABLE_LLM", "").strip().lower() in {"1", "true", "yes", "y"}:
+        return fallback_from_hits(
+            hits,
+            escalated=bool(force_escalate_reason) or low_retrieval,
+            esc_reason=force_escalate_reason,
+            low_retrieval=low_retrieval,
+        )
+
     api_key = os.environ.get("OPENAI_API_KEY")
     if not api_key:
         return fallback_from_hits(
@@ -98,6 +106,9 @@ def decide_with_openai(
             esc_reason=force_escalate_reason,
             low_retrieval=low_retrieval,
         )
+
+    # Import only when needed so offline mode doesn't emit OpenAI/Pydantic warnings on newer Python versions.
+    from openai import OpenAI  # type: ignore
 
     ctx = format_context(hits) if hits else "(no retrieval context)"
     user = f"""Company field from ticket (may be wrong or None): {company_line!r}
@@ -116,18 +127,28 @@ Notes:
 - low_retrieval_flag: {low_retrieval}
 """
 
-    client = OpenAI(api_key=api_key)
-    resp = client.chat.completions.create(
-        model=OPENAI_MODEL,
-        temperature=0.1,
-        seed=42,
-        response_format={"type": "json_object"},
-        messages=[
-            {"role": "system", "content": SCHEMA_HINT},
-            {"role": "user", "content": user},
-        ],
-    )
-    raw = resp.choices[0].message.content or "{}"
+    try:
+        client = OpenAI(api_key=api_key)
+        resp = client.chat.completions.create(
+            model=OPENAI_MODEL,
+            temperature=0.1,
+            seed=42,
+            response_format={"type": "json_object"},
+            messages=[
+                {"role": "system", "content": SCHEMA_HINT},
+                {"role": "user", "content": user},
+            ],
+        )
+        raw = resp.choices[0].message.content or "{}"
+    except Exception as e:
+        # Never fail the whole run due to transient API issues (rate limit/quota/network).
+        msg = f"LLM call failed ({type(e).__name__}). Falling back to offline answer."
+        return fallback_from_hits(
+            hits,
+            escalated=bool(force_escalate_reason) or low_retrieval,
+            esc_reason=(force_escalate_reason or msg),
+            low_retrieval=low_retrieval,
+        )
     try:
         data = json.loads(raw)
     except json.JSONDecodeError:

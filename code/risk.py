@@ -8,6 +8,7 @@ from dataclasses import dataclass
 @dataclass(frozen=True)
 class RiskHit:
     reason: str
+    force_request_type: str | None = None
 
 
 _PATTERNS: list[tuple[re.Pattern[str], str]] = [
@@ -41,6 +42,23 @@ _PATTERNS: list[tuple[re.Pattern[str], str]] = [
         re.compile(r"\b(exploit|zero[- ]day|sql\s+injection)\b", re.I),
         "security exploit discussion",
     ),
+    # Broad outages — usually needs human incident handling.
+    (
+        re.compile(
+            r"\b(site|website)\s+is\s+down\b|\bnone\s+of\s+the\s+pages\b|\b(all\s+requests|requests)\s+are\s+failing\b|\bstopped\s+working\s+completely\b",
+            re.I,
+        ),
+        "possible widespread outage",
+    ),
+    # Fraud/identity theft and vulnerability reports.
+    (
+        re.compile(r"\bidentity\s+(?:has\s+been\s+)?stolen\b|\bidentity\s+theft\b", re.I),
+        "identity theft / fraud-sensitive",
+    ),
+    (
+        re.compile(r"\b(security\s+vulnerability|bug\s+bounty)\b", re.I),
+        "security vulnerability disclosure — needs specialist routing",
+    ),
 ]
 
 
@@ -48,5 +66,7 @@ def assess_risk(issue: str, subject: str) -> RiskHit | None:
     blob = f"{subject}\n{issue}".strip()
     for rx, reason in _PATTERNS:
         if rx.search(blob):
+            if reason == "possible widespread outage":
+                return RiskHit(reason=reason, force_request_type="bug")
             return RiskHit(reason=reason)
     return None

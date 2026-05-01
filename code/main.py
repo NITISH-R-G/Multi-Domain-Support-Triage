@@ -18,6 +18,13 @@ from risk import assess_risk
 random.seed(SEED)
 np.random.seed(SEED)
 
+_INVALID_RE = __import__("re").compile(
+    r"^\s*(thanks|thank you|thx|ty|ok|okay|k)\b|"
+    r"\b(iron man|actor in)\b|"
+    r"\b(out of scope)\b",
+    __import__("re").I,
+)
+
 
 def _normalize_company(val: Any) -> str | None:
     if val is None or (isinstance(val, float) and pd.isna(val)):
@@ -62,9 +69,23 @@ def process_row(row: pd.Series, index: BM25Index) -> dict[str, Any]:
     subject = str(row.get("Subject", "") or "")
     company_raw = row.get("Company")
 
+    # Fast invalid handling (spam / gratitude / off-topic trivia).
+    if _INVALID_RE.search(f"{subject}\n{issue}"):
+        return _validate_row(
+            {
+                "status": "replied",
+                "product_area": "conversation_management",
+                "response": "I’m sorry, this is out of scope from my capabilities.",
+                "justification": "Detected off-topic/invalid request.",
+                "request_type": "invalid",
+            }
+        )
+
     hit = assess_risk(issue, subject)
     if hit:
         fb = fallback_from_hits([], escalated=True, esc_reason=hit.reason, low_retrieval=False)
+        if hit.force_request_type:
+            fb["request_type"] = hit.force_request_type
         return _validate_row(fb)
 
     company = _normalize_company(company_raw)
