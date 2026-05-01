@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
 import pandas as pd
+
+from csv_io import TicketCsvError, canonicalize_ticket_columns, read_tickets_csv, rename_prediction_columns
+from eval_metrics import compact_overlap_ratio, normalize_text, token_set_f1
 
 
 def _norm_status(x: object) -> str:
@@ -18,41 +22,42 @@ def _norm_status(x: object) -> str:
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(
+        description="Compare model predictions to labeled sample_support_tickets.csv (routing + response fuzzy metrics).",
+    )
     ap.add_argument("--sample", type=str, default=str(Path("..") / "support_tickets" / "sample_support_tickets.csv"))
     ap.add_argument("--pred", type=str, default=str(Path("..") / "support_tickets" / "output.csv"))
     ap.add_argument("--report", type=str, default=str(Path("..") / "support_tickets" / "sample_eval_report.csv"))
     args = ap.parse_args()
 
-    sample = pd.read_csv(args.sample)
-    pred = pd.read_csv(args.pred)
+    try:
+        sample = read_tickets_csv(args.sample, label="--sample")
+        pred = read_tickets_csv(args.pred, label="--pred")
+        sample = canonicalize_ticket_columns(sample)
+        pred = canonicalize_ticket_columns(pred)
+    except (FileNotFoundError, TicketCsvError) as e:
+        print(f"error: {e}", file=sys.stderr)
+        sys.exit(2)
 
-    pred = pred.rename(
-        columns={
-            "issue": "Issue",
-            "subject": "Subject",
-            "company": "Company",
-            "response": "Pred_Response",
-            "product_area": "Pred_Product Area",
-            "status": "Pred_Status",
-            "request_type": "Pred_Request Type",
-            "justification": "Pred_Justification",
-        }
-    )
+    pred = rename_prediction_columns(pred)
 
     key_cols = ["Issue", "Subject", "Company"]
-    merged = sample.merge(pred, on=key_cols, how="inner")
+    merged = sample.merge(pred, on=key_cols, how="inner").copy()
 
     print(f"sample rows: {len(sample)}")
     print(f"pred rows:   {len(pred)}")
     print(f"matched:    {len(merged)} (exact match on Issue+Subject+Company)")
 
     if len(merged) == 0:
-        print("No exact matches found; check that output.csv is produced from sample vs support_tickets input.")
-        return
+        print(
+            "error: no rows matched on Issue+Subject+Company between --sample and --pred. "
+            "Regenerate --pred from the same inputs or fix CSV keys.",
+            file=sys.stderr,
+        )
+        sys.exit(2)
 
-    merged["Status"] = merged["Status"].map(_norm_status)
-    merged["Pred_Status"] = merged["Pred_Status"].map(_norm_status)
+    merged.loc[:, "Status"] = merged["Status"].map(_norm_status)
+    merged.loc[:, "Pred_Status"] = merged["Pred_Status"].map(_norm_status)
 
     def exact_acc(gold: str, pred_col: str) -> float:
         g = merged[gold].fillna("").astype(str)
@@ -64,6 +69,24 @@ def main() -> None:
     print(f"- request_type: {exact_acc('Request Type', 'Pred_Request Type'):.2%}")
     print(f"- product_area: {exact_acc('Product Area', 'Pred_Product Area'):.2%}")
 
+    print("\nAnswer columns (same rows; normalized exact + fuzzy):")
+    ge = merged["Response"].fillna("").map(normalize_text)
+    pe = merged["Pred_Response"].fillna("").map(normalize_text)
+    je = merged["Justification"].fillna("").map(normalize_text) if "Justification" in merged.columns else None
+    pje = merged["Pred_Justification"].fillna("").map(normalize_text) if "Pred_Justification" in merged.columns else None
+    print(f"- response (norm exact):  {float((ge == pe).mean()):.2%}")
+    if je is not None and pje is not None:
+        print(f"- justification (norm exact): {float((je == pje).mean()):.2%}")
+    f1_r = [token_set_f1(str(a), str(b)) for a, b in zip(merged["Response"], merged["Pred_Response"])]
+    print(f"- response (token F1 mean):   {sum(f1_r) / max(1, len(f1_r)):.3f}")
+    if "Justification" in merged.columns:
+        f1_j = [
+            token_set_f1(str(a), str(b)) for a, b in zip(merged["Justification"], merged["Pred_Justification"])
+        ]
+        print(f"- justification (token F1 mean): {sum(f1_j) / max(1, len(f1_j)):.3f}")
+    ovl = [compact_overlap_ratio(str(a), str(b)) for a, b in zip(merged["Response"], merged["Pred_Response"])]
+    print(f"- response (compact char overlap mean): {sum(ovl) / max(1, len(ovl)):.3f}")
+
     mism = merged[merged["Status"] != merged["Pred_Status"]][key_cols + ["Status", "Pred_Status"]]
     print(f"\nStatus mismatches: {len(mism)}")
 
@@ -74,7 +97,11 @@ def main() -> None:
         "Pred_Request Type",
         "Product Area",
         "Pred_Product Area",
+        "Response",
+        "Pred_Response",
     ]
+    if "Justification" in merged.columns:
+        report_cols += ["Justification", "Pred_Justification"]
     Path(args.report).parent.mkdir(parents=True, exist_ok=True)
     merged[report_cols].to_csv(args.report, index=False)
     print(f"Wrote report: {args.report}")

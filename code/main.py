@@ -10,20 +10,17 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from config import DATA_DIR, INPUT_CSV, OUTPUT_CSV, SEED, TOP_K
+from config import DATA_DIR, INPUT_CSV, MAX_FIELD_CHARS, OUTPUT_CSV, SEED, TOP_K
+from csv_io import TicketCsvError, canonicalize_ticket_columns, read_tickets_csv
 from openai_agent import decide_with_openai, fallback_from_hits
+from postprocess import finalize_decision
 from retrieve import BM25Index, CACHE_PATH, rerank_hits, should_escalate_low_retrieval
 from risk import assess_risk
+from taxonomy import looks_like_invalid_small_talk
+from ticket_hints import maybe_append_multi_topic_justification
 
 random.seed(SEED)
 np.random.seed(SEED)
-
-_INVALID_RE = __import__("re").compile(
-    r"^\s*(thanks|thank you|thx|ty|ok|okay|k)\b|"
-    r"\b(iron man|actor in)\b|"
-    r"\b(out of scope)\b",
-    __import__("re").I,
-)
 
 
 def _normalize_company(val: Any) -> str | None:
@@ -45,6 +42,38 @@ def _brand_for_search(company: str | None, issue: str, subject: str, index: BM25
         if m == "visa":
             return "visa"
     return index.infer_brand(f"{subject}\n{issue}")
+
+
+def _row_processing_failure_payload(exc: Exception) -> dict[str, Any]:
+    msg = f"{type(exc).__name__}: {exc}"
+    if len(msg) > 2500:
+        msg = msg[:2500] + "…"
+    return {
+        "status": "escalated",
+        "product_area": "",
+        "response": (
+            "This ticket row could not be processed automatically. "
+            "Please escalate to a human specialist."
+        ),
+        "justification": f"Pipeline error while processing this row — {msg}",
+        "request_type": "product_issue",
+    }
+
+
+def _truncate_row_fields(row: pd.Series, max_chars: int, row_num: int) -> pd.Series:
+    """Copy row with Issue/Subject truncated if over max_chars (stderr warning)."""
+    r = row.copy()
+    for col in ("Issue", "Subject"):
+        if col not in r.index:
+            continue
+        s = str(r.get(col, "") or "")
+        if len(s) > max_chars:
+            print(
+                f"warning: row {row_num}: {col} truncated ({len(s)} → {max_chars} chars)",
+                file=sys.stderr,
+            )
+            r[col] = s[:max_chars]
+    return r
 
 
 def _validate_row(d: dict[str, Any]) -> dict[str, Any]:
@@ -69,17 +98,27 @@ def process_row(row: pd.Series, index: BM25Index) -> dict[str, Any]:
     subject = str(row.get("Subject", "") or "")
     company_raw = row.get("Company")
 
+    company = _normalize_company(company_raw)
+    brand = _brand_for_search(company, issue, subject, index)
+
     # Fast invalid handling (spam / gratitude / off-topic trivia).
-    if _INVALID_RE.search(f"{subject}\n{issue}"):
-        return _validate_row(
-            {
+    if looks_like_invalid_small_talk(subject, issue):
+        decision = finalize_decision(
+            brand=brand,
+            issue=issue,
+            subject=subject,
+            hits=[],
+            decision={
                 "status": "replied",
-                "product_area": "conversation_management",
+                "product_area": "",
                 "response": "I’m sorry, this is out of scope from my capabilities.",
                 "justification": "Detected off-topic/invalid request.",
                 "request_type": "invalid",
-            }
+            },
+            low_retrieval=False,
         )
+        decision = maybe_append_multi_topic_justification(decision, issue=issue, subject=subject)
+        return _validate_row(decision)
 
     hit = assess_risk(issue, subject)
     if hit:
@@ -88,8 +127,6 @@ def process_row(row: pd.Series, index: BM25Index) -> dict[str, Any]:
             fb["request_type"] = hit.force_request_type
         return _validate_row(fb)
 
-    company = _normalize_company(company_raw)
-    brand = _brand_for_search(company, issue, subject, index)
     hits, raw_top_score = index.search(f"{subject}\n{issue}", brand, TOP_K)
     hits = rerank_hits(f"{subject}\n{issue}", hits)
     low = should_escalate_low_retrieval(raw_top_score)
@@ -102,6 +139,15 @@ def process_row(row: pd.Series, index: BM25Index) -> dict[str, Any]:
         force_escalate_reason=None,
         low_retrieval=low,
     )
+    decision = finalize_decision(
+        brand=brand,
+        issue=issue,
+        subject=subject,
+        hits=hits,
+        decision=decision,
+        low_retrieval=low,
+    )
+    decision = maybe_append_multi_topic_justification(decision, issue=issue, subject=subject)
     return _validate_row(decision)
 
 
@@ -109,21 +155,95 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Multi-domain support triage agent (Orchestrate)")
     parser.add_argument("--input", type=str, default=str(INPUT_CSV))
     parser.add_argument("--output", type=str, default=str(OUTPUT_CSV))
-    parser.add_argument("--limit", type=int, default=0, help="Process only first N rows (debug)")
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=0,
+        metavar="N",
+        help="Process only the first N rows (default 0 = all rows). Must be >= 0.",
+    )
+    parser.add_argument(
+        "--fail-fast",
+        action="store_true",
+        help="Exit immediately on the first row that raises an exception (exit code 2).",
+    )
+    parser.add_argument(
+        "--progress",
+        action="store_true",
+        help="Show a progress bar (requires tqdm).",
+    )
+    parser.add_argument(
+        "--max-field-chars",
+        type=int,
+        default=None,
+        metavar="N",
+        help=(
+            "Maximum characters per Issue/Subject field (default: env ORCHESTRATE_MAX_FIELD_CHARS "
+            f"or {MAX_FIELD_CHARS}). Longer values are truncated with a warning."
+        ),
+    )
     args = parser.parse_args()
 
-    inp = Path(args.input)
-    out_p = Path(args.output)
+    if args.limit < 0:
+        print("error: --limit must be >= 0 (use 0 to process every row).", file=sys.stderr)
+        sys.exit(2)
 
-    df = pd.read_csv(inp, encoding="utf-8")
+    max_field = args.max_field_chars if args.max_field_chars is not None else MAX_FIELD_CHARS
+    if max_field < 1:
+        print("error: --max-field-chars must be >= 1.", file=sys.stderr)
+        sys.exit(2)
+
+    out_p = Path(args.output).expanduser().resolve()
+    out_p.parent.mkdir(parents=True, exist_ok=True)
+
+    try:
+        df = read_tickets_csv(args.input, label="--input")
+        df = canonicalize_ticket_columns(df)
+    except FileNotFoundError as e:
+        print(f"error: {e}", file=sys.stderr)
+        sys.exit(2)
+    except TicketCsvError as e:
+        print(f"error: {e}", file=sys.stderr)
+        sys.exit(2)
+
+    n_all = len(df)
     if args.limit > 0:
         df = df.head(args.limit)
+        print(
+            f"Note: --limit {args.limit}: processing {len(df)} row(s) of {n_all} in the input file.",
+            file=sys.stderr,
+        )
+    if not DATA_DIR.is_dir():
+        print(f"error: corpus directory not found: {DATA_DIR}", file=sys.stderr)
+        sys.exit(2)
 
-    index = BM25Index.load(CACHE_PATH, DATA_DIR)
+    try:
+        index = BM25Index.load(CACHE_PATH, DATA_DIR)
+    except TimeoutError as e:
+        print(f"error: {e}", file=sys.stderr)
+        sys.exit(2)
 
     rows_out: list[dict[str, Any]] = []
-    for _, row in df.iterrows():
-        pred = process_row(row, index)
+    row_failures = 0
+    iterable = list(df.iterrows())
+    if args.progress:
+        try:
+            from tqdm import tqdm  # type: ignore
+
+            iterable = tqdm(iterable, total=len(iterable), unit="row", desc="Tickets")
+        except ImportError:
+            print("warning: tqdm not installed; install tqdm or omit --progress", file=sys.stderr)
+
+    for row_num, (_, row) in enumerate(iterable, start=1):
+        row_prepared = _truncate_row_fields(row, max_field, row_num)
+        try:
+            pred = process_row(row_prepared, index)
+        except Exception as e:
+            if args.fail_fast:
+                print(f"error: row {row_num} raised {type(e).__name__}: {e}", file=sys.stderr)
+                sys.exit(2)
+            row_failures += 1
+            pred = _validate_row(_row_processing_failure_payload(e))
         rows_out.append(
             {
                 "issue": row.get("Issue", ""),
@@ -137,8 +257,19 @@ def main() -> None:
             }
         )
 
+    if row_failures:
+        print(
+            f"warning: {row_failures} row(s) failed with exceptions; "
+            "those rows were written as escalated with details in justification.",
+            file=sys.stderr,
+        )
+
     out_df = pd.DataFrame(rows_out)
-    out_df.to_csv(out_p, index=False, encoding="utf-8")
+    try:
+        out_df.to_csv(out_p, index=False, encoding="utf-8")
+    except OSError as e:
+        print(f"error: cannot write --output {out_p}: {e}", file=sys.stderr)
+        sys.exit(2)
     print(f"Wrote {len(out_df)} rows to {out_p}", file=sys.stderr)
 
 

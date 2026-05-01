@@ -10,6 +10,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from answer_synthesis import synthesize_reply_from_hits
 from config import OPENAI_MODEL
 from retrieve import Retrieved, format_context
 
@@ -52,20 +53,15 @@ def fallback_from_hits(
     crumbs = list(top.breadcrumbs)
     area_src = crumbs[-1] if crumbs else top.title
     product_area = _slug_area(area_src)
-    plain = re.sub(r"(?m)^#+\s+.*\n", "", top.text)
-    plain = re.sub(r"\s+", " ", plain).strip()
-    excerpt = plain[:1200]
-    if len(plain) > 1200:
-        excerpt += "…"
+    reply, srcs = synthesize_reply_from_hits(hits)
     return {
         "status": "replied",
         "product_area": product_area,
-        "response": (
-            "We found relevant documentation; please review these steps:\n\n"
-            f"{excerpt}\n\n"
-            "If this does not match your situation, contact support through the official help channel."
+        "response": reply,
+        "justification": (
+            f"Offline synthesis from {top.path} (retrieval score={hits[0].score:.2f}). "
+            f"Sources: {', '.join(srcs[:3])}"
         ),
-        "justification": f"Extractive fallback from {top.path} (retrieval score={hits[0].score:.2f}).",
         "request_type": "product_issue",
     }
 
@@ -77,6 +73,8 @@ Rules:
 - product_area: short snake_case like sample outputs (e.g. screen, community, privacy, travel_support). Prefer last breadcrumb or doc topic from CONTEXT.
 - request_type: bug if outage/errors; feature_request for new capability; invalid for spam/thanks/off-topic; else product_issue.
 - response: concise, user-facing, only facts supported by CONTEXT. If status=replied, no fabricated steps.
+- response length: keep it short (aim <= 180 words). Use numbered steps when possible.
+- justification: include 1-3 source article titles or paths from CONTEXT you relied on.
 """
 
 
@@ -125,6 +123,11 @@ Notes:
 - If force_escalate_reason is set, you MUST set status to escalated and explain briefly.
 - force_escalate_reason: {force_escalate_reason!r}
 - low_retrieval_flag: {low_retrieval}
+
+Writing constraints:
+- Prefer actionable numbered steps.
+- Do NOT invent URLs/phone numbers/policy details not present in CONTEXT.
+- If CONTEXT doesn't contain enough detail to answer safely, set status=escalated.
 """
 
     try:
@@ -152,7 +155,18 @@ Notes:
     try:
         data = json.loads(raw)
     except json.JSONDecodeError:
-        return fallback_from_hits(hits, escalated=False, esc_reason=None, low_retrieval=low_retrieval)
+        # Prefer escalation when we already lack confidence in retrieval context.
+        escalate = bool(low_retrieval) or not hits
+        out = fallback_from_hits(
+            hits,
+            escalated=escalate,
+            esc_reason=("LLM produced invalid JSON; escalating for human review." if escalate else None),
+            low_retrieval=low_retrieval,
+        )
+        if not escalate:
+            prev = str(out.get("justification", "") or "")
+            out["justification"] = f"LLM produced invalid JSON; using offline synthesis. {prev}".strip()
+        return out
 
     for key in ("status", "product_area", "response", "justification", "request_type"):
         data.setdefault(key, "")
