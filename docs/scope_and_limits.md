@@ -15,7 +15,7 @@ This keeps expectations aligned with **`problem_statement.md`**: terminal agent,
 
 - **No vector DB / embedding index** in the baseline pipeline — avoids GPU dependency and keeps CI deterministic; trade-off is weaker semantic recall on paraphrases.
 - **No human review queue UI** — output is CSV rows only.
-- **No guaranteed handling** of concatenated multi-brand tickets beyond best-effort single reply.
+- **Cross-ecosystem tickets** (pairwise: HackerRank+Claude, HackerRank+Visa financial, Claude+Visa financial) **escalate** by default — avoids one wrong blended answer. Same-brand multi-question rows still get a single primary reply + transparency note.
 
 ## When embeddings would be justified
 

@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 
 from config import DATA_DIR, INPUT_CSV, MAX_FIELD_CHARS, OUTPUT_CSV, SEED, TOP_K
+from cross_ecosystem import cross_ecosystem_escalation_reason
 from csv_io import TicketCsvError, canonicalize_ticket_columns, read_tickets_csv
 from openai_agent import decide_with_openai, fallback_from_hits
 from postprocess import finalize_decision
@@ -126,6 +127,10 @@ def process_row(row: pd.Series, index: BM25Index) -> dict[str, Any]:
         if hit.force_request_type:
             fb["request_type"] = hit.force_request_type
         return _validate_row(fb)
+
+    eco = cross_ecosystem_escalation_reason(issue, subject)
+    if eco:
+        return _validate_row(fallback_from_hits([], escalated=True, esc_reason=eco, low_retrieval=False))
 
     hits, raw_top_score = index.search(f"{subject}\n{issue}", brand, TOP_K)
     hits = rerank_hits(f"{subject}\n{issue}", hits)

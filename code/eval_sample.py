@@ -28,6 +28,11 @@ def main() -> None:
     ap.add_argument("--sample", type=str, default=str(Path("..") / "support_tickets" / "sample_support_tickets.csv"))
     ap.add_argument("--pred", type=str, default=str(Path("..") / "support_tickets" / "output.csv"))
     ap.add_argument("--report", type=str, default=str(Path("..") / "support_tickets" / "sample_eval_report.csv"))
+    ap.add_argument(
+        "--routing-detail",
+        action="store_true",
+        help="Print per-row gold vs predicted routing (status, request_type, product_area).",
+    )
     args = ap.parse_args()
 
     try:
@@ -89,6 +94,27 @@ def main() -> None:
 
     mism = merged[merged["Status"] != merged["Pred_Status"]][key_cols + ["Status", "Pred_Status"]]
     print(f"\nStatus mismatches: {len(mism)}")
+
+    if args.routing_detail:
+        print("\n=== Per-row routing (gold vs pred) ===")
+        for i, r in merged.iterrows():
+            subj = str(r.get("Subject", ""))[:60]
+            g_st = str(r.get("Status", "")).strip()
+            p_st = str(r.get("Pred_Status", "")).strip()
+            g_rt = str(r.get("Request Type", "")).strip()
+            p_rt = str(r.get("Pred_Request Type", "")).strip()
+            g_pa = str(r.get("Product Area", "")).strip()
+            p_pa = str(r.get("Pred_Product Area", "")).strip()
+            ok = (
+                _norm_status(g_st) == _norm_status(p_st)
+                and g_rt.lower() == p_rt.lower()
+                and g_pa.lower() == p_pa.lower()
+            )
+            mark = "OK" if ok else "MISMATCH"
+            print(f"[{mark}] row={i} subject={subj!r}…")
+            print(f"  status:       gold={g_st!r} pred={p_st!r}")
+            print(f"  request_type: gold={g_rt!r} pred={p_rt!r}")
+            print(f"  product_area: gold={g_pa!r} pred={p_pa!r}")
 
     report_cols = key_cols + [
         "Status",

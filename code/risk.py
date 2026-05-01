@@ -67,6 +67,21 @@ _PATTERNS: list[tuple[re.Pattern[str], str]] = [
         re.compile(r"\b(harm myself|kill myself|suicide)\b", re.I),
         "self-harm mention — escalated for human crisis routing",
     ),
+    # Account compromise / takeover — rarely answered safely from public docs alone.
+    (
+        re.compile(
+            r"\b(account\s+(takeover|hacked|compromised)|"
+            r"unauthorized\s+(access|transactions|charges)|"
+            r"someone\s+else\s+(logged\s+in|accessed))\b",
+            re.I,
+        ),
+        "possible account compromise — specialist verification required",
+    ),
+    # Credential theft / phishing context.
+    (
+        re.compile(r"\b(stolen\s+credentials|credential\s+stuffing|phishing\s+link\s+clicked)\b", re.I),
+        "credential-theft sensitive — escalate",
+    ),
 ]
 
 
