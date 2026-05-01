@@ -23,7 +23,7 @@ Use this in the **AI Judge interview** (camera on). Honesty beats hype.
 
 | Scenario | Honest line |
 |----------|-------------|
-| Multi-request in one row | Heuristic note in **justification** only; single primary reply (see `ticket_hints`). |
+| Multi-request in one row | Note in **justification** for same-brand tickets (`ticket_hints`). **Cross-ecosystem** (e.g. HackerRank + Claude, or Claude + lost Visa card) → **escalated** (`cross_ecosystem.py`). |
 | Wrong `Company` field | Brand inference from query text + retrieval brand mask — **can mis-route**. |
 | Non‑English | Mostly English corpus → **degraded** retrieval. |
 

@@ -70,6 +70,7 @@ SCHEMA_HINT = """Respond with a single JSON object only (no markdown), keys exac
 {"status":"replied"|"escalated","product_area":"string","response":"string","justification":"string","request_type":"product_issue"|"feature_request"|"bug"|"invalid"}
 Rules:
 - status=escalated for fraud, legal threats, account takeover, grading disputes, bug bounty reports needing security team, or when CONTEXT lacks needed facts.
+- If the ticket mixes unrelated products (e.g. HackerRank assessment workflow AND Visa card dispute in one message), status=escalated — humans must split routing.
 - product_area: short snake_case like sample outputs (e.g. screen, community, privacy, travel_support). Prefer last breadcrumb or doc topic from CONTEXT.
 - request_type: bug if outage/errors; feature_request for new capability; invalid for spam/thanks/off-topic; else product_issue.
 - response: concise, user-facing, only facts supported by CONTEXT. If status=replied, no fabricated steps.

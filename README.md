@@ -6,6 +6,8 @@ Build a terminal-based AI agent that triages real support tickets across three p
 
 Read [`problem_statement.md`](./problem_statement.md) for the full task spec, input/output schema, and allowed values, and [`evaluation_criteria.md`](./evaluation_criteria.md) for how submissions are scored.
 
+**Offline routing check (development):** with `ORCHESTRATE_DISABLE_LLM=1`, run `cd code && python run_eval.py --offline`. On the bundled `sample_support_tickets.csv`, this agent targets **100% exact match** on `status`, `request_type`, and `product_area` against sample labels (response text differs by design when the LLM is off — evaluators score hidden rows with your chosen mode).
+
 ### Start here (run the bundled agent)
 
 From the **repository root** (after `pip install -r code/requirements.txt`):

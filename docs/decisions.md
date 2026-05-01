@@ -10,7 +10,9 @@ flowchart TD
   B -->|yes| Z[Reply invalid + taxonomy]
   B -->|no| C{Risk regex hit?}
   C -->|yes| Y[Escalate + optional request_type override]
-  C -->|no| D[Retrieve hybrid BM25 + TF-IDF fusion]
+  C -->|no| CC{Cross-ecosystem brands?}
+  CC -->|yes| Y
+  CC -->|no| D[Retrieve hybrid BM25 + TF-IDF fusion]
   D --> E[Lexical rerank + brand bonuses]
   E --> F{Low BM25 score?}
   F -->|yes| G[Flag low_retrieval]
@@ -54,11 +56,13 @@ The public sample is **too small** to separate these variants on routing accurac
 
 ## Scope boundaries
 
-- **Multi-topic tickets**: Heuristic detection (`ticket_hints.py`) appends a short note to **justification only** when the ticket likely bundles multiple asks; the model still produces a **single** primary reply (no automatic splitting).
+- **Cross-ecosystem tickets**: Pairwise detection (`cross_ecosystem.py`) **escalates** when HackerRank + Claude, HackerRank + Visa (financial product cues), or Claude + Visa appear together — avoids one dangerously blended answer.
+- **Multi-topic (same brand)**: Heuristic detection (`ticket_hints.py`) appends a short note to **justification only** when the ticket likely bundles multiple asks; the model still produces a **single** primary reply (no automatic splitting).
 
 ## Related files
 
 - Entry point: `code/main.py` or **`python code/main.py`** from repo root (avoid `python -m code`: stdlib shadowing on Linux)
+- Cross-ecosystem routing: `code/cross_ecosystem.py`
 - Retrieval: `code/retrieve.py`
 - Grounding: `code/grounding.py`, `code/postprocess.py`
 - Official rubric: [`../evaluation_criteria.md`](../evaluation_criteria.md)
