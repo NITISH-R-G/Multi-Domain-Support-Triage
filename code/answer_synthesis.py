@@ -1,6 +1,7 @@
 """Offline answer shaping: convert retrieved markdown-ish text into short actionable guidance."""
 from __future__ import annotations
 
+import hashlib
 import re
 
 from retrieve import Retrieved
@@ -98,5 +99,12 @@ def synthesize_reply_from_hits(hits: list[Retrieved], *, max_sources: int = 2) -
         blocks.append(f"From {title}:\n{rendered}")
 
     body = "\n\n".join(blocks).strip()
-    body += "\n\nIf anything still doesn’t match what you’re seeing, please reach out via the official support channel for your product."
+    # Short, varied closings (deterministic per content hash — less repetitive than one fixed paragraph).
+    _closings = (
+        "If this doesn’t match what you see, contact official support for your product.",
+        "If you still need help, use your product’s official support channel.",
+        "For anything still unclear, reach out through the official support path for your product.",
+    )
+    h = int(hashlib.sha256(body.encode("utf-8")).hexdigest(), 16)
+    body += "\n\n" + _closings[h % len(_closings)]
     return body, sources

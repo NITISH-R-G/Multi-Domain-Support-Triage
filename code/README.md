@@ -2,7 +2,7 @@
 
 Terminal agent that reads `support_tickets/support_tickets.csv`, retrieves grounded snippets from the offline `data/` corpus (**BM25 + TF‑IDF fusion + lexical rerank**), applies risk-based escalation rules + taxonomy mapping, and writes predictions to `support_tickets/output.csv`.
 
-**Design rationale & decision flowchart:** [`../docs/decisions.md`](../docs/decisions.md).
+**Design rationale & decision flowchart:** [`../docs/decisions.md`](../docs/decisions.md). **Interview / demo / rubric:** [`../docs/interview.md`](../docs/interview.md), [`../docs/demo-script.md`](../docs/demo-script.md), [`../docs/DEV_EVAL.md`](../docs/DEV_EVAL.md).
 
 ## Setup
 
@@ -43,7 +43,13 @@ If `OPENAI_API_KEY` is unset (or `ORCHESTRATE_DISABLE_LLM=1`), the agent uses an
 
 ## Run
 
-From the `code/` directory (so imports resolve):
+From the **repository root** (recommended — avoids import/`cwd` confusion):
+
+```bash
+python -m code
+```
+
+Or from the `code/` directory:
 
 ```bash
 python main.py

@@ -58,7 +58,8 @@ The public sample is **too small** to separate these variants on routing accurac
 
 ## Related files
 
-- Entry point: `code/main.py`
+- Entry point: `code/main.py` (or **`python -m code`** from repo root)
 - Retrieval: `code/retrieve.py`
 - Grounding: `code/grounding.py`, `code/postprocess.py`
-- Interview prep: [`../evaluation_criteria.md`](../evaluation_criteria.md) (rubric)
+- Official rubric: [`../evaluation_criteria.md`](../evaluation_criteria.md)
+- Interview Q&A: [`interview.md`](./interview.md) · Demo script: [`demo-script.md`](./demo-script.md) · Manual answer rubric: [`DEV_EVAL.md`](./DEV_EVAL.md) · Scope / non-goals: [`scope_and_limits.md`](./scope_and_limits.md)

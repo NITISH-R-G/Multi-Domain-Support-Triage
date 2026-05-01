@@ -18,6 +18,9 @@ jobs:
       - name: Install dependencies
         run: pip install -r code/requirements.txt
 
+      - name: Module CLI (--help from repo root)
+        run: python -m code --help
+
       - name: Pytest
         working-directory: code
         run: python -m pytest tests -q

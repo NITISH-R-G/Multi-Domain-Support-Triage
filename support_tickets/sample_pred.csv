@@ -19,7 +19,7 @@ From What is Code Quality:
 7. Major: These issues might have a substantial impact on productivity.\
 8. **Maintainability**: When candidates use code that is easy to implement in the short run instead of applying the best overall solution, it might require extra development work in the long run. This is referred to as long-term technical debt. The more this deb…
 
-If anything still doesn’t match what you’re seeing, please reach out via the official support channel for your product.",screen,replied,product_issue,"Offline synthesis from hackerrank/general-help/release-notes/9502641162-q3%27-23-release-notes.md (retrieval score=12.52). Sources: hackerrank/general-help/release-notes/9502641162-q3%27-23-release-notes.md, hackerrank/screen/test-reports/9722863972-what-is-code-quality.md"
+If you still need help, use your product’s official support channel.",screen,replied,product_issue,"Offline synthesis from hackerrank/general-help/release-notes/9502641162-q3%27-23-release-notes.md (retrieval score=12.52). Sources: hackerrank/general-help/release-notes/9502641162-q3%27-23-release-notes.md, hackerrank/screen/test-reports/9722863972-what-is-code-quality.md"
 site is down & none of the pages are accessible,,,This request needs to be reviewed by a human specialist. Please contact official support through the appropriate channel for your product.,,escalated,bug,possible widespread outage
 "I'm noticing that you all have many default versions of roles. (e.g. front end developer for react, angular, vue.js, etc.) What do you consider best practice 
 for when to create a new test versus create a variant of the test? What are the advantages and disadvantages of using variants?","When should I create a variant versus
@@ -40,7 +40,7 @@ From Question Types in HackerRank Interviews:
 4. Cloud
 5. Prompt Engineering
 
-If anything still doesn’t match what you’re seeing, please reach out via the official support channel for your product.",screen,replied,product_issue,"Offline synthesis from hackerrank/general-help/release-notes/2321596225-january-2026-release-notes.md (retrieval score=21.03). Sources: hackerrank/general-help/release-notes/2321596225-january-2026-release-notes.md, hackerrank/interviews/getting-started/9999244916-question-types-in-hackerrank-interviews.md; Ticket may include multiple topics; this reply addresses the primary request."
+If you still need help, use your product’s official support channel.",screen,replied,product_issue,"Offline synthesis from hackerrank/general-help/release-notes/2321596225-january-2026-release-notes.md (retrieval score=21.03). Sources: hackerrank/general-help/release-notes/2321596225-january-2026-release-notes.md, hackerrank/interviews/getting-started/9999244916-question-types-in-hackerrank-interviews.md; Ticket may include multiple topics; this reply addresses the primary request."
 "Hi there
 
 We have sent a candidate a Hackerrank assessment already, but we have been informed that they require extra time. As the assessment is 105 minutes, they need an extra 50% extra time added (so around 53 minutes) in addition.
@@ -70,7 +70,7 @@ From Extend Test Duration for Candidates Add Time Accommodation Add extra time:
 7. Select the test you want to modify.
 8. Click **Invite**
 
-If anything still doesn’t match what you’re seeing, please reach out via the official support channel for your product.",screen,replied,product_issue,"Offline synthesis from hackerrank/general-help/evaluation-guides/1216495690-early-talent-.md (retrieval score=30.44). Sources: hackerrank/general-help/evaluation-guides/1216495690-early-talent-.md, hackerrank/screen/managing-tests/4811403281-adding-extra-time-for-candidates.md; Ticket may include multiple topics; this reply addresses the primary request."
+For anything still unclear, reach out through the official support path for your product.",screen,replied,product_issue,"Offline synthesis from hackerrank/general-help/evaluation-guides/1216495690-early-talent-.md (retrieval score=30.44). Sources: hackerrank/general-help/evaluation-guides/1216495690-early-talent-.md, hackerrank/screen/managing-tests/4811403281-adding-extra-time-for-candidates.md; Ticket may include multiple topics; this reply addresses the primary request."
 "i signed up using google login on hackerrank community , so i do not have a separate hackerrank password. please delete my account
 ",,HackerRank,"From Troubleshooting Login Issues Issue 1: Invalid credentials Issue 2: Wrong login page Issue 3: Password or cache:
 1. **Cause:** You entered an incorrect email address or password.\
@@ -92,7 +92,7 @@ From Delete an Account:
 7. I get too many emails
 8. I want to clear all my submissions
 
-If anything still doesn’t match what you’re seeing, please reach out via the official support channel for your product.",community,replied,product_issue,"Offline synthesis from hackerrank/hackerrank_community/additional-resources/4147773232-troubleshooting-login-issues.md (retrieval score=17.48). Sources: hackerrank/hackerrank_community/additional-resources/4147773232-troubleshooting-login-issues.md, hackerrank/hackerrank_community/account-settings/manage-account/5618101592-delete-an-account.md"
+If this doesn’t match what you see, contact official support for your product.",community,replied,product_issue,"Offline synthesis from hackerrank/hackerrank_community/additional-resources/4147773232-troubleshooting-login-issues.md (retrieval score=17.48). Sources: hackerrank/hackerrank_community/additional-resources/4147773232-troubleshooting-login-issues.md, hackerrank/hackerrank_community/account-settings/manage-account/5618101592-delete-an-account.md"
 "One of my claude conversations has some private info, i forgot to make a temporary chat, is there anything
  else that can be done? like delete etc?",,Claude,"From I would like to input sensitive data into my chats with Claude. Who can view my conversations?:
 1. We automatically de-link your data from your user ID (like your email address) before any review.
@@ -114,7 +114,7 @@ From Using incognito chats:
 7. Starting an incognito chat won’t use Claude’s existing memory.
 8. Incognito chats will not be included in future memory summaries.
 
-If anything still doesn’t match what you’re seeing, please reach out via the official support channel for your product.",privacy,replied,product_issue,"Offline synthesis from claude/claude/account-management/8325621-i-would-like-to-input-sensitive-data-into-my-chats-with-claude-who-can-view-my-conversations.md (retrieval score=13.63). Sources: claude/claude/account-management/8325621-i-would-like-to-input-sensitive-data-into-my-chats-with-claude-who-can-view-my-conversations.md, claude/claude/conversation-management/12260368-using-incognito-chats.md; Ticket may include multiple topics; this reply addresses the primary request."
+For anything still unclear, reach out through the official support path for your product.",privacy,replied,product_issue,"Offline synthesis from claude/claude/account-management/8325621-i-would-like-to-input-sensitive-data-into-my-chats-with-claude-who-can-view-my-conversations.md (retrieval score=13.63). Sources: claude/claude/account-management/8325621-i-would-like-to-input-sensitive-data-into-my-chats-with-claude-who-can-view-my-conversations.md, claude/claude/conversation-management/12260368-using-incognito-chats.md; Ticket may include multiple topics; this reply addresses the primary request."
 What is the name of the actor in Iron Man?,"Urgent, please help",None ,"I’m sorry, this is out of scope from my capabilities.",conversation_management,replied,invalid,Detected off-topic/invalid request.
 I bought Visa Traveller's Cheques from Citicorp and they were stolen in Lisbon last night. What do I do?,,Visa,"From Visa Traveller's Cheques for Consumers:
 1. Report a lost cheque
@@ -135,7 +135,7 @@ From How to accept Visa Traveller's Cheques:
 6. Start accepting Visa
 7. Info for small businesses
 
-If anything still doesn’t match what you’re seeing, please reach out via the official support channel for your product.",travel_support,replied,product_issue,"Offline synthesis from visa/support/consumer/travelers-cheques.md (retrieval score=10.30). Sources: visa/support/consumer/travelers-cheques.md, visa/support/small-business/travelers-cheques.md"
+For anything still unclear, reach out through the official support path for your product.",travel_support,replied,product_issue,"Offline synthesis from visa/support/consumer/travelers-cheques.md (retrieval score=10.30). Sources: visa/support/consumer/travelers-cheques.md, visa/support/small-business/travelers-cheques.md"
 Where can I report a lost or stolen Visa card from India?,Card stolen,Visa,"From Visa Traveller's Cheques for Consumers:
 1. Report a lost cheque
 2. Request a refund
@@ -156,5 +156,5 @@ From Visa Consumer Support:
 7. The website and freephone number (only free when dialling from within the USA) may be located on the front or back of your Visa card.
 8. If you need any further support, please call Visa using the drop-down menu above.
 
-If anything still doesn’t match what you’re seeing, please reach out via the official support channel for your product.",general_support,replied,product_issue,"Offline synthesis from visa/support/consumer/travelers-cheques.md (retrieval score=7.68). Sources: visa/support/consumer/travelers-cheques.md, visa/support.md; Automated grounding check: regenerated from retrieved articles (overlap=0.97, numeric_guard=fail)."
+If this doesn’t match what you see, contact official support for your product.",general_support,replied,product_issue,"Offline synthesis from visa/support/consumer/travelers-cheques.md (retrieval score=7.68). Sources: visa/support/consumer/travelers-cheques.md, visa/support.md; Automated grounding check: regenerated from retrieved articles (overlap=0.99, numeric_guard=fail)."
 Thank you for helping me,,,"I’m sorry, this is out of scope from my capabilities.",,replied,invalid,Detected off-topic/invalid request.

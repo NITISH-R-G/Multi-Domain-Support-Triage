@@ -6,6 +6,20 @@ Build a terminal-based AI agent that triages real support tickets across three p
 
 Read [`problem_statement.md`](./problem_statement.md) for the full task spec, input/output schema, and allowed values, and [`evaluation_criteria.md`](./evaluation_criteria.md) for how submissions are scored.
 
+### Start here (run the bundled agent)
+
+From the **repository root** (after `pip install -r code/requirements.txt`):
+
+| Shell | Command |
+|-------|---------|
+| **Any** | `python -m code` — same as `python code/main.py` with correct imports |
+| **bash / zsh** | `./scripts/run_agent.sh` or `bash scripts/run_agent.sh` |
+| **PowerShell** | `pwsh -File scripts/run_agent.ps1` |
+
+Optional offline-only: set `ORCHESTRATE_DISABLE_LLM=1`, then run one of the above. Full CLI flags are in [`code/README.md`](./code/README.md).
+
+**Interview / demo:** [`docs/interview.md`](./docs/interview.md), [`docs/demo-script.md`](./docs/demo-script.md). **Manual answer quality:** [`docs/DEV_EVAL.md`](./docs/DEV_EVAL.md). **Scope:** [`docs/scope_and_limits.md`](./docs/scope_and_limits.md).
+
 ---
 
 ## Contents
@@ -28,7 +42,8 @@ Read [`problem_statement.md`](./problem_statement.md) for the full task spec, in
 ├── AGENTS.md                       # Rules for AI coding tools + transcript logging
 ├── problem_statement.md            # Full task description and I/O schema
 ├── README.md                       # You are here
-├── docs/                           # design notes (e.g. decisions.md)
+├── docs/                           # decisions.md, interview prep, demo script, dev rubric
+├── scripts/                        # run_agent.sh / run_agent.ps1 (repo-root invocation)
 ├── code/                           # Participant agent (see code/README.md)
 │   ├── main.py                     # CLI entry: reads CSV, writes predictions
 │   ├── retrieve.py                 # Hybrid retrieval + reranking
@@ -91,14 +106,13 @@ python -m venv .venv
 .venv\Scripts\activate          # Windows
 # source .venv/bin/activate     # macOS / Linux
 pip install -r code/requirements.txt
-cd code
 # Optional: fully offline run (no LLM API)
 set ORCHESTRATE_DISABLE_LLM=1   # Windows cmd
 # export ORCHESTRATE_DISABLE_LLM=1   # macOS / Linux
-python main.py
+python -m code
 ```
 
-This writes `support_tickets/output.csv`. For a quick check against the labeled sample file, run `python run_eval.py --offline` from `code/` (see `code/README.md`).
+This writes `support_tickets/output.csv`. **Regression:** `cd code` then `python run_eval.py --offline` (compares to `sample_support_tickets.csv`).
 
 Submission expects a **zip of `code/` only** (no `data/` in the zip); evaluators use their own corpus copy. Your **`output.csv`** is uploaded separately.
 
