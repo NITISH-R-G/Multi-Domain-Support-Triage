@@ -12,18 +12,13 @@ import pandas as pd
 
 from config import DATA_DIR, INPUT_CSV, OUTPUT_CSV, SEED, TOP_K
 from openai_agent import decide_with_openai, fallback_from_hits
+from postprocess import finalize_decision
 from retrieve import BM25Index, CACHE_PATH, rerank_hits, should_escalate_low_retrieval
 from risk import assess_risk
+from taxonomy import looks_like_invalid_small_talk
 
 random.seed(SEED)
 np.random.seed(SEED)
-
-_INVALID_RE = __import__("re").compile(
-    r"^\s*(thanks|thank you|thx|ty|ok|okay|k)\b|"
-    r"\b(iron man|actor in)\b|"
-    r"\b(out of scope)\b",
-    __import__("re").I,
-)
 
 
 def _normalize_company(val: Any) -> str | None:
@@ -69,17 +64,26 @@ def process_row(row: pd.Series, index: BM25Index) -> dict[str, Any]:
     subject = str(row.get("Subject", "") or "")
     company_raw = row.get("Company")
 
+    company = _normalize_company(company_raw)
+    brand = _brand_for_search(company, issue, subject, index)
+
     # Fast invalid handling (spam / gratitude / off-topic trivia).
-    if _INVALID_RE.search(f"{subject}\n{issue}"):
-        return _validate_row(
-            {
+    if looks_like_invalid_small_talk(subject, issue):
+        decision = finalize_decision(
+            brand=brand,
+            issue=issue,
+            subject=subject,
+            hits=[],
+            decision={
                 "status": "replied",
-                "product_area": "conversation_management",
+                "product_area": "",
                 "response": "I’m sorry, this is out of scope from my capabilities.",
                 "justification": "Detected off-topic/invalid request.",
                 "request_type": "invalid",
-            }
+            },
+            low_retrieval=False,
         )
+        return _validate_row(decision)
 
     hit = assess_risk(issue, subject)
     if hit:
@@ -88,8 +92,6 @@ def process_row(row: pd.Series, index: BM25Index) -> dict[str, Any]:
             fb["request_type"] = hit.force_request_type
         return _validate_row(fb)
 
-    company = _normalize_company(company_raw)
-    brand = _brand_for_search(company, issue, subject, index)
     hits, raw_top_score = index.search(f"{subject}\n{issue}", brand, TOP_K)
     hits = rerank_hits(f"{subject}\n{issue}", hits)
     low = should_escalate_low_retrieval(raw_top_score)
@@ -100,6 +102,14 @@ def process_row(row: pd.Series, index: BM25Index) -> dict[str, Any]:
         company_raw if company_raw is not None and not pd.isna(company_raw) else "None",
         hits,
         force_escalate_reason=None,
+        low_retrieval=low,
+    )
+    decision = finalize_decision(
+        brand=brand,
+        issue=issue,
+        subject=subject,
+        hits=hits,
+        decision=decision,
         low_retrieval=low,
     )
     return _validate_row(decision)

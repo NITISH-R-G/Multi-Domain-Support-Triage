@@ -41,7 +41,7 @@ def main() -> None:
     )
 
     key_cols = ["Issue", "Subject", "Company"]
-    merged = sample.merge(pred, on=key_cols, how="inner")
+    merged = sample.merge(pred, on=key_cols, how="inner").copy()
 
     print(f"sample rows: {len(sample)}")
     print(f"pred rows:   {len(pred)}")
@@ -51,8 +51,8 @@ def main() -> None:
         print("No exact matches found; check that output.csv is produced from sample vs support_tickets input.")
         return
 
-    merged["Status"] = merged["Status"].map(_norm_status)
-    merged["Pred_Status"] = merged["Pred_Status"].map(_norm_status)
+    merged.loc[:, "Status"] = merged["Status"].map(_norm_status)
+    merged.loc[:, "Pred_Status"] = merged["Pred_Status"].map(_norm_status)
 
     def exact_acc(gold: str, pred_col: str) -> float:
         g = merged[gold].fillna("").astype(str)
