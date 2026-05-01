@@ -6,7 +6,23 @@ Build a terminal-based AI agent that triages real support tickets across three p
 
 Read [`problem_statement.md`](./problem_statement.md) for the full task spec, input/output schema, and allowed values, and [`evaluation_criteria.md`](./evaluation_criteria.md) for how submissions are scored.
 
-**Verify before submit (matches CI + full offline batch):** from repo root, run `bash scripts/verify_local.sh` or `pwsh -File scripts/verify_local.ps1`. This installs `code/requirements.txt`, runs `main.py --help`, `pytest`, `run_eval.py --offline`, then `main.py --limit 0` with the LLM off. Set `VERIFY_SKIP_FULL_BATCH=1` to stop after the sample regression (faster). This does **not** prove hidden-test accuracy—only that the pipeline is healthy.
+**Verify before submit (matches CI + full offline batch):** from repo root, run `bash scripts/verify_local.sh` or `pwsh -File scripts/verify_local.ps1`. This installs `code/requirements.txt`, runs `main.py --help`, `pytest`, `run_eval.py --offline`, then `main.py --limit 0` with the LLM off. Set `VERIFY_SKIP_FULL_BATCH=1` to stop after the sample regression (faster). On macOS/Linux, `chmod +x scripts/*.sh` if needed. This does **not** prove hidden-test accuracy—only that the pipeline is healthy.
+
+**Problem statement alignment (what this repo implements):**
+
+| Requirement (`problem_statement.md`) | How it is addressed |
+|--------------------------------------|---------------------|
+| Terminal-based agent | `code/main.py` CLI; run via `python code/main.py` or `scripts/run_agent.*` |
+| HackerRank / Claude / Visa | Corpus under `data/` per brand; retrieval uses brand mask + `infer_brand` when `Company` is `None` |
+| Only provided corpus for answers | Retrieval from `data/` only; LLM (if enabled) is given **retrieved** chunks as context, not live web search |
+| Request type, product area, reply vs escalate, justification | Output columns + `taxonomy.py`, `postprocess.py`, `risk.py`, `cross_ecosystem.py` |
+| Retrieve relevant docs | Hybrid BM25 + TF-IDF fusion + rerank (`retrieve.py`) |
+| Safe / grounded responses | Grounding overlap + numeric guard (`grounding.py`, `postprocess.py`); offline synthesis when LLM off |
+| Escalate high-risk / sensitive | Regex risk routes before generation; low-retrieval flag; cross-ecosystem escalation |
+| Handle noise / multi-topic / malicious-ish text | Invalid small-talk heuristics; risk patterns; multi-topic note (`ticket_hints.py`) |
+| CSV input → CSV output | `csv_io.py`; writes `response`, `product_area`, `status`, `request_type`, `justification` |
+
+**Cross-platform:** CI runs on **Ubuntu** (`python main.py` from `code/`). Use **`python code/main.py`** from the repo root on all OSes—avoid **`python -m code`** on Linux/macOS (stdlib `code` module name clash). **Windows:** use PowerShell scripts or `python code\main.py`. Same Python **3.11+** and `pip install -r code/requirements.txt` everywhere; keep `data/` next to `code/` as in the repo layout.
 
 **Offline routing check:** with `ORCHESTRATE_DISABLE_LLM=1`, `cd code && python run_eval.py --offline` should show **100%** exact match on `status`, `request_type`, and `product_area` for the bundled sample (response text differs when the LLM is off).
 
