@@ -23,3 +23,14 @@ INDEX_VERSION = int(os.environ.get("ORCHESTRATE_INDEX_VERSION", "2"))
 HYBRID_CANDIDATES = int(os.environ.get("HYBRID_CANDIDATES", "160"))
 BM25_WEIGHT = float(os.environ.get("BM25_WEIGHT", "0.55"))
 TFIDF_WEIGHT = float(os.environ.get("TFIDF_WEIGHT", "0.45"))
+
+# Lexical rerank bonuses (query term appears in chunk); tunable without editing code.
+RERANK_BONUS_TEAM = float(os.environ.get("ORCHESTRATE_RERANK_BONUS_TEAM", "5.0"))
+RERANK_BONUS_WORKSPACE = float(os.environ.get("ORCHESTRATE_RERANK_BONUS_WORKSPACE", "5.0"))
+RERANK_BONUS_BRAND = float(os.environ.get("ORCHESTRATE_RERANK_BONUS_BRAND", "3.0"))
+
+# Grounding: replace LLM/offline draft when overlap with retrieved text is too low or numeric guard fires.
+# Lower min_overlap = fewer silent rewrites (more trust in the generator).
+GROUNDING_MIN_OVERLAP = float(os.environ.get("ORCHESTRATE_GROUNDING_MIN_OVERLAP", "0.12"))
+# resynthesize: offline synthesis from hits; escalate: human handoff when check fails.
+GROUNDING_FAIL_MODE = os.environ.get("ORCHESTRATE_GROUNDING_FAIL_MODE", "resynthesize").strip().lower()

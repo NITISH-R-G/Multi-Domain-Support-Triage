@@ -59,6 +59,14 @@ _PATTERNS: list[tuple[re.Pattern[str], str]] = [
         re.compile(r"\b(security\s+vulnerability|bug\s+bounty)\b", re.I),
         "security vulnerability disclosure — needs specialist routing",
     ),
+    (
+        re.compile(r"\b(i will sue|lawsuit|legal action|my lawyer)\b", re.I),
+        "legal threat — route to specialist handling",
+    ),
+    (
+        re.compile(r"\b(harm myself|kill myself|suicide)\b", re.I),
+        "self-harm mention — escalated for human crisis routing",
+    ),
 ]
 
 

@@ -5,3 +5,4 @@ rank-bm25==0.2.2
 openai==1.59.7
 python-dotenv==1.0.1
 tqdm==4.67.1
+pytest==8.3.4

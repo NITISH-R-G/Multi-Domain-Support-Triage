@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 from corpus import Chunk
 
-# Observed in sample_support_tickets.csv (keep stable)
+# Canonical labels shared across brands (must stay stable for CSV evaluation).
 CANONICAL_PRODUCT_AREAS: tuple[str, ...] = (
     "screen",
     "community",
@@ -58,6 +58,22 @@ def infer_request_type(issue: str, subject: str) -> str | None:
     return None
 
 
+def looks_like_off_topic_general_knowledge(subject: str, issue: str) -> bool:
+    """Entertainment / trivia / general-knowledge questions unlikely to be product support."""
+    blob = f"{subject}\n{issue}".strip()
+    if len(blob) > 260:
+        return False
+    low = blob.lower()
+    return bool(
+        re.search(
+            r"\b(who played|name of the actor|which actor|actor in\b|"
+            r"actor in (a |the )?(movie|film)|"
+            r"what movie (won|is)|which film (won|is)|oscar for best (picture|actor))\b",
+            low,
+        )
+    )
+
+
 def looks_like_invalid_small_talk(subject: str, issue: str) -> bool:
     blob = f"{subject}\n{issue}".strip()
     low = blob.lower()
@@ -67,7 +83,7 @@ def looks_like_invalid_small_talk(subject: str, issue: str) -> bool:
         return True
     if len(blob) < 140 and re.fullmatch(r"\s*(thank you for helping me|thanks for helping|thank you so much)\s*\.?\s*", low):
         return True
-    if re.search(r"\b(iron man|actor in)\b", low):
+    if looks_like_off_topic_general_knowledge(subject, issue):
         return True
     return False
 

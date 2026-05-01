@@ -18,6 +18,9 @@ from config import (
     HYBRID_CANDIDATES,
     INDEX_VERSION,
     LOW_BM25_THRESHOLD,
+    RERANK_BONUS_BRAND,
+    RERANK_BONUS_TEAM,
+    RERANK_BONUS_WORKSPACE,
     TFIDF_WEIGHT,
     TOP_K,
 )
@@ -204,16 +207,17 @@ def rerank_hits(query: str, hits: list[Retrieved]) -> list[Retrieved]:
         overlap = len(qset.intersection(set(bag)))
         bonus = 0.0
         ql = query.lower()
-        if "team" in ql and "team" in c.text.lower():
-            bonus += 5
-        if "workspace" in ql and "workspace" in c.text.lower():
-            bonus += 5
+        ct = c.text.lower()
+        if "team" in ql and "team" in ct:
+            bonus += RERANK_BONUS_TEAM
+        if "workspace" in ql and "workspace" in ct:
+            bonus += RERANK_BONUS_WORKSPACE
         if "visa" in ql and c.brand == "visa":
-            bonus += 3
+            bonus += RERANK_BONUS_BRAND
         if "hackerrank" in ql and c.brand == "hackerrank":
-            bonus += 3
+            bonus += RERANK_BONUS_BRAND
         if "claude" in ql and c.brand == "claude":
-            bonus += 3
+            bonus += RERANK_BONUS_BRAND
         combined = h.score + overlap * 1.2 + bonus
         scored.append((combined, Retrieved(chunk=c, score=combined)))
     scored.sort(key=lambda x: -x[0])

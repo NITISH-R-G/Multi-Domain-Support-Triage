@@ -28,16 +28,19 @@ Read [`problem_statement.md`](./problem_statement.md) for the full task spec, in
 ├── AGENTS.md                       # Rules for AI coding tools + transcript logging
 ├── problem_statement.md            # Full task description and I/O schema
 ├── README.md                       # You are here
-├── code/                           # ← Build your agent here
-│   └── main.py                     #   Entry point (rename/extend as you like)
-├── data/                           # Local-only support corpus (no network needed)
-│   ├── hackerrank/                 #   HackerRank help center
-│   ├── claude/                     #   Claude Help Center export
-│   └── visa/                       #   Visa consumer + small-business support
+├── code/                           # Participant agent (see code/README.md)
+│   ├── main.py                     # CLI entry: reads CSV, writes predictions
+│   ├── retrieve.py                 # Hybrid retrieval + reranking
+│   ├── eval_sample.py              # Metrics vs sample_support_tickets.csv
+│   └── tests/                      # pytest regression checks
+├── data/                           # Offline support corpus (required to run locally)
+│   ├── hackerrank/
+│   ├── claude/
+│   └── visa/
 └── support_tickets/
-    ├── sample_support_tickets.csv  # Inputs + expected outputs (for development)
-    ├── support_tickets.csv         # Inputs only (run your agent on these)
-    └── output.csv                  # Write your agent's predictions here
+    ├── sample_support_tickets.csv  # Labeled examples for development
+    ├── support_tickets.csv         # Inputs for final predictions
+    └── output.csv                  # Generated predictions (create by running the agent)
 ```
 
 ---
@@ -67,27 +70,34 @@ Beyond that you are free to bring your own approach — RAG, vector DBs, tool us
 
 ## Where your code goes
 
-All of your work belongs in [`code/`](./code/). The repo ships with an empty `code/main.py` you can grow into your full agent — add more modules (`agent.py`, `retriever.py`, `classifier.py`, etc.) next to it as needed.
+Implement the agent under [`code/`](./code/). This checkout includes a **Python** reference implementation: hybrid retrieval over `data/`, risk-based escalation, optional OpenAI JSON generation with offline fallback, and CSV I/O. Full setup, environment variables, and regression commands are documented in **[`code/README.md`](./code/README.md)**.
 
 Conventions:
 
-- Put a **README inside `code/`** describing how to install dependencies and run your agent.
-- Read secrets **from environment variables only** (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, …). Copy `.env.example` → `.env` (already gitignored) if you keep one. **Never hardcode keys.**
-- Be **deterministic** where possible. Seed any random sampling.
-- Write responses to `support_tickets/output.csv`.
+- Read secrets **only from environment variables** (see `.env.example`). **Never hardcode keys.**
+- Be **deterministic** where possible (seeded retrieval / sampling).
+- Write predictions to `support_tickets/output.csv`.
 
 ---
 
 ## Quickstart
 
-Clone this repository:
+Clone the repository and keep the **`data/`** folder next to `code/` — the agent does not fetch live help-center content; it reads the bundled corpus.
 
 ```bash
-git clone git@github.com:interviewstreet/hackerrank-orchestrate-may26.git
 cd hackerrank-orchestrate-may26
+python -m venv .venv
+.venv\Scripts\activate          # Windows
+# source .venv/bin/activate     # macOS / Linux
+pip install -r code/requirements.txt
+cd code
+set ORCHESTRATE_DISABLE_LLM=1   # optional: fully offline run
+python main.py
 ```
 
-You are free to use any language or runtime. We recommend **Python**, **JavaScript**, or **TypeScript**.
+This writes `support_tickets/output.csv`. For a quick check against the labeled sample file, run `python run_eval.py --offline` from `code/` (see `code/README.md`).
+
+Submission expects a **zip of `code/` only** (no `data/` in the zip); evaluators use their own corpus copy. Your **`output.csv`** is uploaded separately.
 
 ---
 

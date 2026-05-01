@@ -155,7 +155,18 @@ Writing constraints:
     try:
         data = json.loads(raw)
     except json.JSONDecodeError:
-        return fallback_from_hits(hits, escalated=False, esc_reason=None, low_retrieval=low_retrieval)
+        # Prefer escalation when we already lack confidence in retrieval context.
+        escalate = bool(low_retrieval) or not hits
+        out = fallback_from_hits(
+            hits,
+            escalated=escalate,
+            esc_reason=("LLM produced invalid JSON; escalating for human review." if escalate else None),
+            low_retrieval=low_retrieval,
+        )
+        if not escalate:
+            prev = str(out.get("justification", "") or "")
+            out["justification"] = f"LLM produced invalid JSON; using offline synthesis. {prev}".strip()
+        return out
 
     for key in ("status", "product_area", "response", "justification", "request_type"):
         data.setdefault(key, "")

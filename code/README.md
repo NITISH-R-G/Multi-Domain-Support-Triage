@@ -26,6 +26,15 @@ OPENAI_API_KEY=sk-...
 # HYBRID_CANDIDATES=160
 # BM25_WEIGHT=0.55
 # TFIDF_WEIGHT=0.45
+#
+# Grounding (post-generation checks vs retrieved text):
+# ORCHESTRATE_GROUNDING_MIN_OVERLAP=0.12
+# ORCHESTRATE_GROUNDING_FAIL_MODE=resynthesize   # or: escalate
+#
+# Lexical rerank bonuses (query term + brand alignment):
+# ORCHESTRATE_RERANK_BONUS_TEAM=5
+# ORCHESTRATE_RERANK_BONUS_WORKSPACE=5
+# ORCHESTRATE_RERANK_BONUS_BRAND=3
 ```
 
 If `OPENAI_API_KEY` is unset (or `ORCHESTRATE_DISABLE_LLM=1`), the agent uses an **offline synthesis** path (structured steps from retrieved articles; weaker than a quota-available LLM, but fully corpus-grounded).
@@ -60,6 +69,15 @@ Optional diagnostics on the generated `sample_pred.csv`:
 python run_eval.py --offline --report-quality
 ```
 
+`eval_sample.py` reports exact match on routing columns and **fuzzy stats on `response`** (normalized exact, token F1, character overlap). Use them to catch regressions on free-text answers; the official holdout is still scored by the platform.
+
+### Tests
+
+```bash
+cd code
+python -m pytest tests -q
+```
+
 ## Architecture
 
 | Module          | Role                                               |
@@ -70,6 +88,8 @@ python run_eval.py --offline --report-quality
 | `grounding.py` / `postprocess.py` | Cheap grounding checks + finalize |
 | `risk.py`       | Regex escalation triggers (e.g. grading disputes) |
 | `openai_agent.py` | JSON-grounded LLM decisioning + offline synthesis |
+| `eval_metrics.py` / `eval_sample.py` | Sample regression metrics |
+| `ticket_hints.py` | Optional multi-topic heuristics (tests / docs) |
 | `main.py`       | CSV orchestration                                  |
 
 Secrets are read **only** from the environment (never commit `.env`).
