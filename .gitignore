@@ -31,3 +31,11 @@ data/index/
 data/embeddings/
 *.sqlite
 *.db
+
+# git worktrees / agent tooling artifacts
+.worktrees/
+worktrees/
+.superpowers/
+
+# python caches created during agent runs
+code/.cache/
