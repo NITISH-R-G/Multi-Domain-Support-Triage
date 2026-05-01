@@ -6,7 +6,9 @@ Build a terminal-based AI agent that triages real support tickets across three p
 
 Read [`problem_statement.md`](./problem_statement.md) for the full task spec, input/output schema, and allowed values, and [`evaluation_criteria.md`](./evaluation_criteria.md) for how submissions are scored.
 
-**Offline routing check (development):** with `ORCHESTRATE_DISABLE_LLM=1`, run `cd code && python run_eval.py --offline`. On the bundled `sample_support_tickets.csv`, this agent targets **100% exact match** on `status`, `request_type`, and `product_area` against sample labels (response text differs by design when the LLM is off — evaluators score hidden rows with your chosen mode).
+**Verify before submit (matches CI + full offline batch):** from repo root, run `bash scripts/verify_local.sh` or `pwsh -File scripts/verify_local.ps1`. This installs `code/requirements.txt`, runs `main.py --help`, `pytest`, `run_eval.py --offline`, then `main.py --limit 0` with the LLM off. Set `VERIFY_SKIP_FULL_BATCH=1` to stop after the sample regression (faster). This does **not** prove hidden-test accuracy—only that the pipeline is healthy.
+
+**Offline routing check:** with `ORCHESTRATE_DISABLE_LLM=1`, `cd code && python run_eval.py --offline` should show **100%** exact match on `status`, `request_type`, and `product_area` for the bundled sample (response text differs when the LLM is off).
 
 ### Start here (run the bundled agent)
 
@@ -48,7 +50,7 @@ Optional offline-only: set `ORCHESTRATE_DISABLE_LLM=1`, then run one of the abov
 ├── problem_statement.md            # Full task description and I/O schema
 ├── README.md                       # You are here
 ├── docs/                           # decisions.md, interview prep, demo script, dev rubric
-├── scripts/                        # run_agent.sh / run_agent.ps1 (repo-root invocation)
+├── scripts/                        # run_agent.*, verify_local.* (pre-submit checks)
 ├── code/                           # Participant agent (see code/README.md)
 │   ├── main.py                     # CLI entry: reads CSV, writes predictions
 │   ├── retrieve.py                 # Hybrid retrieval + reranking
