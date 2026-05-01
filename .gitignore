@@ -39,3 +39,6 @@ worktrees/
 
 # python caches created during agent runs
 code/.cache/
+
+# local submission zip (git archive); do not commit
+*-submission.zip
