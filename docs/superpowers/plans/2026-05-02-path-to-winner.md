@@ -29,10 +29,10 @@
 
 **Purpose:** Every later change is judged against numbers, not vibes.
 
-- [ ] Record **current** metrics in a single note (gitignored or `docs/`): Python version, commit hash, env vars (`ORCHESTRATE_*`, `OPENAI_MODEL`).
-- [ ] Run `scripts/verify_local.ps1` / `.sh` → capture pytest count, sample **routing** exact %, full batch row count.
-- [ ] Run **with LLM enabled** (if allowed for final submit): `python main.py --limit 0` once; save token-F1 / overlap from `eval_sample.py` if you add `--report-quality` path—baseline **free-text** quality.
-- [ ] Export `support_tickets/output.csv` checksum or row count into that note.
+- [x] Record **current** metrics — run `python scripts/capture_baseline.py` from repo root → writes [`BASELINE.md`](../BASELINE.md) (git SHA, pytest, sample routing %, full batch line).
+- [x] Run `scripts/verify_local.ps1` / `.sh` → same checks embedded in capture script + verify script.
+- [ ] Run **with LLM enabled** (optional baseline for free-text): `python main.py --limit 0` then compare fuzzy metrics — separate row in BASELINE if you do this.
+- [x] Golden routing tests — `code/tests/test_sample_routing_golden.py` locks sample labels offline.
 
 **Exit criterion:** You can answer “what regressed?” after any experiment.
 
@@ -42,12 +42,12 @@
 
 ### 1A — Exhaust the public sample as a syllabus
 
-- [ ] Build a **row-by-row diff** script or notebook: for each `sample_support_tickets.csv` row, show gold vs pred for all five columns (reuse merge logic from `eval_sample.py`).
-- [ ] Tag failures: **routing** vs **response text** vs **justification**.
-- [ ] For every routing mismatch (should be rare offline): **root-cause** (brand inference, taxonomy rule, risk false positive).
-- [ ] Add **pytest** cases that encode gold expectations for **routing columns** on sample rows (golden-file style), so refactors can’t silently break routing.
+- [x] Row-by-row routing diff — `eval_sample.py --routing-detail` (after generating `sample_pred.csv` via `run_eval.py`).
+- [ ] Tag failures in free-text columns — use `eval_sample.py` fuzzy stats + manual row inspection when regressing.
+- [ ] For every routing mismatch after a change: root-cause (brand, taxonomy, risk).
+- [x] **pytest** golden routing — `code/tests/test_sample_routing_golden.py` (offline LLM, session BM25 index).
 
-**Files:** `code/tests/` new module e.g. `test_sample_routing_golden.py`; possibly small fixture CSV under `code/tests/fixtures/`.
+**Files:** `code/tests/test_sample_routing_golden.py`, `code/eval_sample.py` (`--routing-detail`), `code/conftest.py`.
 
 ### 1B — Synthetic / adversarial suite (proxy for “malicious / multi-topic / None company”)
 

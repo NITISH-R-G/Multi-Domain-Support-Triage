@@ -17,6 +17,8 @@ Read [`problem_statement.md`](./problem_statement.md) for the full task spec, in
 
 **If many teams “meet” the bar — how is one winner chosen?** The public docs **do not publish exact weights or tie-break rules**. Typically: scores from **each dimension are combined** into a final score; **Output CSV** quality on **held-out rows** usually moves the leaderboard the most; **Interview** and **transcript** differentiate teams when numeric scores are close. Perfect ties across *all* dimensions are unlikely—small CSV differences still rank-order. For anything not specified here, treat **official platform / organizer communications** as source of truth.
 
+**Baseline snapshot (Phase 0):** after meaningful routing/retrieval changes, run `python scripts/capture_baseline.py` from the repo root to refresh [`docs/superpowers/BASELINE.md`](./docs/superpowers/BASELINE.md) (git SHA, pytest count, sample routing %). Per-row routing diff: `cd code && ORCHESTRATE_DISABLE_LLM=1 python run_eval.py --offline`, then `python eval_sample.py --sample ../support_tickets/sample_support_tickets.csv --pred ../support_tickets/sample_pred.csv --routing-detail`.
+
 **Verify before submit (matches CI + full offline batch):** from repo root, run `bash scripts/verify_local.sh` or `pwsh -File scripts/verify_local.ps1`. This installs `code/requirements.txt`, runs `main.py --help`, `pytest`, `run_eval.py --offline`, then `main.py --limit 0` with the LLM off. Set `VERIFY_SKIP_FULL_BATCH=1` to stop after the sample regression (faster). On macOS/Linux, `chmod +x scripts/*.sh` if needed. This does **not** prove hidden-test accuracy—only that the pipeline is healthy.
 
 **Problem statement alignment (what this repo implements):**
