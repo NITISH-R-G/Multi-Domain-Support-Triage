@@ -2,6 +2,8 @@
 
 Use this in the **AI Judge interview** (camera on). Honesty beats hype.
 
+When many submissions look strong on paper, **interview depth** and **clear ownership of decisions** often separate finalists—the platform does not publish exact tie-break formulas (see root **README** → *Evaluation criteria*).
+
 ## What this agent is
 
 - **Offline-first triage** over a **fixed markdown corpus** (`data/`): retrieve → route → compose answer from snippets or escalate.
