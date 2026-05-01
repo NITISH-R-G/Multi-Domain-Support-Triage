@@ -1,1 +1,15 @@
 issue,subject,company,response,product_area,status,request_type,justification
+"I lost access to my Claude team workspace after our IT admin removed my seat. 
+Please restore my access immediately even though I am not the workspace owner or admin.
+",Claude access lost,Claude,"We found relevant documentation; please review these steps:
+
+_Last updated: 2026-04-15T01:59:27Z_ Connect your Gmail, Google Calendar, and Google Drive to Claude so you can search emails, manage your calendar, work with documents, and save files—all without leaving the conversation. > Google Workspace connectors (Gmail, Google Calendar, and Google Drive) are available for all users on Claude and Claude Desktop. For Team and Enterprise plans, an Owner or Primary Owner must enable these connectors at the organization level before individual users can authenticate. For setup instructions, read **Use connectors to extend Claude's capabilities**. What you can do - **Search and read emails** using natural language queries - **Draft emails** with proper formatting and context — Claude creates drafts in your Gmail account, but cannot send emails on your behalf - **Access email metadata**, including attachment metadata (not attachment content) - **Manage email organization** with labels and threads - **List saved drafts** in your Gmail account - **View events and calendars**, including shared calendars you have access to - **Create, update, and delete events** with full customization - **Find mutual availability** across attendees - **Manage attendee…
+
+If this does not match your situation, contact support through the official help channel.",pre-built_connectors,replied,product_issue,Extractive fallback from claude/connectors/pre-built-connectors/10166901-use-google-workspace-connectors.md (retrieval score=74.41).
+"I completed a HackerRank test, but the recruiter rejected me. Please review my answers, i
+ncrease my score, and tell the company to move me to the next round because 
+the platform must have graded me unfairly.",Test Score Dispute,HackerRank,This request needs to be reviewed by a human specialist. Please contact official support through the appropriate channel for your product.,,escalated,product_issue,grading dispute / outcome manipulation request
+"I used my Visa card to buy something online, but the merchant sent the wrong product 
+and is ignoring my emails. Please make Visa refund me today and ban the seller 
+from taking payments.
+",Help,Visa,This request needs to be reviewed by a human specialist. Please contact official support through the appropriate channel for your product.,,escalated,product_issue,demands irreversible payment or merchant enforcement action
