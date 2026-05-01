@@ -2,7 +2,9 @@
 from __future__ import annotations
 
 import math
+import os
 import pickle
+import time
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
@@ -115,38 +117,86 @@ class HybridIndex:
         return cls(chunks, bm25, doc_tokens, tfidf_docs, idf)
 
     def save(self, path: Path) -> None:
+        """Atomically replace index file to avoid torn reads from concurrent runners."""
         path.parent.mkdir(parents=True, exist_ok=True)
-        with path.open("wb") as f:
-            pickle.dump(
-                {
-                    "v": INDEX_VERSION,
-                    "chunks": self.chunks,
-                    "doc_tokens": self.doc_tokens,
-                    "tfidf_docs": self.tfidf_docs,
-                    "idf": self.idf,
-                },
-                f,
-            )
+        payload = {
+            "v": INDEX_VERSION,
+            "chunks": self.chunks,
+            "doc_tokens": self.doc_tokens,
+            "tfidf_docs": self.tfidf_docs,
+            "idf": self.idf,
+        }
+        tmp = path.with_suffix(path.suffix + ".tmp")
+        try:
+            with tmp.open("wb") as f:
+                pickle.dump(payload, f)
+            os.replace(tmp, path)
+        finally:
+            if tmp.is_file() and not path.is_file():
+                try:
+                    tmp.unlink()
+                except OSError:
+                    pass
+
+    @classmethod
+    def _deserialize(cls, path: Path) -> HybridIndex | None:
+        try:
+            with path.open("rb") as f:
+                blob = pickle.load(f)
+        except Exception:
+            return None
+        if not isinstance(blob, dict) or blob.get("v") != INDEX_VERSION:
+            return None
+        try:
+            chunks: list[Chunk] = blob["chunks"]
+            doc_tokens: list[list[str]] = blob["doc_tokens"]
+            tfidf_docs: list[dict[str, float]] = blob["tfidf_docs"]
+            idf: dict[str, float] = blob["idf"]
+        except (KeyError, TypeError):
+            return None
+        bm25 = BM25Okapi(doc_tokens)
+        return cls(chunks, bm25, doc_tokens, tfidf_docs, idf)
 
     @classmethod
     def load(cls, path: Path, data_dir: Path) -> HybridIndex:
-        if not path.is_file():
-            idx = cls.build(data_dir)
-            idx.save(path)
-            return idx
-        with path.open("rb") as f:
-            blob = pickle.load(f)
-        if not isinstance(blob, dict) or blob.get("v") != INDEX_VERSION:
-            idx = cls.build(data_dir)
-            idx.save(path)
-            return idx
+        path = path.resolve()
+        if path.is_file():
+            idx = cls._deserialize(path)
+            if idx is not None:
+                return idx
+            try:
+                path.unlink()
+            except OSError:
+                pass
 
-        chunks: list[Chunk] = blob["chunks"]
-        doc_tokens: list[list[str]] = blob["doc_tokens"]
-        tfidf_docs: list[dict[str, float]] = blob["tfidf_docs"]
-        idf: dict[str, float] = blob["idf"]
-        bm25 = BM25Okapi(doc_tokens)
-        return cls(chunks, bm25, doc_tokens, tfidf_docs, idf)
+        lock_path = path.with_name(path.name + ".lock")
+        deadline = time.time() + 180.0
+        while time.time() < deadline:
+            if path.is_file():
+                idx = cls._deserialize(path)
+                if idx is not None:
+                    return idx
+            try:
+                fd = os.open(str(lock_path), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+                os.close(fd)
+                try:
+                    if path.is_file():
+                        idx = cls._deserialize(path)
+                        if idx is not None:
+                            return idx
+                    idx = cls.build(data_dir)
+                    idx.save(path)
+                    return idx
+                finally:
+                    try:
+                        os.unlink(lock_path)
+                    except OSError:
+                        pass
+            except FileExistsError:
+                time.sleep(0.2)
+                continue
+
+        raise TimeoutError(f"Timed out after 180s waiting for retrieval index lock/build at {path}")
 
     def infer_brand(self, query: str) -> str:
         q = tokenize(query)

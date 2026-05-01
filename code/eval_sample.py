@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
 import pandas as pd
 
+from csv_io import TicketCsvError, canonicalize_ticket_columns, read_tickets_csv, rename_prediction_columns
 from eval_metrics import compact_overlap_ratio, normalize_text, token_set_f1
 
 
@@ -20,27 +22,24 @@ def _norm_status(x: object) -> str:
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(
+        description="Compare model predictions to labeled sample_support_tickets.csv (routing + response fuzzy metrics).",
+    )
     ap.add_argument("--sample", type=str, default=str(Path("..") / "support_tickets" / "sample_support_tickets.csv"))
     ap.add_argument("--pred", type=str, default=str(Path("..") / "support_tickets" / "output.csv"))
     ap.add_argument("--report", type=str, default=str(Path("..") / "support_tickets" / "sample_eval_report.csv"))
     args = ap.parse_args()
 
-    sample = pd.read_csv(args.sample)
-    pred = pd.read_csv(args.pred)
+    try:
+        sample = read_tickets_csv(args.sample, label="--sample")
+        pred = read_tickets_csv(args.pred, label="--pred")
+        sample = canonicalize_ticket_columns(sample)
+        pred = canonicalize_ticket_columns(pred)
+    except (FileNotFoundError, TicketCsvError) as e:
+        print(f"error: {e}", file=sys.stderr)
+        sys.exit(2)
 
-    pred = pred.rename(
-        columns={
-            "issue": "Issue",
-            "subject": "Subject",
-            "company": "Company",
-            "response": "Pred_Response",
-            "product_area": "Pred_Product Area",
-            "status": "Pred_Status",
-            "request_type": "Pred_Request Type",
-            "justification": "Pred_Justification",
-        }
-    )
+    pred = rename_prediction_columns(pred)
 
     key_cols = ["Issue", "Subject", "Company"]
     merged = sample.merge(pred, on=key_cols, how="inner").copy()

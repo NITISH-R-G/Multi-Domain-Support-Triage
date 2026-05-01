@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 
 from config import DATA_DIR, INPUT_CSV, OUTPUT_CSV, SEED, TOP_K
+from csv_io import TicketCsvError, canonicalize_ticket_columns, read_tickets_csv
 from openai_agent import decide_with_openai, fallback_from_hits
 from postprocess import finalize_decision
 from retrieve import BM25Index, CACHE_PATH, rerank_hits, should_escalate_low_retrieval
@@ -122,17 +123,48 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Multi-domain support triage agent (Orchestrate)")
     parser.add_argument("--input", type=str, default=str(INPUT_CSV))
     parser.add_argument("--output", type=str, default=str(OUTPUT_CSV))
-    parser.add_argument("--limit", type=int, default=0, help="Process only first N rows (debug)")
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=0,
+        metavar="N",
+        help="Process only the first N rows (default 0 = all rows). Must be >= 0.",
+    )
     args = parser.parse_args()
 
-    inp = Path(args.input)
-    out_p = Path(args.output)
+    if args.limit < 0:
+        print("error: --limit must be >= 0 (use 0 to process every row).", file=sys.stderr)
+        sys.exit(2)
 
-    df = pd.read_csv(inp, encoding="utf-8")
+    out_p = Path(args.output).expanduser().resolve()
+    out_p.parent.mkdir(parents=True, exist_ok=True)
+
+    try:
+        df = read_tickets_csv(args.input, label="--input")
+        df = canonicalize_ticket_columns(df)
+    except FileNotFoundError as e:
+        print(f"error: {e}", file=sys.stderr)
+        sys.exit(2)
+    except TicketCsvError as e:
+        print(f"error: {e}", file=sys.stderr)
+        sys.exit(2)
+
+    n_all = len(df)
     if args.limit > 0:
         df = df.head(args.limit)
+        print(
+            f"Note: --limit {args.limit}: processing {len(df)} row(s) of {n_all} in the input file.",
+            file=sys.stderr,
+        )
+    if not DATA_DIR.is_dir():
+        print(f"error: corpus directory not found: {DATA_DIR}", file=sys.stderr)
+        sys.exit(2)
 
-    index = BM25Index.load(CACHE_PATH, DATA_DIR)
+    try:
+        index = BM25Index.load(CACHE_PATH, DATA_DIR)
+    except TimeoutError as e:
+        print(f"error: {e}", file=sys.stderr)
+        sys.exit(2)
 
     rows_out: list[dict[str, Any]] = []
     for _, row in df.iterrows():
@@ -151,7 +183,11 @@ def main() -> None:
         )
 
     out_df = pd.DataFrame(rows_out)
-    out_df.to_csv(out_p, index=False, encoding="utf-8")
+    try:
+        out_df.to_csv(out_p, index=False, encoding="utf-8")
+    except OSError as e:
+        print(f"error: cannot write --output {out_p}: {e}", file=sys.stderr)
+        sys.exit(2)
     print(f"Wrote {len(out_df)} rows to {out_p}", file=sys.stderr)
 
 

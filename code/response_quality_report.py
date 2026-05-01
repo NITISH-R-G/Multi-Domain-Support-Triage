@@ -13,12 +13,14 @@ from __future__ import annotations
 import argparse
 import os
 import re
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
 import pandas as pd
 
 from config import CACHE_PATH, DATA_DIR, TOP_K
+from csv_io import TicketCsvError, read_tickets_csv
 from corpus import tokenize
 from grounding import has_unsupported_numbers, lexical_overlap
 from retrieve import BM25Index, rerank_hits
@@ -62,7 +64,9 @@ def metrics_for_row(index: BM25Index, issue: str, subject: str, company_raw: obj
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(
+        description="Diagnostics on prediction CSV (lengths, escalation rate, lexical overlap vs retrieval).",
+    )
     ap.add_argument("--pred", type=str, default=str(Path("..") / "support_tickets" / "output.csv"))
     ap.add_argument("--offline", action="store_true", help="Force ORCHESTRATE_DISABLE_LLM=1 (informational; retrieval ignores it)")
     args = ap.parse_args()
@@ -70,7 +74,11 @@ def main() -> None:
     if args.offline:
         os.environ["ORCHESTRATE_DISABLE_LLM"] = "1"
 
-    df = pd.read_csv(args.pred)
+    try:
+        df = read_tickets_csv(args.pred, label="--pred")
+    except (FileNotFoundError, TicketCsvError) as e:
+        print(f"error: {e}", file=sys.stderr)
+        sys.exit(2)
     norm_cols = {str(c).strip().lower(): c for c in df.columns}
     required = {"issue", "subject", "company", "response", "status"}
     missing = required - set(norm_cols.keys())

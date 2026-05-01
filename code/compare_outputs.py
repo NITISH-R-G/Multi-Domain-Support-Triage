@@ -11,9 +11,11 @@ token F1 / compact overlap for Response and Justification when gold columns exis
 from __future__ import annotations
 
 import argparse
+import sys
 
 import pandas as pd
 
+from csv_io import TicketCsvError, canonicalize_ticket_columns, read_tickets_csv, rename_prediction_columns
 from eval_metrics import compact_overlap_ratio, normalize_text, token_set_f1
 
 
@@ -23,20 +25,15 @@ def main() -> None:
     ap.add_argument("--pred", type=str, required=True, help="CSV with predictions (issue/subject/company lowercase)")
     args = ap.parse_args()
 
-    gold = pd.read_csv(args.gold)
-    pred = pd.read_csv(args.pred)
-    pred = pred.rename(
-        columns={
-            "issue": "Issue",
-            "subject": "Subject",
-            "company": "Company",
-            "response": "Pred_Response",
-            "product_area": "Pred_Product Area",
-            "status": "Pred_Status",
-            "request_type": "Pred_Request Type",
-            "justification": "Pred_Justification",
-        }
-    )
+    try:
+        gold = read_tickets_csv(args.gold, label="--gold")
+        pred = read_tickets_csv(args.pred, label="--pred")
+        gold = canonicalize_ticket_columns(gold)
+        pred = canonicalize_ticket_columns(pred)
+    except (FileNotFoundError, TicketCsvError) as e:
+        print(f"error: {e}", file=sys.stderr)
+        sys.exit(2)
+    pred = rename_prediction_columns(pred)
     keys = ["Issue", "Subject", "Company"]
     merged = gold.merge(pred, on=keys, how="inner")
     print(f"matched rows: {len(merged)} / gold {len(gold)} / pred {len(pred)}")

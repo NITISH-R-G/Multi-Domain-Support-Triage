@@ -9,7 +9,9 @@ from pathlib import Path
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(
+        description="Regenerate sample predictions and print eval_sample metrics (optional quality report).",
+    )
     ap.add_argument("--offline", action="store_true", help="Force ORCHESTRATE_DISABLE_LLM=1 for repeatable runs")
     ap.add_argument(
         "--report-quality",
