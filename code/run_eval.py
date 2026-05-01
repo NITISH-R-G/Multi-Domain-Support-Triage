@@ -29,23 +29,53 @@ def main() -> None:
     if args.offline:
         env["ORCHESTRATE_DISABLE_LLM"] = "1"
 
-    cmds = [
-        [sys.executable, str(root / "code" / "main.py"), "--input", str(sample_in), "--output", str(sample_out)],
-        [sys.executable, str(root / "code" / "eval_sample.py"), "--sample", str(sample_in), "--pred", str(sample_out), "--report", str(report)],
+    steps: list[tuple[str, list[str]]] = [
+        (
+            "Generate predictions (main.py → sample_pred.csv)",
+            [
+                sys.executable,
+                str(root / "code" / "main.py"),
+                "--input",
+                str(sample_in),
+                "--output",
+                str(sample_out),
+            ],
+        ),
+        (
+            "Compare to labeled sample (eval_sample.py)",
+            [
+                sys.executable,
+                str(root / "code" / "eval_sample.py"),
+                "--sample",
+                str(sample_in),
+                "--pred",
+                str(sample_out),
+                "--report",
+                str(report),
+            ],
+        ),
     ]
 
-    for cmd in cmds:
+    for label, cmd in steps:
+        print(f"[run_eval] {label}", file=sys.stderr)
         r = subprocess.run(cmd, cwd=str(root / "code"), env=env)
         if r.returncode != 0:
+            print(f"[run_eval] FAILED: {label} (exit {r.returncode})", file=sys.stderr)
             raise SystemExit(r.returncode)
 
     if args.report_quality:
-        r = subprocess.run(
-            [sys.executable, str(root / "code" / "response_quality_report.py"), "--pred", str(sample_out), "--offline"],
-            cwd=str(root / "code"),
-            env=env,
-        )
+        label = "Quality report (response_quality_report.py)"
+        cmd = [
+            sys.executable,
+            str(root / "code" / "response_quality_report.py"),
+            "--pred",
+            str(sample_out),
+            "--offline",
+        ]
+        print(f"[run_eval] {label}", file=sys.stderr)
+        r = subprocess.run(cmd, cwd=str(root / "code"), env=env)
         if r.returncode != 0:
+            print(f"[run_eval] FAILED: {label} (exit {r.returncode})", file=sys.stderr)
             raise SystemExit(r.returncode)
 
 

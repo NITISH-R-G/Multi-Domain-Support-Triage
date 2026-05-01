@@ -38,7 +38,11 @@ def main() -> None:
     merged = gold.merge(pred, on=keys, how="inner")
     print(f"matched rows: {len(merged)} / gold {len(gold)} / pred {len(pred)}")
     if len(merged) == 0:
-        return
+        print(
+            "error: no rows matched on Issue+Subject+Company; check --gold vs --pred alignment.",
+            file=sys.stderr,
+        )
+        sys.exit(2)
 
     def block(title: str, gold_col: str, pred_col: str) -> None:
         if gold_col not in merged.columns or pred_col not in merged.columns:

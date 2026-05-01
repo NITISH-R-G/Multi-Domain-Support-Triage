@@ -55,9 +55,12 @@ Options:
 --input   path to input CSV (default: ../support_tickets/support_tickets.csv)
 --output  path to output CSV (default: ../support_tickets/output.csv)
 --limit N process only the first N rows (default 0 = all rows; must be >= 0)
+--fail-fast        exit on first row exception (exit 2); default is write escalated placeholder rows
+--progress         tqdm progress bar (requires `tqdm` installed)
+--max-field-chars N cap Issue/Subject length per row (default: env ORCHESTRATE_MAX_FIELD_CHARS or 200000)
 ```
 
-Exit codes: **0** success; **2** user error (missing input, bad CSV schema, bad `--limit`, unusable `--output`, missing `data/`, index lock timeout). Other failures may exit **1** with a traceback (unexpected errors).
+Exit codes: **0** success; **2** user error (missing input, bad CSV schema, bad `--limit` / `--max-field-chars`, unusable `--output`, missing `data/`, index lock timeout, **`--fail-fast` row error**). Exceptions in row processing are caught by default (escalated row); otherwise **1** for unexpected crashes.
 
 The first run builds a retrieval index under `code/.cache/bm25_index.pkl`. Delete it if you change chunking/fusion logic or bump `ORCHESTRATE_INDEX_VERSION`.
 

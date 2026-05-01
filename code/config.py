@@ -34,3 +34,6 @@ RERANK_BONUS_BRAND = float(os.environ.get("ORCHESTRATE_RERANK_BONUS_BRAND", "3.0
 GROUNDING_MIN_OVERLAP = float(os.environ.get("ORCHESTRATE_GROUNDING_MIN_OVERLAP", "0.12"))
 # resynthesize: offline synthesis from hits; escalate: human handoff when check fails.
 GROUNDING_FAIL_MODE = os.environ.get("ORCHESTRATE_GROUNDING_FAIL_MODE", "resynthesize").strip().lower()
+
+# Guardrail against pathological CSV cells (memory / retrieval DoS).
+MAX_FIELD_CHARS = int(os.environ.get("ORCHESTRATE_MAX_FIELD_CHARS", "200000"))

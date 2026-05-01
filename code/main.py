@@ -10,7 +10,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from config import DATA_DIR, INPUT_CSV, OUTPUT_CSV, SEED, TOP_K
+from config import DATA_DIR, INPUT_CSV, MAX_FIELD_CHARS, OUTPUT_CSV, SEED, TOP_K
 from csv_io import TicketCsvError, canonicalize_ticket_columns, read_tickets_csv
 from openai_agent import decide_with_openai, fallback_from_hits
 from postprocess import finalize_decision
@@ -42,6 +42,38 @@ def _brand_for_search(company: str | None, issue: str, subject: str, index: BM25
         if m == "visa":
             return "visa"
     return index.infer_brand(f"{subject}\n{issue}")
+
+
+def _row_processing_failure_payload(exc: Exception) -> dict[str, Any]:
+    msg = f"{type(exc).__name__}: {exc}"
+    if len(msg) > 2500:
+        msg = msg[:2500] + "…"
+    return {
+        "status": "escalated",
+        "product_area": "",
+        "response": (
+            "This ticket row could not be processed automatically. "
+            "Please escalate to a human specialist."
+        ),
+        "justification": f"Pipeline error while processing this row — {msg}",
+        "request_type": "product_issue",
+    }
+
+
+def _truncate_row_fields(row: pd.Series, max_chars: int, row_num: int) -> pd.Series:
+    """Copy row with Issue/Subject truncated if over max_chars (stderr warning)."""
+    r = row.copy()
+    for col in ("Issue", "Subject"):
+        if col not in r.index:
+            continue
+        s = str(r.get(col, "") or "")
+        if len(s) > max_chars:
+            print(
+                f"warning: row {row_num}: {col} truncated ({len(s)} → {max_chars} chars)",
+                file=sys.stderr,
+            )
+            r[col] = s[:max_chars]
+    return r
 
 
 def _validate_row(d: dict[str, Any]) -> dict[str, Any]:
@@ -130,10 +162,35 @@ def main() -> None:
         metavar="N",
         help="Process only the first N rows (default 0 = all rows). Must be >= 0.",
     )
+    parser.add_argument(
+        "--fail-fast",
+        action="store_true",
+        help="Exit immediately on the first row that raises an exception (exit code 2).",
+    )
+    parser.add_argument(
+        "--progress",
+        action="store_true",
+        help="Show a progress bar (requires tqdm).",
+    )
+    parser.add_argument(
+        "--max-field-chars",
+        type=int,
+        default=None,
+        metavar="N",
+        help=(
+            "Maximum characters per Issue/Subject field (default: env ORCHESTRATE_MAX_FIELD_CHARS "
+            f"or {MAX_FIELD_CHARS}). Longer values are truncated with a warning."
+        ),
+    )
     args = parser.parse_args()
 
     if args.limit < 0:
         print("error: --limit must be >= 0 (use 0 to process every row).", file=sys.stderr)
+        sys.exit(2)
+
+    max_field = args.max_field_chars if args.max_field_chars is not None else MAX_FIELD_CHARS
+    if max_field < 1:
+        print("error: --max-field-chars must be >= 1.", file=sys.stderr)
         sys.exit(2)
 
     out_p = Path(args.output).expanduser().resolve()
@@ -167,8 +224,26 @@ def main() -> None:
         sys.exit(2)
 
     rows_out: list[dict[str, Any]] = []
-    for _, row in df.iterrows():
-        pred = process_row(row, index)
+    row_failures = 0
+    iterable = list(df.iterrows())
+    if args.progress:
+        try:
+            from tqdm import tqdm  # type: ignore
+
+            iterable = tqdm(iterable, total=len(iterable), unit="row", desc="Tickets")
+        except ImportError:
+            print("warning: tqdm not installed; install tqdm or omit --progress", file=sys.stderr)
+
+    for row_num, (_, row) in enumerate(iterable, start=1):
+        row_prepared = _truncate_row_fields(row, max_field, row_num)
+        try:
+            pred = process_row(row_prepared, index)
+        except Exception as e:
+            if args.fail_fast:
+                print(f"error: row {row_num} raised {type(e).__name__}: {e}", file=sys.stderr)
+                sys.exit(2)
+            row_failures += 1
+            pred = _validate_row(_row_processing_failure_payload(e))
         rows_out.append(
             {
                 "issue": row.get("Issue", ""),
@@ -180,6 +255,13 @@ def main() -> None:
                 "request_type": pred["request_type"],
                 "justification": pred["justification"],
             }
+        )
+
+    if row_failures:
+        print(
+            f"warning: {row_failures} row(s) failed with exceptions; "
+            "those rows were written as escalated with details in justification.",
+            file=sys.stderr,
         )
 
     out_df = pd.DataFrame(rows_out)

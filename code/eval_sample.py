@@ -49,8 +49,12 @@ def main() -> None:
     print(f"matched:    {len(merged)} (exact match on Issue+Subject+Company)")
 
     if len(merged) == 0:
-        print("No exact matches found; check that output.csv is produced from sample vs support_tickets input.")
-        return
+        print(
+            "error: no rows matched on Issue+Subject+Company between --sample and --pred. "
+            "Regenerate --pred from the same inputs or fix CSV keys.",
+            file=sys.stderr,
+        )
+        sys.exit(2)
 
     merged.loc[:, "Status"] = merged["Status"].map(_norm_status)
     merged.loc[:, "Pred_Status"] = merged["Pred_Status"].map(_norm_status)
