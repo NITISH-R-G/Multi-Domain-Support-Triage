@@ -64,5 +64,9 @@ def has_unsupported_numbers(response: str, hits: list[Retrieved]) -> bool:
     for m in re.finditer(r"\d[\d\-\s().+]{5,}\d", response):
         frag = re.sub(r"\s+", "", m.group(0))
         if frag and frag not in ctx_compact:
+            # Avoid false positives on standalone years (4 digits) and short codes.
+            digit_chars = re.sub(r"\D+", "", frag)
+            if len(digit_chars) < 7:
+                continue
             return True
     return False

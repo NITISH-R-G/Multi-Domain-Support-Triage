@@ -1,17 +1,46 @@
 issue,subject,company,response,product_area,status,request_type,justification
-I notice that people I assigned the test in October of 2025 have not received new tests. How long do the tests stay active in the system.,Test Active in the system,HackerRank,"We found relevant documentation; please review these steps:
+I notice that people I assigned the test in October of 2025 have not received new tests. How long do the tests stay active in the system.,Test Active in the system,HackerRank,"From Q3' 23 Release Notes Q3' 23 Release Notes:
+1. We’ve rolled out a series of new improvements and fixes this October 2023.
+2. On request, our team is ready to assist you with the required change management.
+3. Please contact us at support@hackerrank.com if you have any questions.
+4. Your test administrators will soon have the ability to set defaults that apply to all of your tests.
+5. For example, if you'd like all your tests to have plagiarism detection enabled or to have a set of fields that need to be collected, it can be enforced from a central location.
+6. You can also ensure that none of your tests have a specific setting.
+7. Say, you don't want any of the tests to have video proctoring on, you can disable video proctoring across your tests too.
+8. If company administrators lock a setting, only they can modify it.
 
-_Last updated: Dec 13, 2024, 5:03 AM (Last updated 1 year ago)_ HackerRank continually enhances its platform with improvements and fixes to serve you better. We’ve rolled out a series of new improvements and fixes this October 2023. On request, our team is ready to assist you with the required change management. Please contact us at support@hackerrank.com if you have any questions. Your test administrators will soon have the ability to set defaults that apply to all of your tests. For example, if you'd like all your tests to have plagiarism detection enabled or to have a set of fields that need to be collected, it can be enforced from a central location. The defaults work both ways. You can also ensure that none of your tests have a specific setting. Say, you don't want any of the tests to have video proctoring on, you can disable video proctoring across your tests too. If company administrators lock a setting, only they can modify it. When a setting is unlocked, its value becomes the default, and users can adjust it for individual tests. If a setting is locked, its value is applied to all tests—including existing ones and individual users can not modify it for their tests. Any new…
+From What is Code Quality:
+1. ***Note**: Currently, we do not provide an overall rating or score for the code quality. Also, we do not evaluate the time complexity of the candidate's code submission. Only the issues in the code are highlighted and described.
+2. **Duplications**: The more the number of duplicate blocks of code, the worse is the quality of the code.
+3. **Documentation**: A large number of irrelevant comments in the code adversely impacts the code quality.
+4. **Issues**: The number of issues with the following three levels of severity:
+5. Blocker: The blocker issues have operational or security risks. These issues might make the whole application unstable in production.\
+6. Critical: The critical issues have operational or security risks. These issues might lead to unexpected behavior in production without impacting the integrity of the whole application.\
+7. Major: These issues might have a substantial impact on productivity.\
+8. **Maintainability**: When candidates use code that is easy to implement in the short run instead of applying the best overall solution, it might require extra development work in the long run. This is referred to as long-term technical debt. The more this deb…
 
-If this does not match your situation, contact support through the official help channel.",screen,replied,product_issue,Extractive fallback from hackerrank/general-help/release-notes/9502641162-q3%27-23-release-notes.md (retrieval score=12.52).
+If anything still doesn’t match what you’re seeing, please reach out via the official support channel for your product.",screen,replied,product_issue,"Offline synthesis from hackerrank/general-help/release-notes/9502641162-q3%27-23-release-notes.md (retrieval score=12.52). Sources: hackerrank/general-help/release-notes/9502641162-q3%27-23-release-notes.md, hackerrank/screen/test-reports/9722863972-what-is-code-quality.md"
 site is down & none of the pages are accessible,,,This request needs to be reviewed by a human specialist. Please contact official support through the appropriate channel for your product.,,escalated,bug,possible widespread outage
 "I'm noticing that you all have many default versions of roles. (e.g. front end developer for react, angular, vue.js, etc.) What do you consider best practice 
 for when to create a new test versus create a variant of the test? What are the advantages and disadvantages of using variants?","When should I create a variant versus
- have a different test?",HackerRank,"We found relevant documentation; please review these steps:
+ have a different test?",HackerRank,"From January 2026 Release Notes Screen Skills Platform Developer Experience Integrity Interview Data and Insights Integrations SkillUp Deprecations and Experience Changes:
+1. Benchmark calculations include data from 2025 attempts, so comparisons reflect the most recent performance trends.
+2. Integrity details are shown at the attempt level, rather than the test level, to reflect the proctoring settings used for each session.
+3. Candidate ratings, feedback, and all other collected test data are available directly within the Summary Report.
+4. Interviews can be created directly from the new Summary Report.
+5. For new attempts, links to Detailed Reports in CSV exports now open up to four times faster.
+6. You can now evaluate how candidates leverage AI in solving real-world challenges with a new AI Fluency grade. This is shown in the ‘Performance Summary’ section of the Summary Report for tests taken with the AI Assistant.
+7. Scores below the cut-off are no longer shown in red, helping you assess results more objectively.
+8. Colors tied to benchmark percentiles have been removed to reduce visual bias when evaluating candidates.
 
-When you create a variant of an existing test, you now see a clear overview that explains how test variants work. This helps you get oriented before setup, whether you are new to variants or need a quick refresher. You can now grant time accommodations to candidates taking variant-based tests. Time adjustments can be applied at the section level for each candidate. For bulk updates, select multiple candidates from the same test variant. The relevant test sections will be displayed, allowing you to add time where applicable. Time adjustments can only be applied when all selected candidates belong to the same variant. If candidates from different variants are selected, the Add time option is disabled and you’ll be prompted to filter your selection to a single variant before proceeding. Creating test variant criteria is now more intuitive. The redesigned Add Variant Logic workflow lets you route candidates to different test variants based on their answers to a qualifying question. For more information, see Adding extra time in variant-based tests, 📄 Create Test Variants. Detailed reports are now easier to navigate, making it faster to move between questions. The Next and Previous butt…
+From Question Types in HackerRank Interviews:
+1. Multiple Choice
+2. Sentence Completion
+3. File Upload
+4. Cloud
+5. Prompt Engineering
 
-If this does not match your situation, contact support through the official help channel.",screen,replied,product_issue,Extractive fallback from hackerrank/general-help/release-notes/2321596225-january-2026-release-notes.md (retrieval score=21.03).
+If anything still doesn’t match what you’re seeing, please reach out via the official support channel for your product.",screen,replied,product_issue,"Offline synthesis from hackerrank/general-help/release-notes/2321596225-january-2026-release-notes.md (retrieval score=21.03). Sources: hackerrank/general-help/release-notes/2321596225-january-2026-release-notes.md, hackerrank/interviews/getting-started/9999244916-question-types-in-hackerrank-interviews.md"
 "Hi there
 
 We have sent a candidate a Hackerrank assessment already, but we have been informed that they require extra time. As the assessment is 105 minutes, they need an extra 50% extra time added (so around 53 minutes) in addition.
@@ -21,32 +50,111 @@ Please can you provide step-by-step instruction on how we are to reinvite them.
 Do we find their profile in 'Candidates' , put in Add time 53 minutes and then click 'reinvite' and send the email? The email to the candidate says 105 minutes as the duration though still so not sure how we can check?
 
 Thanks","How to reinvite candidate to Hackerrank 
-assessment and add extra time",HackerRank,"We found relevant documentation; please review these steps:
+assessment and add extra time",HackerRank,"From Early Talent:
+1. What role are you hiring for?
+2. Will they be an intern? Campus hiring? Or blast off to everyone?
+3. How can we reduce bias in our hiring process?
+4. Who will be your SME?
+5. Will there be an ATS integration for housing data?
+6. Define a range of skills that you want to hire for
+7. Decide question randomization and cutoff scores
+8. Structure the processes in place for test validation
 
-_Last updated: Oct 15, 2025, 10:15 PM (Last updated 6 months ago)_ Hiring early talent developers is vital to a company's success. Not only do they help shape your company’s culture, but as they develop skills, they help drive the future development of your company’s road map. Early Talent usually consists of recent college graduates or developers with less than two years of hands-on, real-world experience. HackerRank has put together the following best practices process for hiring early talent developers. From resume submission to onsite interview up to the final offer, HackerRank can help streamline this process so that your team is spending as much time as possible effectively evaluating the right skills for the role. Before the role can be promoted, Talent Acquisition, Hiring Managers, and Subject Matter Experts should all work together to define what the assessment and hiring process should work. Factors to consider: - What role are you hiring for? - Will they be an intern? Campus hiring? Or blast off to everyone? - How can we reduce bias in our hiring process? - Who will be your SME? - Will there be an ATS integration for housing data? Subject matter experts are vital in the …
+From Extend Test Duration for Candidates Add Time Accommodation Add extra time:
+1. Add Time Accommodation
+2. Add Extra Time
+3. You must have a published test in your HackerRank account.
+4. You must be the test owner or have editor access.
+5. Log in to your **HackerRank for Work** account using your credentials.
+6. Go to the **Tests** tab.
+7. Select the test you want to modify.
+8. Click **Invite**
 
-If this does not match your situation, contact support through the official help channel.",screen,replied,product_issue,Extractive fallback from hackerrank/general-help/evaluation-guides/1216495690-early-talent-.md (retrieval score=33.44).
+If anything still doesn’t match what you’re seeing, please reach out via the official support channel for your product.",screen,replied,product_issue,"Offline synthesis from hackerrank/general-help/evaluation-guides/1216495690-early-talent-.md (retrieval score=33.44). Sources: hackerrank/general-help/evaluation-guides/1216495690-early-talent-.md, hackerrank/screen/managing-tests/4811403281-adding-extra-time-for-candidates.md"
 "i signed up using google login on hackerrank community , so i do not have a separate hackerrank password. please delete my account
-",,HackerRank,"We found relevant documentation; please review these steps:
+",,HackerRank,"From Troubleshooting Login Issues Issue 1: Invalid credentials Issue 2: Wrong login page Issue 3: Password or cache:
+1. **Cause:** You entered an incorrect email address or password.\
+2. **Solution:**
+3. Verify that you are entering the correct email address and password.
+4. If you signed up using a third-party account (Google, Facebook, LinkedIn, or GitHub), use the same platform to log in.
+5. Select **Forgot Password** on the login page to reset your credentials if needed.
+6. Remove any saved passwords from your browser before trying again.
+7. **Cause:** You are trying to log in using HackerRank business URL instead of the HackerRank for developer URL.
+8. **Solution:** Use the following HackerRank for developer login URL: https://www.hackerrank.com/signup
 
-_Last updated: Oct 27, 2025, 11:12 AM (Last updated 6 months ago)_ This article explains how to resolve common login issues that you may encounter when accessing your HackerRank Community account. - **Cause:** You entered an incorrect email address or password.\ HackerRank supports login using an email and password or third-party accounts such as Google, Facebook, LinkedIn, and GitHub. - **Solution:** 1. Verify that you are entering the correct email address and password. 2. If you signed up using a third-party account (Google, Facebook, LinkedIn, or GitHub), use the same platform to log in. 3. Select **Forgot Password** on the login page to reset your credentials if needed. 4. Remove any saved passwords from your browser before trying again. **Note:** If you do not have a HackerRank account, see [](https://www.hackerrank.com/signup) 📄 Create an Account. - **Cause:** You are trying to log in using HackerRank business URL instead of the HackerRank for developer URL. For example, you may see the message: `Please use a valid business email address to sign up`. - **Solution:** Use the following HackerRank for developer login URL: https://www.hackerrank.com/signup - **Cause:** Saved pas…
+From Delete an Account:
+1. Log in to the HackerRank Community using your credentials.
+2. Click the profile icon in the top-right corner.
+3. Select **Settings** from the drop-down menu. The **Settings** page appears under the **Account** section.
+4. Scroll to the **Delete Accounts** section.
+5. Click **Delete Account**. A confirmation dialog box appears.
+6. Select a reason for deleting your account from the available options:
+7. I get too many emails
+8. I want to clear all my submissions
 
-If this does not match your situation, contact support through the official help channel.",community,replied,product_issue,Extractive fallback from hackerrank/hackerrank_community/additional-resources/4147773232-troubleshooting-login-issues.md (retrieval score=20.48).
+If anything still doesn’t match what you’re seeing, please reach out via the official support channel for your product.",community,replied,product_issue,"Offline synthesis from hackerrank/hackerrank_community/additional-resources/4147773232-troubleshooting-login-issues.md (retrieval score=20.48). Sources: hackerrank/hackerrank_community/additional-resources/4147773232-troubleshooting-login-issues.md, hackerrank/hackerrank_community/account-settings/manage-account/5618101592-delete-an-account.md"
 "One of my claude conversations has some private info, i forgot to make a temporary chat, is there anything
- else that can be done? like delete etc?",,Claude,"We found relevant documentation; please review these steps:
+ else that can be done? like delete etc?",,Claude,"From I would like to input sensitive data into my chats with Claude. Who can view my conversations?:
+1. We automatically de-link your data from your user ID (like your email address) before any review.
+2. Access is limited to a small number of personnel involved in model training.
+3. We will use tools and processes derived from our work on privacy-preserving analysis tools to filter or obfuscate sensitive data. In addition to that, our pioneering research in post-training techniques helps to minimize the amount of personal data included i…
+4. Your data is used solely to make Claude better for everyone - we do not use such personal data to contact people, build profiles about them, to try to sell or market anything to them, or to sell the information itself to any third party.
+5. You maintain full control and can adjust your privacy settings at any time.
+6. Your incognito chats are not used to improve Claude, even if you have enabled Model Improvement in your Privacy Settings. Learn more about incognito chats.
+7. Financial information (SSN, credit card numbers, bank account details)
+8. Health records or medical information
 
-_Last updated: 2026-03-16T21:15:09Z_ *This article is about our consumer products (e.g. Claude Free, Pro, Max (and when using Claude Code with those accounts)).* When you allow us to use your chats or coding sessions to help improve Claude, we implement several layers of protection for your privacy. - We automatically de-link your data from your user ID (like your email address) before any review. - Access is limited to a small number of personnel involved in model training. - We will use tools and processes derived from our work on privacy-preserving analysis tools to filter or obfuscate sensitive data. In addition to that, our pioneering research in post-training techniques helps to minimize the amount of personal data included in Claude’s outputs. - Your data is used solely to make Claude better for everyone - we do not use such personal data to contact people, build profiles about them, to try to sell or market anything to them, or to sell the information itself to any third party. - You maintain full control and can adjust your privacy settings at any time. - Your incognito chats are not used to improve Claude, even if you have enabled Model Improvement in your Privacy Setting…
+From Using incognito chats:
+1. Incognito chats are not used for training. See our Privacy Center for more information:
+2. **Is my data used for model training?** (for Free, Pro, and Max plans)
+3. **Is my data used for model training?** (for Team and Enterprise plans)
+4. While incognito chats aren't saved to your chat history, they are retained for either 30 days (default), or longer in accordance with your organization's custom data retention setting (available for Enterprise plans).
+5. Claude won’t pull information from incognito chats when searching previous conversations.
+6. If you are using Claude’s memory:
+7. Starting an incognito chat won’t use Claude’s existing memory.
+8. Incognito chats will not be included in future memory summaries.
 
-If this does not match your situation, contact support through the official help channel.",privacy,replied,product_issue,Extractive fallback from claude/claude/account-management/8325621-i-would-like-to-input-sensitive-data-into-my-chats-with-claude-who-can-view-my-conversations.md (retrieval score=16.63).
+If anything still doesn’t match what you’re seeing, please reach out via the official support channel for your product.",privacy,replied,product_issue,"Offline synthesis from claude/claude/account-management/8325621-i-would-like-to-input-sensitive-data-into-my-chats-with-claude-who-can-view-my-conversations.md (retrieval score=16.63). Sources: claude/claude/account-management/8325621-i-would-like-to-input-sensitive-data-into-my-chats-with-claude-who-can-view-my-conversations.md, claude/claude/conversation-management/12260368-using-incognito-chats.md"
 What is the name of the actor in Iron Man?,"Urgent, please help",None ,"I’m sorry, this is out of scope from my capabilities.",conversation_management,replied,invalid,Detected off-topic/invalid request.
-I bought Visa Traveller's Cheques from Citicorp and they were stolen in Lisbon last night. What do I do?,,Visa,"We found relevant documentation; please review these steps:
+I bought Visa Traveller's Cheques from Citicorp and they were stolen in Lisbon last night. What do I do?,,Visa,"From Visa Traveller's Cheques for Consumers:
+1. Report a lost cheque
+2. Request a refund
+3. Keep cheques safe
+4. What are the cheque serial numbers?
+5. Where and when did you buy the cheques?
+6. How and when do you think the cheques were lost or stolen?
+7. Who is the issuer of the traveller's cheques?
+8. Be as careful with your cheques as you would be with cash.
 
-_Last modified: 2019-10-23T09:14:04.044Z_ Visa Traveller's Cheques offer convenience and security while you travel. Contact us about traveller’s cheques - Report a lost cheque - Request a refund - Keep cheques safe If your cheques are lost or stolen, they can be replaced or refunded subject to certain terms and conditions. You should immediately call the issuing bank. If you cannot find the issuing bank’s contact details, contact us about traveller’s cheques. UK +44-1733-457026 Monday-Friday, 8 am to 5 pm GMT or BST [\[email protected\]](/cdn-cgi/l/email-protection#b8ccdbd9cbcbd1cbccd9d6dbddf8cccad9ceddd4ddc096dbd7d5) 1-214-209-0519 Monday-Friday, 8 am to 4:30 pm CST [\[email protected\]](/cdn-cgi/l/email-protection#691d1b081f0a01180d0c191d290b080702060f08040c1b000a08470a0604) UK +44-1733-457026 Monday-Friday, 8 am to 5 pm GMT or BST [\[email protected\]](/cdn-cgi/l/email-protection#1266717361617b6166737c71775266607364777e776a3c717d7f) Freephone: 1-800-645-6556 Collect: 1-813-623-1709 Monday-Friday, 6:30 am to 2:30 pm EST Automated cheque verification is available 24 hours a day, 7 days a week (if you select the English or Spanish option). If you need to speak to a customer service…
+From How to accept Visa Traveller's Cheques:
+1. Paper: Does it feel like currency?
+2. Watermark: Is a watermark visible on the front side of the cheque when the cheque is lifted to the light?
+3. Raised texture: Does the blue border feel raised?
+4. Holographic thread: Does the vertical silver, metallic, shiny strip with the word ‘secure’ shine and change colour when the cheque is moved?
+5. Fraud prevention
+6. Start accepting Visa
+7. Info for small businesses
 
-If this does not match your situation, contact support through the official help channel.",travel_support,replied,product_issue,Extractive fallback from visa/support/consumer/travelers-cheques.md (retrieval score=13.30).
-Where can I report a lost or stolen Visa card from India?,Card stolen,Visa,"We found relevant documentation; please review these steps:
+If anything still doesn’t match what you’re seeing, please reach out via the official support channel for your product.",travel_support,replied,product_issue,"Offline synthesis from visa/support/consumer/travelers-cheques.md (retrieval score=13.30). Sources: visa/support/consumer/travelers-cheques.md, visa/support/small-business/travelers-cheques.md"
+Where can I report a lost or stolen Visa card from India?,Card stolen,Visa,"From Visa Traveller's Cheques for Consumers:
+1. Report a lost cheque
+2. Request a refund
+3. Keep cheques safe
+4. What are the cheque serial numbers?
+5. Where and when did you buy the cheques?
+6. How and when do you think the cheques were lost or stolen?
+7. Who is the issuer of the traveller's cheques?
+8. Be as careful with your cheques as you would be with cash.
 
-_Last modified: 2019-10-23T09:14:04.044Z_ Visa Traveller's Cheques offer convenience and security while you travel. Contact us about traveller’s cheques - Report a lost cheque - Request a refund - Keep cheques safe If your cheques are lost or stolen, they can be replaced or refunded subject to certain terms and conditions. You should immediately call the issuing bank. If you cannot find the issuing bank’s contact details, contact us about traveller’s cheques. UK +44-1733-457026 Monday-Friday, 8 am to 5 pm GMT or BST [\[email protected\]](/cdn-cgi/l/email-protection#b8ccdbd9cbcbd1cbccd9d6dbddf8cccad9ceddd4ddc096dbd7d5) 1-214-209-0519 Monday-Friday, 8 am to 4:30 pm CST [\[email protected\]](/cdn-cgi/l/email-protection#691d1b081f0a01180d0c191d290b080702060f08040c1b000a08470a0604) UK +44-1733-457026 Monday-Friday, 8 am to 5 pm GMT or BST [\[email protected\]](/cdn-cgi/l/email-protection#1266717361617b6166737c71775266607364777e776a3c717d7f) Freephone: 1-800-645-6556 Collect: 1-813-623-1709 Monday-Friday, 6:30 am to 2:30 pm EST Automated cheque verification is available 24 hours a day, 7 days a week (if you select the English or Spanish option). If you need to speak to a customer service…
+From Visa Consumer Support:
+1. _Last modified: 2026-01-06T04:51:28.352Z_ Need help?
+2. Give us a call For lost or stolen credit cards, please call us: | Country | Phone | |----|----| | Anguilla | 1 800 847 2911 | | Antigua | 1 800 847 2911 | | Argentina | 0800 666 0171 | | Aruba | 800 1518 | | Australia | 1 800 125 440 | | Austria | 0 800 200 2…
+3. Virgin Islands | 1 800 847 2911 | | Ukraine | 800 502 886; await second dial tone, then dial: 888 557 4445 | | United Arab Emirates | 8000 021; await second dial tone, then dial: 866 654 0112 | | United Kingdom | 0800 89 1725 | | United States | 1 800 847 291…
+4. Visa will not be responsible for any fees incurred.
+5. If the country/region you are in is not listed, or if you experience difficulties using any of the freephone numbers (only free when dialling from within the USA), please make a reverse charge call to +1 303 967 1096.
+6. (Reverse charge calls are placed using the local operator.) ------------------------------------------------------------------------ To log in to your credit card account, please visit your issuer or bank website.
+7. The website and freephone number (only free when dialling from within the USA) may be located on the front or back of your Visa card.
+8. If you need any further support, please call Visa using the drop-down menu above.
 
-If this does not match your situation, contact support through the official help channel.",general_support,replied,product_issue,Extractive fallback from visa/support/consumer/travelers-cheques.md (retrieval score=10.68).
+If anything still doesn’t match what you’re seeing, please reach out via the official support channel for your product.",general_support,replied,product_issue,"Offline synthesis from visa/support/consumer/travelers-cheques.md (retrieval score=10.68). Sources: visa/support/consumer/travelers-cheques.md, visa/support.md"
 Thank you for helping me,,,"I’m sorry, this is out of scope from my capabilities.",,replied,invalid,Detected off-topic/invalid request.
