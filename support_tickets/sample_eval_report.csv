@@ -1,0 +1,24 @@
+Issue,Subject,Company,Status,Pred_Status,Request Type,Pred_Request Type,Product Area,Pred_Product Area
+I notice that people I assigned the test in October of 2025 have not received new tests. How long do the tests stay active in the system.,Test Active in the system,HackerRank,replied,replied,product_issue,product_issue,screen,release_notes
+site is down & none of the pages are accessible,,,escalated,escalated,bug,bug,,
+"I'm noticing that you all have many default versions of roles. (e.g. front end developer for react, angular, vue.js, etc.) What do you consider best practice 
+for when to create a new test versus create a variant of the test? What are the advantages and disadvantages of using variants?","When should I create a variant versus
+ have a different test?",HackerRank,replied,replied,product_issue,product_issue,screen,release_notes
+"Hi there
+
+We have sent a candidate a Hackerrank assessment already, but we have been informed that they require extra time. As the assessment is 105 minutes, they need an extra 50% extra time added (so around 53 minutes) in addition.
+
+Please can you provide step-by-step instruction on how we are to reinvite them.
+
+Do we find their profile in 'Candidates' , put in Add time 53 minutes and then click 'reinvite' and send the email? The email to the candidate says 105 minutes as the duration though still so not sure how we can check?
+
+Thanks","How to reinvite candidate to Hackerrank 
+assessment and add extra time",HackerRank,replied,replied,product_issue,product_issue,screen,onboarding_candidates
+"i signed up using google login on hackerrank community , so i do not have a separate hackerrank password. please delete my account
+",,HackerRank,replied,replied,product_issue,product_issue,community,additional_resources
+"One of my claude conversations has some private info, i forgot to make a temporary chat, is there anything
+ else that can be done? like delete etc?",,Claude,replied,replied,product_issue,product_issue,privacy,safeguards
+What is the name of the actor in Iron Man?,"Urgent, please help",None ,replied,replied,invalid,invalid,conversation_management,conversation_management
+I bought Visa Traveller's Cheques from Citicorp and they were stolen in Lisbon last night. What do I do?,,Visa,replied,replied,product_issue,product_issue,travel_support,visa_travellers_cheques_for_consumers
+Where can I report a lost or stolen Visa card from India?,Card stolen,Visa,replied,replied,product_issue,product_issue,general_support,visa_travel_services_visa_travel_credit_card_sup
+Thank you for helping me,,,replied,replied,invalid,product_issue,,claude_for_nonprofits
