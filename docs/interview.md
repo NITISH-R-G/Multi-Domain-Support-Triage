@@ -2,7 +2,7 @@
 
 Use this in the **AI Judge interview** (camera on). Honesty beats hype.
 
-**Full question bank:** [`AI_Judge_interview_guide.md`](./AI_Judge_interview_guide.md) — possible AI Judge questions grouped by topic.
+**Full Q&A bank:** [`AI_Judge_interview_guide.md`](./AI_Judge_interview_guide.md) — questions with **model answers** (adapt to your real decisions).
 
 When many submissions look strong on paper, **interview depth** and **clear ownership of decisions** often separate finalists—the platform does not publish exact tie-break formulas (see root **README** → *Evaluation criteria*).
 
