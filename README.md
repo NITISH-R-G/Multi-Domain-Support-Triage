@@ -107,7 +107,7 @@ From the **repository root** (after `pip install -r code/requirements.txt`):
 
 Optional offline-only: set `ORCHESTRATE_DISABLE_LLM=1`, then run one of the above. Full CLI flags are in [`code/README.md`](./code/README.md).
 
-**Interview / demo:** [`docs/interview.md`](./docs/interview.md), **[`docs/AI_Judge_interview_guide.md`](./docs/AI_Judge_interview_guide.md)** (question bank), [`docs/demo-script.md`](./docs/demo-script.md). **Manual answer quality:** [`docs/DEV_EVAL.md`](./docs/DEV_EVAL.md). **Scope:** [`docs/scope_and_limits.md`](./docs/scope_and_limits.md).
+**Interview / demo:** [`docs/interview.md`](./docs/interview.md), **[`docs/AI_Judge_interview_guide.md`](./docs/AI_Judge_interview_guide.md)** (Q&A with model answers), [`docs/demo-script.md`](./docs/demo-script.md). **Manual answer quality:** [`docs/DEV_EVAL.md`](./docs/DEV_EVAL.md). **Scope:** [`docs/scope_and_limits.md`](./docs/scope_and_limits.md).
 
 ---
 
