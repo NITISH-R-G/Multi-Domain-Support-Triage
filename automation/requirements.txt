@@ -1,4 +1,4 @@
-openai>=1.0.0
+openai>=2.41.0
 PyYAML>=6.0.1
 networkx>=3.0
 bandit>=1.7.0
