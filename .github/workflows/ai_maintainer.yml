@@ -1,0 +1,39 @@
+name: AI Maintainer
+
+on:
+  issues:
+    types: [opened, edited]
+  pull_request:
+    types: [opened, edited]
+  issue_comment:
+    types: [created]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  ai-maintainer:
+    runs-on: ubuntu-latest
+    # Do not trigger on comments by the bot itself to prevent loops
+    if: github.event.sender.login != 'github-actions[bot]' && github.event.sender.login != 'dependabot[bot]'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -r automation/requirements.txt
+          pip install openai requests
+
+      - name: Run AI Maintainer
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_EVENT_PATH: ${{ github.event_path }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: python automation/ai_maintainer.py
