@@ -13,7 +13,6 @@ from __future__ import annotations
 import argparse
 import sys
 
-import pandas as pd
 
 from csv_io import TicketCsvError, canonicalize_ticket_columns, read_tickets_csv, rename_prediction_columns
 from eval_metrics import compact_overlap_ratio, normalize_text, token_set_f1

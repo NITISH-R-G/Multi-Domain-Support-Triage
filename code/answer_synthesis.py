@@ -105,6 +105,6 @@ def synthesize_reply_from_hits(hits: list[Retrieved], *, max_sources: int = 2) -
         "If you still need help, use your product’s official support channel.",
         "For anything still unclear, reach out through the official support path for your product.",
     )
-    h = int(hashlib.sha256(body.encode("utf-8")).hexdigest(), 16)
-    body += "\n\n" + _closings[h % len(_closings)]
+    h2 = int(hashlib.sha256(body.encode("utf-8")).hexdigest(), 16)
+    body += "\n\n" + _closings[h2 % len(_closings)]
     return body, sources

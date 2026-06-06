@@ -15,8 +15,6 @@ from rank_bm25 import BM25Okapi
 
 from config import (
     BM25_WEIGHT,
-    CACHE_PATH,
-    DATA_DIR,
     HYBRID_CANDIDATES,
     INDEX_VERSION,
     LOW_BM25_THRESHOLD,

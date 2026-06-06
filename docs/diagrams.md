@@ -68,18 +68,16 @@ graph TD
     click node_30 href "../code/tests/test_cross_ecosystem.py"
     node_31["capture_baseline.py"]
     click node_31 href "../scripts/capture_baseline.py"
-    node_32["ai_qa_agent.py"]
-    click node_32 href "../automation/ai_qa_agent.py"
-    node_33["diagrams.py"]
-    click node_33 href "../automation/diagrams.py"
-    node_34["readme_generator.py"]
-    click node_34 href "../automation/readme_generator.py"
-    node_35["analyzer.py"]
-    click node_35 href "../automation/analyzer.py"
-    node_36["__init__.py"]
-    click node_36 href "../automation/__init__.py"
-    node_37["ai_agent.py"]
-    click node_37 href "../automation/ai_agent.py"
+    node_32["diagrams.py"]
+    click node_32 href "../automation/diagrams.py"
+    node_33["readme_generator.py"]
+    click node_33 href "../automation/readme_generator.py"
+    node_34["analyzer.py"]
+    click node_34 href "../automation/analyzer.py"
+    node_35["__init__.py"]
+    click node_35 href "../automation/__init__.py"
+    node_36["ai_agent.py"]
+    click node_36 href "../automation/ai_agent.py"
     node_0 --> node_17
     node_0 --> node_17
     node_0 --> node_19
@@ -105,9 +103,9 @@ graph TD
     node_5 --> node_1
     node_5 --> node_1
     node_5 --> node_4
-    node_5 --> node_37
+    node_5 --> node_36
     node_5 --> node_4
-    node_5 --> node_37
+    node_5 --> node_36
     node_5 --> node_15
     node_5 --> node_19
     node_5 --> node_19
@@ -144,7 +142,7 @@ graph TD
     node_15 --> node_20
     node_15 --> node_20
     node_15 --> node_4
-    node_15 --> node_37
+    node_15 --> node_36
     node_18 --> node_19
     node_19 --> node_17
     node_19 --> node_17

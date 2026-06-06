@@ -12,8 +12,8 @@ from __future__ import annotations
 
 import argparse
 import os
-import re
 import sys
+import typing
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -21,9 +21,8 @@ import pandas as pd
 
 from config import CACHE_PATH, DATA_DIR, TOP_K
 from csv_io import TicketCsvError, read_tickets_csv
-from corpus import tokenize
 from grounding import has_unsupported_numbers, lexical_overlap
-from retrieve import BM25Index, rerank_hits
+from retrieve import BM25Index, rerank_hits, Brand
 
 
 def _norm_company(val: object) -> str | None:
@@ -56,7 +55,7 @@ class RowMetrics:
 def metrics_for_row(index: BM25Index, issue: str, subject: str, company_raw: object, response: str) -> RowMetrics:
     company = _norm_company(company_raw)
     brand = _brand_for_search(company, issue, subject, index)
-    hits, _raw_top = index.search(f"{subject}\n{issue}", brand, TOP_K)
+    hits, _raw_top = index.search(f"{subject}\n{issue}", typing.cast(Brand, brand), TOP_K)
     hits = rerank_hits(f"{subject}\n{issue}", hits)
     ov = lexical_overlap(response, hits) if hits else 0.0
     leak = has_unsupported_numbers(response, hits) if hits else False

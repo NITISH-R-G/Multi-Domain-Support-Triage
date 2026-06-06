@@ -1,7 +1,6 @@
 """Golden routing assertions vs bundled sample_support_tickets.csv (offline LLM)."""
 from __future__ import annotations
 
-import os
 
 import pandas as pd
 import pytest
@@ -9,6 +8,8 @@ import pytest
 from config import REPO_ROOT
 from csv_io import canonicalize_ticket_columns, read_tickets_csv
 from main import process_row
+from typing import cast
+from retrieve import HybridIndex
 
 SAMPLE_PATH = REPO_ROOT / "support_tickets" / "sample_support_tickets.csv"
 
@@ -48,7 +49,7 @@ def test_sample_support_routing_matches_golden(bm25_index_session: object, offli
     assert len(df) >= 1
 
     for idx, row in df.iterrows():
-        pred = process_row(row, bm25_index_session)
+        pred = process_row(row, cast(HybridIndex, bm25_index_session))
         gold_st = _norm_status(row.get("Status"))
         gold_rt = _norm_rt(row.get("Request Type"))
         gold_pa = _norm_pa(row.get("Product Area"))
