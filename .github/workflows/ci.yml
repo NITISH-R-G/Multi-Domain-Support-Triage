@@ -26,7 +26,9 @@ jobs:
 
       - name: Pytest
         working-directory: code
-        run: python -m pytest tests -q
+        run: |
+          mkdir -p .cache
+          python -m pytest tests -q
 
       - name: Sample regression (offline)
         working-directory: code

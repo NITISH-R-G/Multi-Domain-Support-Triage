@@ -36,7 +36,9 @@ jobs:
 
       - name: Run Tests
         working-directory: code
-        run: python -m pytest tests -q
+        run: |
+          mkdir -p .cache
+          python -m pytest tests -q
 
       - name: Linting
         run: flake8 code/
