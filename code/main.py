@@ -1,5 +1,4 @@
 """Offline-grounded support triage agent — entry point."""
-
 from __future__ import annotations
 
 import argparse
@@ -34,9 +33,7 @@ def _normalize_company(val: Any) -> str | None:
     return s
 
 
-def _brand_for_search(
-    company: str | None, issue: str, subject: str, index: BM25Index
-) -> str:
+def _brand_for_search(company: str | None, issue: str, subject: str, index: BM25Index) -> str:
     if company:
         m = company.strip().lower()
         if m == "hackerrank":
@@ -121,25 +118,19 @@ def process_row(row: pd.Series, index: BM25Index) -> dict[str, Any]:
             },
             low_retrieval=False,
         )
-        decision = maybe_append_multi_topic_justification(
-            decision, issue=issue, subject=subject
-        )
+        decision = maybe_append_multi_topic_justification(decision, issue=issue, subject=subject)
         return _validate_row(decision)
 
     hit = assess_risk(issue, subject)
     if hit:
-        fb = fallback_from_hits(
-            [], escalated=True, esc_reason=hit.reason, low_retrieval=False
-        )
+        fb = fallback_from_hits([], escalated=True, esc_reason=hit.reason, low_retrieval=False)
         if hit.force_request_type:
             fb["request_type"] = hit.force_request_type
         return _validate_row(fb)
 
     eco = cross_ecosystem_escalation_reason(issue, subject)
     if eco:
-        return _validate_row(
-            fallback_from_hits([], escalated=True, esc_reason=eco, low_retrieval=False)
-        )
+        return _validate_row(fallback_from_hits([], escalated=True, esc_reason=eco, low_retrieval=False))
 
     hits, raw_top_score = index.search(f"{subject}\n{issue}", brand, TOP_K)
     hits = rerank_hits(f"{subject}\n{issue}", hits)
@@ -161,16 +152,12 @@ def process_row(row: pd.Series, index: BM25Index) -> dict[str, Any]:
         decision=decision,
         low_retrieval=low,
     )
-    decision = maybe_append_multi_topic_justification(
-        decision, issue=issue, subject=subject
-    )
+    decision = maybe_append_multi_topic_justification(decision, issue=issue, subject=subject)
     return _validate_row(decision)
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Multi-domain support triage agent (Orchestrate)"
-    )
+    parser = argparse.ArgumentParser(description="Multi-domain support triage agent (Orchestrate)")
     parser.add_argument("--input", type=str, default=str(INPUT_CSV))
     parser.add_argument("--output", type=str, default=str(OUTPUT_CSV))
     parser.add_argument(
@@ -203,14 +190,10 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.limit < 0:
-        print(
-            "error: --limit must be >= 0 (use 0 to process every row).", file=sys.stderr
-        )
+        print("error: --limit must be >= 0 (use 0 to process every row).", file=sys.stderr)
         sys.exit(2)
 
-    max_field = (
-        args.max_field_chars if args.max_field_chars is not None else MAX_FIELD_CHARS
-    )
+    max_field = args.max_field_chars if args.max_field_chars is not None else MAX_FIELD_CHARS
     if max_field < 1:
         print("error: --max-field-chars must be >= 1.", file=sys.stderr)
         sys.exit(2)
@@ -254,10 +237,7 @@ def main() -> None:
 
             iterable = tqdm(iterable, total=len(iterable), unit="row", desc="Tickets")
         except ImportError:
-            print(
-                "warning: tqdm not installed; install tqdm or omit --progress",
-                file=sys.stderr,
-            )
+            print("warning: tqdm not installed; install tqdm or omit --progress", file=sys.stderr)
 
     for row_num, (_, row) in enumerate(iterable, start=1):
         row_prepared = _truncate_row_fields(row, max_field, row_num)
@@ -265,10 +245,7 @@ def main() -> None:
             pred = process_row(row_prepared, index)
         except Exception as e:
             if args.fail_fast:
-                print(
-                    f"error: row {row_num} raised {type(e).__name__}: {e}",
-                    file=sys.stderr,
-                )
+                print(f"error: row {row_num} raised {type(e).__name__}: {e}", file=sys.stderr)
                 sys.exit(2)
             row_failures += 1
             pred = _validate_row(_row_processing_failure_payload(e))

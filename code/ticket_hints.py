@@ -1,14 +1,11 @@
 """Lightweight ticket shape helpers (multi-topic detection + optional justification note)."""
-
 from __future__ import annotations
 
 import re
 from typing import Any
 
 
-_MULTI_NOTE = (
-    "Ticket may include multiple topics; this reply addresses the primary request."
-)
+_MULTI_NOTE = "Ticket may include multiple topics; this reply addresses the primary request."
 
 
 def ticket_may_span_multiple_topics(text: str) -> bool:
@@ -16,11 +13,7 @@ def ticket_may_span_multiple_topics(text: str) -> bool:
     t = (text or "").strip()
     if len(t) < 50:
         return False
-    if re.search(
-        r"\b(also|another question|second (issue|question)|in addition|additionally)\b",
-        t,
-        re.I,
-    ):
+    if re.search(r"\b(also|another question|second (issue|question)|in addition|additionally)\b", t, re.I):
         return True
     if t.count("?") >= 2 and len(t) > 100:
         return True

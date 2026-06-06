@@ -1,5 +1,4 @@
 """Convenience wrapper: regenerate preds for sample_support_tickets.csv and print eval_sample metrics."""
-
 from __future__ import annotations
 
 import argparse
@@ -13,11 +12,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(
         description="Regenerate sample predictions and print eval_sample metrics (optional quality report).",
     )
-    ap.add_argument(
-        "--offline",
-        action="store_true",
-        help="Force ORCHESTRATE_DISABLE_LLM=1 for repeatable runs",
-    )
+    ap.add_argument("--offline", action="store_true", help="Force ORCHESTRATE_DISABLE_LLM=1 for repeatable runs")
     ap.add_argument(
         "--report-quality",
         action="store_true",

@@ -1,5 +1,4 @@
 """Cheap grounding checks: ensure responses don't drift far from retrieved evidence."""
-
 from __future__ import annotations
 
 import re

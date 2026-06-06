@@ -1,5 +1,4 @@
 """Hybrid offline retrieval: BM25 candidate generation + TF-IDF cosine reranking."""
-
 from __future__ import annotations
 
 import math
@@ -37,9 +36,7 @@ class Retrieved:
     score: float
 
 
-def _tfidf_vectors(
-    doc_tokens: list[list[str]],
-) -> tuple[list[dict[str, float]], list[float], dict[str, float]]:
+def _tfidf_vectors(doc_tokens: list[list[str]]) -> tuple[list[dict[str, float]], list[float], dict[str, float]]:
     """Tiny TF-IDF implementation (no sklearn), cosine-normalized per doc."""
     n_docs = len(doc_tokens)
     df: Counter[str] = Counter()
@@ -70,9 +67,7 @@ def _tfidf_vectors(
     return vecs, norms, idf
 
 
-def _cosine_tfidf(
-    q_terms: list[str], doc_vec: dict[str, float], q_idf: dict[str, float]
-) -> float:
+def _cosine_tfidf(q_terms: list[str], doc_vec: dict[str, float], q_idf: dict[str, float]) -> float:
     # normalize query vector similarly to docs
     qw: dict[str, float] = {}
     tf = Counter(q_terms)
@@ -108,17 +103,12 @@ class HybridIndex:
         self.doc_tokens = doc_tokens
         self.tfidf_docs = tfidf_docs
         self.idf = idf
-        self._brand_mask = {
-            b: np.array([c.brand == b for c in chunks], dtype=bool)
-            for b in ("hackerrank", "claude", "visa")
-        }
+        self._brand_mask = {b: np.array([c.brand == b for c in chunks], dtype=bool) for b in ("hackerrank", "claude", "visa")}
 
     @classmethod
     def build(cls, data_dir: Path) -> HybridIndex:
         chunks = load_chunks(data_dir)
-        doc_tokens = [
-            tokenize(f"{c.title} {' '.join(c.breadcrumbs)} {c.text}") for c in chunks
-        ]
+        doc_tokens = [tokenize(f"{c.title} {' '.join(c.breadcrumbs)} {c.text}") for c in chunks]
         bm25 = BM25Okapi(doc_tokens)
 
         tfidf_docs, _norms, idf = _tfidf_vectors(doc_tokens)
@@ -204,9 +194,7 @@ class HybridIndex:
                 time.sleep(0.2)
                 continue
 
-        raise TimeoutError(
-            f"Timed out after 180s waiting for retrieval index lock/build at {path}"
-        )
+        raise TimeoutError(f"Timed out after 180s waiting for retrieval index lock/build at {path}")
 
     def infer_brand(self, query: str) -> str:
         q = tokenize(query)
@@ -221,9 +209,7 @@ class HybridIndex:
                 best = (brand, mx)
         return best[0]
 
-    def search(
-        self, query: str, brand: Brand, top_k: int = TOP_K
-    ) -> tuple[list[Retrieved], float]:
+    def search(self, query: str, brand: Brand, top_k: int = TOP_K) -> tuple[list[Retrieved], float]:
         q_tok = tokenize(query)
         bm25_scores = np.array(self.bm25.get_scores(q_tok), dtype=float)
         if brand != "any":

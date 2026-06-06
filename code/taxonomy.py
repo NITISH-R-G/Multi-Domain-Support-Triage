@@ -1,5 +1,4 @@
 """Canonical labels + mapping from retrieved corpus evidence to evaluator-friendly areas."""
-
 from __future__ import annotations
 
 import re
@@ -32,57 +31,29 @@ def _rx(pat: str, flags: int = re.I) -> re.Pattern[str]:
 
 RULES: list[LabelRule] = [
     # HackerRank — broad "product UI / workflows" bucket used heavily in sample as `screen`
-    LabelRule(
-        "screen", "hackerrank", _rx(r"(^|/)hackerrank/(?!hackerrank_community/)")
-    ),
+    LabelRule("screen", "hackerrank", _rx(r"(^|/)hackerrank/(?!hackerrank_community/)")),
     LabelRule("community", "hackerrank", _rx(r"/hackerrank_community/|/community/")),
-    LabelRule(
-        "community", "hackerrank", _rx(r"\b(community account|hackerrank community)\b")
-    ),
+    LabelRule("community", "hackerrank", _rx(r"\b(community account|hackerrank community)\b")),
     # Claude privacy / conversations
-    LabelRule(
-        "privacy", "claude", _rx(r"/privacy\.|/privacy/|privacy\.claude|safeguard")
-    ),
-    LabelRule(
-        "privacy", "claude", _rx(r"\b(delete|remove)\b.*\b(conversation|chat)\b")
-    ),
+    LabelRule("privacy", "claude", _rx(r"/privacy\.|/privacy/|privacy\.claude|safeguard")),
+    LabelRule("privacy", "claude", _rx(r"\b(delete|remove)\b.*\b(conversation|chat)\b")),
     LabelRule("privacy", "claude", _rx(r"\b(temporary chat|private)\b")),
     # Visa — travel vs general support
-    LabelRule(
-        "travel_support",
-        "visa",
-        _rx(
-            r"traveller|traveler|travel\-support|travel_support|exchange rate|exchange\-rate"
-        ),
-    ),
-    LabelRule(
-        "general_support",
-        "visa",
-        _rx(
-            r"lost|stolen|block|card|emergency|customer assistance|gcas|dispute|merchant"
-        ),
-    ),
+    LabelRule("travel_support", "visa", _rx(r"traveller|traveler|travel\-support|travel_support|exchange rate|exchange\-rate")),
+    LabelRule("general_support", "visa", _rx(r"lost|stolen|block|card|emergency|customer assistance|gcas|dispute|merchant")),
 ]
 
 
 def infer_request_type(issue: str, subject: str) -> str | None:
     blob = f"{subject}\n{issue}".lower()
     # Long tickets may include "Thanks," signatures — don't classify as invalid solely due to that.
-    if len(blob) < 170 and re.search(
-        r"\b(thank you for helping(\s+me)?|thanks for helping|thank you so much)\b",
-        blob,
-    ):
+    if len(blob) < 170 and re.search(r"\b(thank you for helping(\s+me)?|thanks for helping|thank you so much)\b", blob):
         return "invalid"
     if looks_like_invalid_small_talk(subject, issue):
         return "invalid"
-    if re.search(
-        r"\bsite\b.*\bdown\b|\b503\b|\berror\b.*\bpage\b|\bnot accessible\b", blob
-    ):
+    if re.search(r"\bsite\b.*\bdown\b|\b503\b|\berror\b.*\bpage\b|\bnot accessible\b", blob):
         return "bug"
-    if re.search(
-        r"\bfeature request\b|\bplease add\b|\bcan you implement\b|\bnew feature\b",
-        blob,
-    ):
+    if re.search(r"\bfeature request\b|\bplease add\b|\bcan you implement\b|\bnew feature\b", blob):
         return "feature_request"
     return None
 
@@ -110,10 +81,7 @@ def looks_like_invalid_small_talk(subject: str, issue: str) -> bool:
         return True
     if len(blob) < 160 and re.search(r"\bthank you for helping\b", low):
         return True
-    if len(blob) < 140 and re.fullmatch(
-        r"\s*(thank you for helping me|thanks for helping|thank you so much)\s*\.?\s*",
-        low,
-    ):
+    if len(blob) < 140 and re.fullmatch(r"\s*(thank you for helping me|thanks for helping|thank you so much)\s*\.?\s*", low):
         return True
     if looks_like_off_topic_general_knowledge(subject, issue):
         return True
@@ -130,10 +98,7 @@ def map_product_area(brand: str, issue: str, subject: str, top: Chunk | None) ->
         # Traveller's cheques are categorized as travel support even if stolen/lost appears in the message.
         if re.search(r"\btraveller|traveler|cheque\b", blob):
             return "travel_support"
-        if re.search(
-            r"\blost\b|\bstolen\b|\bblock\b|\bcard\b|\bgcas\b|\bemergency\b|\breport\b|\bindia\b",
-            blob,
-        ):
+        if re.search(r"\blost\b|\bstolen\b|\bblock\b|\bcard\b|\bgcas\b|\bemergency\b|\breport\b|\bindia\b", blob):
             return "general_support"
         if re.search(r"\btravel\b", blob):
             return "travel_support"
@@ -165,9 +130,7 @@ def map_product_area(brand: str, issue: str, subject: str, top: Chunk | None) ->
     return "conversation_management"
 
 
-def normalize_product_area(
-    raw: str, brand: str, issue: str, subject: str, top: Chunk | None
-) -> str:
+def normalize_product_area(raw: str, brand: str, issue: str, subject: str, top: Chunk | None) -> str:
     s = (raw or "").strip().lower()
     if s in CANONICAL_PRODUCT_AREAS:
         return s

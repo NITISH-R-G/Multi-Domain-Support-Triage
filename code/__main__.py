@@ -6,7 +6,6 @@ on Linux ``python -m code`` may load the stdlib ``code`` module — use ``python
 ``sys.path``. Running ``python -m code`` sets the cwd on ``sys.path``, not ``code/``,
 so we prepend this package directory before importing ``main``.
 """
-
 from __future__ import annotations
 
 import sys

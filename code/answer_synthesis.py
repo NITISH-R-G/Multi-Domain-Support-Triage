@@ -1,5 +1,4 @@
 """Offline answer shaping: convert retrieved markdown-ish text into short actionable guidance."""
-
 from __future__ import annotations
 
 import hashlib
@@ -32,9 +31,7 @@ def _strip_heading_noise(text: str) -> str:
     return text
 
 
-def extract_steps(
-    text: str, *, max_steps: int = 8, max_chars_per_step: int = 260
-) -> list[str]:
+def extract_steps(text: str, *, max_steps: int = 8, max_chars_per_step: int = 260) -> list[str]:
     """Pull readable steps from support article bodies."""
     text = _strip_heading_noise(text)
     lines = [ln.rstrip() for ln in text.splitlines()]
@@ -78,9 +75,7 @@ def extract_steps(
     return steps[:max_steps]
 
 
-def synthesize_reply_from_hits(
-    hits: list[Retrieved], *, max_sources: int = 2
-) -> tuple[str, list[str]]:
+def synthesize_reply_from_hits(hits: list[Retrieved], *, max_sources: int = 2) -> tuple[str, list[str]]:
     """Return (user_response, source_paths_used)."""
     if not hits:
         return "", []
@@ -100,7 +95,7 @@ def synthesize_reply_from_hits(
             blocks.append(f"From {title}:\n{excerpt}")
             continue
 
-        rendered = "\n".join(f"{i + 1}. {s}" for i, s in enumerate(steps))
+        rendered = "\n".join(f"{i+1}. {s}" for i, s in enumerate(steps))
         blocks.append(f"From {title}:\n{rendered}")
 
     body = "\n\n".join(blocks).strip()

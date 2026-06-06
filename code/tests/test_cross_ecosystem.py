@@ -1,5 +1,4 @@
 """Cross-ecosystem escalation: multi-brand tickets should route to humans."""
-
 from __future__ import annotations
 
 

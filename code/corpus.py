@@ -1,5 +1,4 @@
 """Load markdown corpus into searchable chunks."""
-
 from __future__ import annotations
 
 import re

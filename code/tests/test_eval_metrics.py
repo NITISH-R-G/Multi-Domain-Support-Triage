@@ -4,12 +4,7 @@ from eval_metrics import compact_overlap_ratio, normalize_text, token_set_f1
 
 
 def test_token_f1_identical() -> None:
-    assert (
-        token_set_f1(
-            "reset your password in settings", "reset your password in settings"
-        )
-        == 1.0
-    )
+    assert token_set_f1("reset your password in settings", "reset your password in settings") == 1.0
 
 
 def test_token_f1_partial() -> None:
