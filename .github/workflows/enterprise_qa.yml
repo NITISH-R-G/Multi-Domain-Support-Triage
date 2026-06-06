@@ -136,7 +136,7 @@ jobs:
 
       - name: Post QA Report as PR Comment
         if: always() && github.event_name == 'pull_request'
-        uses: thollander/actions-comment-pull-request@v2
+        uses: thollander/actions-comment-pull-request@v3
         with:
           filePath: reports/qa_report.md
           comment_tag: qa_report
