@@ -252,6 +252,7 @@ Submissions are scored across four dimensions: agent design (your `code/`), the 
 
 See [`evaluation_criteria.md`](./evaluation_criteria.md) for the full rubric. Design notes for this repo’s agent: [`docs/decisions.md`](./docs/decisions.md).
 
+
 <!-- AUTONOMOUS_SECTION_START -->
 
 ---
@@ -457,4 +458,5 @@ graph TD
 AI generation skipped.
 
 <!-- AUTONOMOUS_SECTION_END -->
+
 
