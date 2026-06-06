@@ -1,0 +1,195 @@
+name: Enterprise QA System
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  release:
+    types: [published]
+  schedule:
+    - cron: "0 0 * * *" # Daily at midnight UTC
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: write
+
+env:
+  CODE_DIR: "."
+
+jobs:
+  enterprise-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Determine Code Directory
+        run: |
+          if [ -d "code" ]; then
+            echo "CODE_DIR=code" >> $GITHUB_ENV
+          else
+            echo "CODE_DIR=." >> $GITHUB_ENV
+          fi
+
+      - name: Install Project Dependencies
+        run: |
+          if [ -f "$CODE_DIR/requirements.txt" ]; then
+            pip install -r "$CODE_DIR/requirements.txt"
+          elif [ -f "requirements.txt" ]; then
+            pip install -r requirements.txt
+          fi
+
+      - name: Install QA & Security Tools
+        run: |
+          pip install ruff mypy vulture pylint radon bandit safety detect-secrets cyclonedx-bom pip-licenses openai
+          if [ -f "automation/requirements.txt" ]; then
+            pip install -r automation/requirements.txt
+          fi
+
+      - name: Create Reports Directory
+        run: mkdir -p reports
+
+      # Linting & Formatting
+      - name: Run Ruff (Linting & Formatting)
+        id: ruff
+        run: |
+          ruff check $CODE_DIR --output-format=json -o reports/ruff_report.json || echo "Ruff check failed"
+          ruff format $CODE_DIR --check || echo "Ruff format failed"
+
+      # Type Checking
+      - name: Run Mypy (Type Checking)
+        id: mypy
+        if: always()
+        run: mypy $CODE_DIR > reports/mypy_report.txt || true
+
+      # Dead & Duplicate Code
+      - name: Run Vulture (Dead Code)
+        id: vulture
+        if: always()
+        run: vulture $CODE_DIR > reports/vulture_report.txt || true
+
+      - name: Run Pylint (Duplicate Code & More)
+        id: pylint
+        if: always()
+        run: pylint $CODE_DIR --output-format=json > reports/pylint_report.json || true
+
+      # Complexity Analysis
+      - name: Run Radon (Complexity)
+        id: radon
+        if: always()
+        run: |
+          radon cc $CODE_DIR -j > reports/radon_cc.json || true
+          radon mi $CODE_DIR -j > reports/radon_mi.json || true
+
+      # Security Scanning
+      - name: Run Bandit (Security Scans)
+        id: bandit
+        if: always()
+        run: bandit -r $CODE_DIR -f json -o reports/bandit_report.json || true
+
+      - name: Run Safety (Dependency Audit)
+        id: safety
+        if: always()
+        run: |
+          if [ -f "$CODE_DIR/requirements.txt" ]; then
+            safety check -r "$CODE_DIR/requirements.txt" --json > reports/safety_report.json || true
+          elif [ -f "requirements.txt" ]; then
+            safety check -r requirements.txt --json > reports/safety_report.json || true
+          else
+            echo '{"vulnerabilities": []}' > reports/safety_report.json
+          fi
+
+      - name: Run Detect-Secrets (Secret Detection)
+        id: secrets
+        if: always()
+        run: detect-secrets scan $CODE_DIR > reports/secrets_report.json || true
+
+      # License Compliance & SBOM
+      - name: Run Pip-Licenses (License Compliance)
+        id: licenses
+        if: always()
+        run: pip-licenses --format=json > reports/licenses_report.json || true
+
+      - name: Run CycloneDX (SBOM Generation)
+        id: cyclonedx
+        if: always()
+        run: cyclonedx-py environment --outfile reports/sbom.json || true
+
+      - name: Run AI QA Agent
+        if: always()
+        run: python automation/ai_qa_agent.py
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          PYTHONPATH: .
+
+      - name: Publish QA Report to Step Summary
+        if: always()
+        run: cat reports/qa_report.md >> $GITHUB_STEP_SUMMARY || echo "Failed to add to step summary"
+
+      - name: Post QA Report as PR Comment
+        if: always() && github.event_name == 'pull_request'
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          filePath: reports/qa_report.md
+          comment_tag: qa_report
+
+      - name: Upload Reports as Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-reports
+          path: reports/
+
+      - name: Quality Gates Enforcer
+        if: always()
+        run: |
+          echo "Enforcing quality gates..."
+          EXIT_CODE=0
+
+          # Check for Ruff failures (using grep on the report as ruff check doesn't exit 1 if wrapped)
+          if grep -q '"message":' reports/ruff_report.json 2>/dev/null; then
+            echo "Ruff found linting issues."
+            EXIT_CODE=1
+          fi
+
+          # Check Mypy failures
+          if grep -q 'Found [0-9]\+ error' reports/mypy_report.txt 2>/dev/null; then
+            echo "Mypy found typing issues."
+            EXIT_CODE=1
+          fi
+
+          # Check for Bandit high severity issues
+          if grep -q "SEVERITY: HIGH" reports/bandit_report.json 2>/dev/null || grep -q "issue_severity\": \"HIGH\"" reports/bandit_report.json 2>/dev/null; then
+            echo "Bandit found high severity security issues."
+            EXIT_CODE=1
+          fi
+
+          # Check for Safety issues
+          if [ -s reports/safety_report.json ] && grep -q '"vulnerabilities"' reports/safety_report.json 2>/dev/null; then
+             # Since safety json format can vary, a simple check might just see if we got an error output, but here we just check if string is present.
+             echo "Safety found dependency vulnerabilities."
+             EXIT_CODE=1
+          fi
+
+          # Check for secrets
+          if grep -q '"results": {' reports/secrets_report.json 2>/dev/null; then
+            # If results object has keys, secrets were found
+            if [ "$(jq '.results | length' reports/secrets_report.json)" -gt 0 ]; then
+                echo "Detect-secrets found potential secrets."
+                EXIT_CODE=1
+            fi
+          fi
+
+          if [ $EXIT_CODE -ne 0 ]; then
+            echo "One or more critical quality gates failed."
+            exit 1
+          fi
+          echo "All quality gates passed!"

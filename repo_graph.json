@@ -351,6 +351,13 @@
         "pathlib.Path"
       ]
     },
+    "automation/ai_qa_agent.py": {
+      "imports": [
+        "os",
+        "json",
+        "openai.OpenAI"
+      ]
+    },
     "automation/diagrams.py": {
       "imports": [
         "json",
