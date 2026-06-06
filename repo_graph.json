@@ -21,7 +21,6 @@
         "__future__.annotations",
         "argparse",
         "sys",
-        "pandas",
         "csv_io.TicketCsvError",
         "csv_io.canonicalize_ticket_columns",
         "csv_io.read_tickets_csv",
@@ -61,10 +60,12 @@
         "argparse",
         "random",
         "sys",
+        "typing",
         "pathlib.Path",
         "typing.Any",
         "numpy",
         "pandas",
+        "config.CACHE_PATH",
         "config.DATA_DIR",
         "config.INPUT_CSV",
         "config.MAX_FIELD_CHARS",
@@ -79,9 +80,9 @@
         "openai_agent.fallback_from_hits",
         "postprocess.finalize_decision",
         "retrieve.BM25Index",
-        "retrieve.CACHE_PATH",
         "retrieve.rerank_hits",
         "retrieve.should_escalate_low_retrieval",
+        "retrieve.Brand",
         "risk.assess_risk",
         "taxonomy.looks_like_invalid_small_talk",
         "ticket_hints.maybe_append_multi_topic_justification",
@@ -142,8 +143,8 @@
         "__future__.annotations",
         "argparse",
         "os",
-        "re",
         "sys",
+        "typing",
         "dataclasses.dataclass",
         "pathlib.Path",
         "pandas",
@@ -152,15 +153,12 @@
         "config.TOP_K",
         "csv_io.TicketCsvError",
         "csv_io.read_tickets_csv",
-        "corpus.tokenize",
         "grounding.has_unsupported_numbers",
         "grounding.lexical_overlap",
         "retrieve.BM25Index",
-        "retrieve.rerank_hits"
+        "retrieve.rerank_hits",
+        "retrieve.Brand"
       ]
-    },
-    "code/__init__.py": {
-      "imports": []
     },
     "code/ticket_hints.py": {
       "imports": [
@@ -228,8 +226,6 @@
         "numpy",
         "rank_bm25.BM25Okapi",
         "config.BM25_WEIGHT",
-        "config.CACHE_PATH",
-        "config.DATA_DIR",
         "config.HYBRID_CANDIDATES",
         "config.INDEX_VERSION",
         "config.LOW_BM25_THRESHOLD",
@@ -254,13 +250,14 @@
     "code/tests/test_sample_routing_golden.py": {
       "imports": [
         "__future__.annotations",
-        "os",
         "pandas",
         "pytest",
         "config.REPO_ROOT",
         "csv_io.canonicalize_ticket_columns",
         "csv_io.read_tickets_csv",
-        "main.process_row"
+        "main.process_row",
+        "typing.cast",
+        "retrieve.HybridIndex"
       ]
     },
     "code/tests/test_ticket_hints.py": {
@@ -296,8 +293,7 @@
         "__future__.annotations",
         "subprocess",
         "sys",
-        "pathlib.Path",
-        "pytest"
+        "pathlib.Path"
       ]
     },
     "code/tests/test_module_invocation.py": {
@@ -334,7 +330,6 @@
     "code/tests/test_cross_ecosystem.py": {
       "imports": [
         "__future__.annotations",
-        "os",
         "pytest",
         "cross_ecosystem.cross_ecosystem_escalation_reason"
       ]
@@ -349,6 +344,13 @@
         "datetime.datetime",
         "datetime.timezone",
         "pathlib.Path"
+      ]
+    },
+    "automation/ai_qa_agent.py": {
+      "imports": [
+        "os",
+        "json",
+        "openai.OpenAI"
       ]
     },
     "automation/diagrams.py": {
