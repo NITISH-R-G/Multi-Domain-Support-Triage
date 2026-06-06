@@ -1,4 +1,5 @@
 """Paths and deterministic defaults."""
+
 from __future__ import annotations
 
 import os
@@ -26,14 +27,20 @@ TFIDF_WEIGHT = float(os.environ.get("TFIDF_WEIGHT", "0.45"))
 
 # Lexical rerank bonuses (query term appears in chunk); tunable without editing code.
 RERANK_BONUS_TEAM = float(os.environ.get("ORCHESTRATE_RERANK_BONUS_TEAM", "5.0"))
-RERANK_BONUS_WORKSPACE = float(os.environ.get("ORCHESTRATE_RERANK_BONUS_WORKSPACE", "5.0"))
+RERANK_BONUS_WORKSPACE = float(
+    os.environ.get("ORCHESTRATE_RERANK_BONUS_WORKSPACE", "5.0")
+)
 RERANK_BONUS_BRAND = float(os.environ.get("ORCHESTRATE_RERANK_BONUS_BRAND", "3.0"))
 
 # Grounding: replace LLM/offline draft when overlap with retrieved text is too low or numeric guard fires.
 # Lower min_overlap = fewer silent rewrites (more trust in the generator).
-GROUNDING_MIN_OVERLAP = float(os.environ.get("ORCHESTRATE_GROUNDING_MIN_OVERLAP", "0.12"))
+GROUNDING_MIN_OVERLAP = float(
+    os.environ.get("ORCHESTRATE_GROUNDING_MIN_OVERLAP", "0.12")
+)
 # resynthesize: offline synthesis from hits; escalate: human handoff when check fails.
-GROUNDING_FAIL_MODE = os.environ.get("ORCHESTRATE_GROUNDING_FAIL_MODE", "resynthesize").strip().lower()
+GROUNDING_FAIL_MODE = (
+    os.environ.get("ORCHESTRATE_GROUNDING_FAIL_MODE", "resynthesize").strip().lower()
+)
 
 # Guardrail against pathological CSV cells (memory / retrieval DoS).
 MAX_FIELD_CHARS = int(os.environ.get("ORCHESTRATE_MAX_FIELD_CHARS", "200000"))

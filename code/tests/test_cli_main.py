@@ -4,7 +4,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
 
 _CODE = Path(__file__).resolve().parents[1]
 

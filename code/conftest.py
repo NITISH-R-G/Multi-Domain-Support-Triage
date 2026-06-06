@@ -1,4 +1,5 @@
 """Shared pytest fixtures (session-scoped retrieval index)."""
+
 from __future__ import annotations
 
 import pytest

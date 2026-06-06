@@ -6,7 +6,12 @@ from pathlib import Path
 
 import pandas as pd
 
-from csv_io import TicketCsvError, canonicalize_ticket_columns, read_tickets_csv, rename_prediction_columns
+from csv_io import (
+    TicketCsvError,
+    canonicalize_ticket_columns,
+    read_tickets_csv,
+    rename_prediction_columns,
+)
 from eval_metrics import compact_overlap_ratio, normalize_text, token_set_f1
 
 
@@ -25,9 +30,19 @@ def main() -> None:
     ap = argparse.ArgumentParser(
         description="Compare model predictions to labeled sample_support_tickets.csv (routing + response fuzzy metrics).",
     )
-    ap.add_argument("--sample", type=str, default=str(Path("..") / "support_tickets" / "sample_support_tickets.csv"))
-    ap.add_argument("--pred", type=str, default=str(Path("..") / "support_tickets" / "output.csv"))
-    ap.add_argument("--report", type=str, default=str(Path("..") / "support_tickets" / "sample_eval_report.csv"))
+    ap.add_argument(
+        "--sample",
+        type=str,
+        default=str(Path("..") / "support_tickets" / "sample_support_tickets.csv"),
+    )
+    ap.add_argument(
+        "--pred", type=str, default=str(Path("..") / "support_tickets" / "output.csv")
+    )
+    ap.add_argument(
+        "--report",
+        type=str,
+        default=str(Path("..") / "support_tickets" / "sample_eval_report.csv"),
+    )
     ap.add_argument(
         "--routing-detail",
         action="store_true",
@@ -77,22 +92,39 @@ def main() -> None:
     print("\nAnswer columns (same rows; normalized exact + fuzzy):")
     ge = merged["Response"].fillna("").map(normalize_text)
     pe = merged["Pred_Response"].fillna("").map(normalize_text)
-    je = merged["Justification"].fillna("").map(normalize_text) if "Justification" in merged.columns else None
-    pje = merged["Pred_Justification"].fillna("").map(normalize_text) if "Pred_Justification" in merged.columns else None
+    je = (
+        merged["Justification"].fillna("").map(normalize_text)
+        if "Justification" in merged.columns
+        else None
+    )
+    pje = (
+        merged["Pred_Justification"].fillna("").map(normalize_text)
+        if "Pred_Justification" in merged.columns
+        else None
+    )
     print(f"- response (norm exact):  {float((ge == pe).mean()):.2%}")
     if je is not None and pje is not None:
         print(f"- justification (norm exact): {float((je == pje).mean()):.2%}")
-    f1_r = [token_set_f1(str(a), str(b)) for a, b in zip(merged["Response"], merged["Pred_Response"])]
+    f1_r = [
+        token_set_f1(str(a), str(b))
+        for a, b in zip(merged["Response"], merged["Pred_Response"])
+    ]
     print(f"- response (token F1 mean):   {sum(f1_r) / max(1, len(f1_r)):.3f}")
     if "Justification" in merged.columns:
         f1_j = [
-            token_set_f1(str(a), str(b)) for a, b in zip(merged["Justification"], merged["Pred_Justification"])
+            token_set_f1(str(a), str(b))
+            for a, b in zip(merged["Justification"], merged["Pred_Justification"])
         ]
         print(f"- justification (token F1 mean): {sum(f1_j) / max(1, len(f1_j)):.3f}")
-    ovl = [compact_overlap_ratio(str(a), str(b)) for a, b in zip(merged["Response"], merged["Pred_Response"])]
+    ovl = [
+        compact_overlap_ratio(str(a), str(b))
+        for a, b in zip(merged["Response"], merged["Pred_Response"])
+    ]
     print(f"- response (compact char overlap mean): {sum(ovl) / max(1, len(ovl)):.3f}")
 
-    mism = merged[merged["Status"] != merged["Pred_Status"]][key_cols + ["Status", "Pred_Status"]]
+    mism = merged[merged["Status"] != merged["Pred_Status"]][
+        key_cols + ["Status", "Pred_Status"]
+    ]
     print(f"\nStatus mismatches: {len(mism)}")
 
     if args.routing_detail:
@@ -135,4 +167,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

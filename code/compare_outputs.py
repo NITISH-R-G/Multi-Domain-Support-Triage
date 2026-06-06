@@ -8,21 +8,31 @@ Usage (from repo root or code/):
 Uses the same merge keys as eval_sample (Issue, Subject, Company) and reports
 token F1 / compact overlap for Response and Justification when gold columns exist.
 """
+
 from __future__ import annotations
 
 import argparse
 import sys
 
-import pandas as pd
 
-from csv_io import TicketCsvError, canonicalize_ticket_columns, read_tickets_csv, rename_prediction_columns
+from csv_io import (
+    TicketCsvError,
+    canonicalize_ticket_columns,
+    read_tickets_csv,
+    rename_prediction_columns,
+)
 from eval_metrics import compact_overlap_ratio, normalize_text, token_set_f1
 
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Compare gold vs predicted CSV rows")
     ap.add_argument("--gold", type=str, required=True, help="CSV with expected columns")
-    ap.add_argument("--pred", type=str, required=True, help="CSV with predictions (issue/subject/company lowercase)")
+    ap.add_argument(
+        "--pred",
+        type=str,
+        required=True,
+        help="CSV with predictions (issue/subject/company lowercase)",
+    )
     args = ap.parse_args()
 
     try:

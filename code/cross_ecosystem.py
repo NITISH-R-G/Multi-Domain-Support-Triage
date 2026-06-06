@@ -1,4 +1,5 @@
 """Detect tickets that span multiple distinct product ecosystems — safer to escalate than guess one answer."""
+
 from __future__ import annotations
 
 import os
@@ -12,7 +13,9 @@ def cross_ecosystem_escalation_reason(issue: str, subject: str) -> str | None:
     (mentions Visa immigration language without Visa-the-network product context).
     Disable entirely with ``ORCHESTRATE_DISABLE_CROSS_ECOSYSTEM_ESCALATE=1``.
     """
-    if os.environ.get("ORCHESTRATE_DISABLE_CROSS_ECOSYSTEM_ESCALATE", "").strip().lower() in {
+    if os.environ.get(
+        "ORCHESTRATE_DISABLE_CROSS_ECOSYSTEM_ESCALATE", ""
+    ).strip().lower() in {
         "1",
         "true",
         "yes",
