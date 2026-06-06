@@ -1,0 +1,104 @@
+name: Autonomous Repository System
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  release:
+    types: [published]
+  schedule:
+    - cron: "0 0 * * *" # Daily at midnight UTC
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  validate-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install Project Dependencies
+        run: pip install -r code/requirements.txt
+
+      - name: Install Automation Dependencies
+        run: pip install -r automation/requirements.txt || true
+
+      - name: Install Linting & Security Tools
+        run: pip install flake8 bandit safety
+
+      - name: Run Tests
+        working-directory: code
+        run: python -m pytest tests -q
+
+      - name: Linting
+        run: flake8 code/
+
+      - name: Security Scans
+        run: bandit -r code/
+
+      - name: Dependency Audit
+        run: safety check -r code/requirements.txt
+
+  autonomous-docs:
+    runs-on: ubuntu-latest
+    needs: validate-and-test
+    # We only want to auto-commit docs on certain events (like push to main) to avoid PR feedback loops,
+    # but the instructions say "Scans the entire repository on every push, pull request, merge, release, and scheduled interval."
+    # So we'll run the automation scripts.
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history for git diffs and graph building
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install Project Dependencies
+        run: pip install -r code/requirements.txt
+
+      - name: Install Automation Dependencies
+        run: |
+          if [ -f "automation/requirements.txt" ]; then
+            pip install -r automation/requirements.txt
+          fi
+
+      - name: Run Autonomous Repository Analysis
+        run: python automation/analyzer.py
+        env:
+          PYTHONPATH: .
+
+      - name: Generate Interactive Architecture Diagrams
+        run: python automation/diagrams.py
+        env:
+          PYTHONPATH: .
+
+      - name: Run AI Documentation Agent
+        run: python automation/ai_agent.py
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          PYTHONPATH: .
+
+      - name: Update README
+        run: python automation/readme_generator.py
+        env:
+          PYTHONPATH: .
+
+      - name: Commit and Push Changes
+        if: github.event_name == 'push' || github.event_name == 'schedule'
+        # Avoid committing if no changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add README.md docs/ repo_graph.json || true
+          git diff --quiet && git diff --staged --quiet || (git commit -m "docs: auto-update repository documentation and architecture graphs" && git push)
