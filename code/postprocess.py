@@ -1,5 +1,4 @@
 """Post-processing decisions for taxonomy alignment + grounding checks."""
-
 from __future__ import annotations
 
 import re
@@ -34,20 +33,12 @@ def finalize_decision(
     if rt == "invalid":
         blob = f"{subject}\n{issue}".strip().lower()
         # Sample taxonomy: pure gratitude uses blank product_area; trivia/off-topic uses conversation_management.
-        if (
-            re.search(
-                r"\b(thank you for helping|thanks for helping|thank you so much)\b",
-                blob,
-            )
-            and len(blob) < 160
-        ):
+        if re.search(r"\b(thank you for helping|thanks for helping|thank you so much)\b", blob) and len(blob) < 160:
             pa = ""
         else:
             pa = "conversation_management"
     else:
-        pa = normalize_product_area(
-            str(decision.get("product_area", "")), brand, issue, subject, top
-        )
+        pa = normalize_product_area(str(decision.get("product_area", "")), brand, issue, subject, top)
 
     resp = str(decision.get("response", "") or "")
     if status == "replied" and hits:
@@ -72,19 +63,11 @@ def finalize_decision(
                     low_retrieval=low_retrieval,
                 )
             else:
-                fb = fallback_from_hits(
-                    hits, escalated=False, esc_reason=None, low_retrieval=low_retrieval
-                )
+                fb = fallback_from_hits(hits, escalated=False, esc_reason=None, low_retrieval=low_retrieval)
                 base_j = str(fb.get("justification", "") or "")
                 fb["justification"] = f"{base_j}; {grounding_note}".strip("; ")
-            fb["request_type"] = (
-                rt
-                if rt in ("product_issue", "feature_request", "bug", "invalid")
-                else fb["request_type"]
-            )
-            fb["product_area"] = normalize_product_area(
-                fb.get("product_area", ""), brand, issue, subject, top
-            )
+            fb["request_type"] = rt if rt in ("product_issue", "feature_request", "bug", "invalid") else fb["request_type"]
+            fb["product_area"] = normalize_product_area(fb.get("product_area", ""), brand, issue, subject, top)
             return fb
 
     out = dict(decision)

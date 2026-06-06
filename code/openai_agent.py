@@ -1,5 +1,4 @@
 """Grounded LLM decisioning with strict JSON outputs."""
-
 from __future__ import annotations
 
 import json
@@ -47,8 +46,7 @@ def fallback_from_hits(
             "status": "escalated",
             "product_area": "",
             "response": "We could not locate matching guidance in the offline support library for this request.",
-            "justification": "No retrieval hits above threshold."
-            + (" Low retrieval scores." if low_retrieval else ""),
+            "justification": "No retrieval hits above threshold." + (" Low retrieval scores." if low_retrieval else ""),
             "request_type": "product_issue",
         }
     top = hits[0].chunk
@@ -91,12 +89,7 @@ def decide_with_openai(
     low_retrieval: bool,
 ) -> dict[str, Any]:
     # Allow forcing offline-only mode even if OPENAI_API_KEY exists.
-    if os.environ.get("ORCHESTRATE_DISABLE_LLM", "").strip().lower() in {
-        "1",
-        "true",
-        "yes",
-        "y",
-    }:
+    if os.environ.get("ORCHESTRATE_DISABLE_LLM", "").strip().lower() in {"1", "true", "yes", "y"}:
         return fallback_from_hits(
             hits,
             escalated=bool(force_escalate_reason) or low_retrieval,
@@ -168,30 +161,20 @@ Writing constraints:
         out = fallback_from_hits(
             hits,
             escalated=escalate,
-            esc_reason=(
-                "LLM produced invalid JSON; escalating for human review."
-                if escalate
-                else None
-            ),
+            esc_reason=("LLM produced invalid JSON; escalating for human review." if escalate else None),
             low_retrieval=low_retrieval,
         )
         if not escalate:
             prev = str(out.get("justification", "") or "")
-            out["justification"] = (
-                f"LLM produced invalid JSON; using offline synthesis. {prev}".strip()
-            )
+            out["justification"] = f"LLM produced invalid JSON; using offline synthesis. {prev}".strip()
         return out
 
     for key in ("status", "product_area", "response", "justification", "request_type"):
         data.setdefault(key, "")
     if force_escalate_reason:
         data["status"] = "escalated"
-        data["justification"] = (
-            f"{force_escalate_reason}; {data.get('justification', '')}".strip("; ")
-        )
+        data["justification"] = f"{force_escalate_reason}; {data.get('justification','')}".strip("; ")
     if low_retrieval and data.get("status") == "replied" and not hits:
         data["status"] = "escalated"
-        data["justification"] = (
-            f"Low retrieval confidence; {data.get('justification', '')}"
-        ).strip()
+        data["justification"] = (f"Low retrieval confidence; {data.get('justification', '')}").strip()
     return data

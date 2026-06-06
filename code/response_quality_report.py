@@ -8,7 +8,6 @@ Computes cheap, interpretable metrics without needing hidden labels:
 
 This is meant for hackathon iteration: catch verbose outputs and grounding drift early.
 """
-
 from __future__ import annotations
 
 import argparse
@@ -34,9 +33,7 @@ def _norm_company(val: object) -> str | None:
     return s
 
 
-def _brand_for_search(
-    company: str | None, issue: str, subject: str, index: BM25Index
-) -> str:
+def _brand_for_search(company: str | None, issue: str, subject: str, index: BM25Index) -> str:
     if company:
         m = company.strip().lower()
         if m == "hackerrank":
@@ -54,9 +51,7 @@ class RowMetrics:
     numeric_leak: bool
 
 
-def metrics_for_row(
-    index: BM25Index, issue: str, subject: str, company_raw: object, response: str
-) -> RowMetrics:
+def metrics_for_row(index: BM25Index, issue: str, subject: str, company_raw: object, response: str) -> RowMetrics:
     company = _norm_company(company_raw)
     brand = _brand_for_search(company, issue, subject, index)
     hits, _raw_top = index.search(f"{subject}\n{issue}", brand, TOP_K)
@@ -70,14 +65,8 @@ def main() -> None:
     ap = argparse.ArgumentParser(
         description="Diagnostics on prediction CSV (lengths, escalation rate, lexical overlap vs retrieval).",
     )
-    ap.add_argument(
-        "--pred", type=str, default=str(Path("..") / "support_tickets" / "output.csv")
-    )
-    ap.add_argument(
-        "--offline",
-        action="store_true",
-        help="Force ORCHESTRATE_DISABLE_LLM=1 (informational; retrieval ignores it)",
-    )
+    ap.add_argument("--pred", type=str, default=str(Path("..") / "support_tickets" / "output.csv"))
+    ap.add_argument("--offline", action="store_true", help="Force ORCHESTRATE_DISABLE_LLM=1 (informational; retrieval ignores it)")
     args = ap.parse_args()
 
     if args.offline:
@@ -123,14 +112,12 @@ def main() -> None:
 
     n = max(1, len(df))
     print(f"rows: {len(df)}")
-    print(f"escalated_rate: {esc / n:.2%}")
-    print(f"avg_response_words: {sum(lengths) / n:.1f}")
-    print(
-        f"p95_response_words: {sorted(lengths)[int(0.95 * (len(lengths) - 1))] if lengths else 0}"
-    )
-    print(f"avg_lexical_overlap: {sum(overlaps) / n:.3f}")
+    print(f"escalated_rate: {esc/n:.2%}")
+    print(f"avg_response_words: {sum(lengths)/n:.1f}")
+    print(f"p95_response_words: {sorted(lengths)[int(0.95*(len(lengths)-1))] if lengths else 0}")
+    print(f"avg_lexical_overlap: {sum(overlaps)/n:.3f}")
     print(f"p05_lexical_overlap: {sorted(overlaps)[0] if overlaps else 0.0}")
-    print(f"numeric_leak_rows: {leaks} ({leaks / n:.2%})")
+    print(f"numeric_leak_rows: {leaks} ({leaks/n:.2%})")
 
 
 if __name__ == "__main__":

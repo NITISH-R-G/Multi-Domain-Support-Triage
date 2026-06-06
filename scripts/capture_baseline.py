@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """Update docs/superpowers/BASELINE.md with git sha, python version, pytest + sample eval (Phase 0)."""
-
 from __future__ import annotations
 
 import os
@@ -15,9 +14,7 @@ BASELINE_MD = REPO / "docs" / "superpowers" / "BASELINE.md"
 CODE = REPO / "code"
 
 
-def _run(
-    cmd: list[str], *, cwd: Path, env: dict[str, str] | None = None
-) -> subprocess.CompletedProcess[str]:
+def _run(cmd: list[str], *, cwd: Path, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         cmd,
         cwd=str(cwd),
@@ -28,25 +25,19 @@ def _run(
 
 
 def main() -> int:
-    git_sha = (
-        subprocess.run(
-            ["git", "rev-parse", "--short", "HEAD"],
-            cwd=str(REPO),
-            capture_output=True,
-            text=True,
-        ).stdout.strip()
-        or "unknown"
-    )
+    git_sha = subprocess.run(
+        ["git", "rev-parse", "--short", "HEAD"],
+        cwd=str(REPO),
+        capture_output=True,
+        text=True,
+    ).stdout.strip() or "unknown"
 
-    branch = (
-        subprocess.run(
-            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-            cwd=str(REPO),
-            capture_output=True,
-            text=True,
-        ).stdout.strip()
-        or "unknown"
-    )
+    branch = subprocess.run(
+        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+        cwd=str(REPO),
+        capture_output=True,
+        text=True,
+    ).stdout.strip() or "unknown"
 
     py_ver = sys.version.replace("\n", " ")
 
@@ -101,21 +92,21 @@ def main() -> int:
 
 | Check | Result |
 |-------|--------|
-| `pytest tests -q` | {"PASS" if pytest_ok else "FAIL"} |
-| `run_eval.py --offline` (sample routing) | {"PASS" if eval_ok else "FAIL"} |
-| `main.py --limit 0` (full batch) | {"PASS" if batch_ok else "FAIL"} |
+| `pytest tests -q` | {'PASS' if pytest_ok else 'FAIL'} |
+| `run_eval.py --offline` (sample routing) | {'PASS' if eval_ok else 'FAIL'} |
+| `main.py --limit 0` (full batch) | {'PASS' if batch_ok else 'FAIL'} |
 
 ### Sample routing exact match (public labels)
 
 | Column | Exact match |
 |--------|-------------|
-| status | {routing.get("status", "n/a")} |
-| request_type | {routing.get("request_type", "n/a")} |
-| product_area | {routing.get("product_area", "n/a")} |
+| status | {routing.get('status', 'n/a')} |
+| request_type | {routing.get('request_type', 'n/a')} |
+| product_area | {routing.get('product_area', 'n/a')} |
 
 ### Full batch
 
-{rows_line or "(no Wrote … rows line captured)"}
+{rows_line or '(no Wrote … rows line captured)'}
 
 ## pytest output (tail)
 

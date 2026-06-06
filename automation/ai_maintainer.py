@@ -3,11 +3,9 @@ import json
 import requests
 from openai import OpenAI
 
-
 def get_event_data(event_path):
-    with open(event_path, "r", encoding="utf-8") as f:
+    with open(event_path, 'r', encoding='utf-8') as f:
         return json.load(f)
-
 
 def generate_ai_response(prompt):
     api_key = os.environ.get("OPENAI_API_KEY")
@@ -19,34 +17,27 @@ def generate_ai_response(prompt):
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {
-                    "role": "system",
-                    "content": "You are a senior staff engineer AI maintainer for the HackerRank Orchestrate repository. You review issues, pull requests, and answer questions. Be helpful, polite, and technical. If it's a pull request, evaluate code quality and architecture. If it's an issue, suggest fixes or ask clarifying questions. Keep it concise.",
-                },
-                {"role": "user", "content": prompt},
+                {"role": "system", "content": "You are a senior staff engineer AI maintainer for the HackerRank Orchestrate repository. You review issues, pull requests, and answer questions. Be helpful, polite, and technical. If it's a pull request, evaluate code quality and architecture. If it's an issue, suggest fixes or ask clarifying questions. Keep it concise."},
+                {"role": "user", "content": prompt}
             ],
-            max_tokens=500,
+            max_tokens=500
         )
         return response.choices[0].message.content
     except Exception as e:
         return f"AI Maintainer: Error generating response: {str(e)}"
 
-
 def post_comment(repo, issue_number, token, body):
     url = f"https://api.github.com/repos/{repo}/issues/{issue_number}/comments"
     headers = {
         "Authorization": f"token {token}",
-        "Accept": "application/vnd.github.v3+json",
+        "Accept": "application/vnd.github.v3+json"
     }
     data = {"body": body}
     response = requests.post(url, headers=headers, json=data)
     if response.status_code == 201:
         print("Successfully posted comment.")
     else:
-        print(
-            f"Failed to post comment. Status: {response.status_code}, Response: {response.text}"
-        )
-
+        print(f"Failed to post comment. Status: {response.status_code}, Response: {response.text}")
 
 def main():
     event_path = os.environ.get("GITHUB_EVENT_PATH")
@@ -71,11 +62,7 @@ def main():
         title = event_data["pull_request"]["title"]
         body = event_data["pull_request"]["body"] or ""
         event_type = "Pull Request"
-    elif (
-        "issue" in event_data
-        and action in ["opened", "edited"]
-        and "pull_request" not in event_data["issue"]
-    ):
+    elif "issue" in event_data and action in ["opened", "edited"] and "pull_request" not in event_data["issue"]:
         issue_number = event_data["issue"]["number"]
         title = event_data["issue"]["title"]
         body = event_data["issue"]["body"] or ""
@@ -103,7 +90,6 @@ def main():
 
     formatted_response = f"🤖 **AI Maintainer**\n\n{ai_response}"
     post_comment(repo, issue_number, token, formatted_response)
-
 
 if __name__ == "__main__":
     main()
