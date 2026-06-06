@@ -1,4 +1,5 @@
 """Cheap text metrics for regression checks against labeled sample CSVs."""
+
 from __future__ import annotations
 
 import re
@@ -13,6 +14,7 @@ def normalize_text(s: str) -> str:
 
 def token_set_f1(reference: str, hypothesis: str) -> float:
     """Token-overlap F1 (bag of words; labels normalized)."""
+
     def _tok(x: str) -> set[str]:
         return {t for t in re.findall(r"[a-z0-9]+", x.lower()) if len(t) > 1}
 

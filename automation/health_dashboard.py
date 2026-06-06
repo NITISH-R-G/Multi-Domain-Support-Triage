@@ -3,6 +3,7 @@ import json
 import subprocess
 from datetime import datetime
 
+
 def run_command(command):
     try:
         result = subprocess.run(command, shell=True, capture_output=True, text=True)
@@ -10,9 +11,10 @@ def run_command(command):
     except Exception as e:
         return str(e), 1
 
+
 def generate_health_dashboard():
-    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-    code_dir = os.path.join(root_dir, 'code')
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    code_dir = os.path.join(root_dir, "code")
 
     print("Running security and dependency checks...")
 
@@ -25,12 +27,16 @@ def generate_health_dashboard():
     try:
         bandit_data = json.loads(bandit_out)
         bandit_issues = len(bandit_data.get("results", []))
-        bandit_high = sum(1 for r in bandit_data.get("results", []) if r.get("issue_severity") == "HIGH")
+        bandit_high = sum(
+            1
+            for r in bandit_data.get("results", [])
+            if r.get("issue_severity") == "HIGH"
+        )
     except Exception:
         pass
 
     # Run safety
-    req_file = os.path.join(code_dir, 'requirements.txt')
+    req_file = os.path.join(code_dir, "requirements.txt")
     safety_issues = 0
     if os.path.exists(req_file):
         safety_cmd = f"safety check -r {req_file} --json"
@@ -62,7 +68,7 @@ def generate_health_dashboard():
 
     health_score = max(0, min(100, health_score))
 
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     dashboard_content = f"""# Repository Health Dashboard
 
@@ -72,30 +78,31 @@ def generate_health_dashboard():
 
 | Metric | Status / Count |
 |--------|----------------|
-| **Test Suite** | {'✅' if test_status == 'Pass' else '❌'} {test_status} |
+| **Test Suite** | {"✅" if test_status == "Pass" else "❌"} {test_status} |
 | **Security Issues (Bandit)** | {bandit_issues} total ({bandit_high} HIGH) |
 | **Vulnerable Dependencies (Safety)** | {safety_issues} |
 
 ## Details
 
 ### Security
-{'✅ No security issues found.' if bandit_issues == 0 else f'⚠️ Found {bandit_issues} potential security issues. Please review Bandit reports.'}
+{"✅ No security issues found." if bandit_issues == 0 else f"⚠️ Found {bandit_issues} potential security issues. Please review Bandit reports."}
 
 ### Dependencies
-{'✅ No known vulnerabilities in dependencies.' if safety_issues == 0 else f'❌ Found {safety_issues} vulnerable dependencies. Run `safety check` and update them.'}
+{"✅ No known vulnerabilities in dependencies." if safety_issues == 0 else f"❌ Found {safety_issues} vulnerable dependencies. Run `safety check` and update them."}
 
 ---
 *This dashboard is generated automatically by the AI Maintainer system.*
 """
 
-    docs_dir = os.path.join(root_dir, 'docs')
+    docs_dir = os.path.join(root_dir, "docs")
     os.makedirs(docs_dir, exist_ok=True)
 
-    out_path = os.path.join(docs_dir, 'health_dashboard.md')
-    with open(out_path, 'w', encoding='utf-8') as f:
+    out_path = os.path.join(docs_dir, "health_dashboard.md")
+    with open(out_path, "w", encoding="utf-8") as f:
         f.write(dashboard_content)
 
     print(f"Health dashboard saved to {out_path}")
+
 
 if __name__ == "__main__":
     generate_health_dashboard()

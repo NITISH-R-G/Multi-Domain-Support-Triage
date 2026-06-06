@@ -6,18 +6,22 @@ try:
 except ImportError:
     OpenAI = None
 
+
 def read_file(filepath):
     if not os.path.exists(filepath):
         return None
     try:
-        with open(filepath, 'r', encoding='utf-8') as f:
+        with open(filepath, "r", encoding="utf-8") as f:
             return f.read()
     except Exception as e:
         return f"Error reading {filepath}: {e}"
 
+
 def generate_qa_report(tool_outputs, root_dir):
     if OpenAI is None or not os.environ.get("OPENAI_API_KEY"):
-        print("OpenAI API key not set or openai package not installed. Skipping AI generation.")
+        print(
+            "OpenAI API key not set or openai package not installed. Skipping AI generation."
+        )
         # Fallback basic report
         return "# Enterprise QA Report\n\nAI generation skipped due to missing API key or `openai` package.\n"
 
@@ -52,21 +56,22 @@ def generate_qa_report(tool_outputs, root_dir):
         print(f"Error calling OpenAI API: {e}")
         return f"# Enterprise QA Report\n\nError generating report: {e}\n"
 
+
 def main():
-    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-    reports_dir = os.path.join(root_dir, 'reports')
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    reports_dir = os.path.join(root_dir, "reports")
 
     # Read tool outputs
     tools = {
-        'ruff': 'ruff_report.json',
-        'mypy': 'mypy_report.txt',
-        'vulture': 'vulture_report.txt',
-        'pylint': 'pylint_report.json',
-        'radon_cc': 'radon_cc.json',
-        'radon_mi': 'radon_mi.json',
-        'bandit': 'bandit_report.json',
-        'safety': 'safety_report.json',
-        'detect_secrets': 'secrets_report.json'
+        "ruff": "ruff_report.json",
+        "mypy": "mypy_report.txt",
+        "vulture": "vulture_report.txt",
+        "pylint": "pylint_report.json",
+        "radon_cc": "radon_cc.json",
+        "radon_mi": "radon_mi.json",
+        "bandit": "bandit_report.json",
+        "safety": "safety_report.json",
+        "detect_secrets": "secrets_report.json",
     }
 
     tool_outputs = {}
@@ -75,7 +80,7 @@ def main():
         content = read_file(filepath)
         if content:
             # Try parsing JSON if applicable, otherwise keep as text
-            if filepath.endswith('.json'):
+            if filepath.endswith(".json"):
                 try:
                     tool_outputs[tool] = json.loads(content)
                 except json.JSONDecodeError:
@@ -88,11 +93,12 @@ def main():
     report_content = generate_qa_report(tool_outputs, root_dir)
 
     os.makedirs(reports_dir, exist_ok=True)
-    out_path = os.path.join(reports_dir, 'qa_report.md')
-    with open(out_path, 'w', encoding='utf-8') as f:
+    out_path = os.path.join(reports_dir, "qa_report.md")
+    with open(out_path, "w", encoding="utf-8") as f:
         f.write(report_content)
 
     print(f"QA report saved to {out_path}")
+
 
 if __name__ == "__main__":
     main()

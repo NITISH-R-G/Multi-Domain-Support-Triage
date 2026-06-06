@@ -1,4 +1,5 @@
 """High-risk and policy-based escalation heuristics."""
+
 from __future__ import annotations
 
 import re
@@ -26,11 +27,16 @@ _PATTERNS: list[tuple[re.Pattern[str], str]] = [
     ),
     # Payments / disputes demanding outcomes (policy-sensitive)
     (
-        re.compile(r"\b(ban\s+the\s+seller|refund\s+me\s+today|make\s+visa\s+refund)", re.I),
+        re.compile(
+            r"\b(ban\s+the\s+seller|refund\s+me\s+today|make\s+visa\s+refund)", re.I
+        ),
         "demands irreversible payment or merchant enforcement action",
     ),
     (
-        re.compile(r"\b(unfair|graded\s+me\s+unfair|increase\s+my\s+score|review\s+my\s+answers)\b", re.I),
+        re.compile(
+            r"\b(unfair|graded\s+me\s+unfair|increase\s+my\s+score|review\s+my\s+answers)\b",
+            re.I,
+        ),
         "grading dispute / outcome manipulation request",
     ),
     # Malicious intent
@@ -52,7 +58,9 @@ _PATTERNS: list[tuple[re.Pattern[str], str]] = [
     ),
     # Fraud/identity theft and vulnerability reports.
     (
-        re.compile(r"\bidentity\s+(?:has\s+been\s+)?stolen\b|\bidentity\s+theft\b", re.I),
+        re.compile(
+            r"\bidentity\s+(?:has\s+been\s+)?stolen\b|\bidentity\s+theft\b", re.I
+        ),
         "identity theft / fraud-sensitive",
     ),
     (
@@ -79,7 +87,10 @@ _PATTERNS: list[tuple[re.Pattern[str], str]] = [
     ),
     # Credential theft / phishing context.
     (
-        re.compile(r"\b(stolen\s+credentials|credential\s+stuffing|phishing\s+link\s+clicked)\b", re.I),
+        re.compile(
+            r"\b(stolen\s+credentials|credential\s+stuffing|phishing\s+link\s+clicked)\b",
+            re.I,
+        ),
         "credential-theft sensitive — escalate",
     ),
 ]

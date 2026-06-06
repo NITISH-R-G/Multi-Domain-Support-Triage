@@ -1,4 +1,5 @@
 """Golden routing assertions vs bundled sample_support_tickets.csv (offline LLM)."""
+
 from __future__ import annotations
 
 
@@ -40,7 +41,9 @@ def offline_llm(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("ORCHESTRATE_DISABLE_LLM", "1")
 
 
-def test_sample_support_routing_matches_golden(bm25_index_session: object, offline_llm: None) -> None:
+def test_sample_support_routing_matches_golden(
+    bm25_index_session: object, offline_llm: None
+) -> None:
     """Every sample row: status, request_type, product_area must match labels when LLM is disabled."""
     df = read_tickets_csv(SAMPLE_PATH, label="sample")
     df = canonicalize_ticket_columns(df)
