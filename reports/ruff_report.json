@@ -1,0 +1,266 @@
+[
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 20,
+      "row": 16
+    },
+    "filename": "/app/code/compare_outputs.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 17
+          },
+          "location": {
+            "column": 1,
+            "row": 16
+          }
+        }
+      ],
+      "message": "Remove unused import: `pandas`"
+    },
+    "location": {
+      "column": 18,
+      "row": 16
+    },
+    "message": "`pandas` imported but unused",
+    "noqa_row": 16,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 10,
+      "row": 15
+    },
+    "filename": "/app/code/response_quality_report.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 16
+          },
+          "location": {
+            "column": 1,
+            "row": 15
+          }
+        }
+      ],
+      "message": "Remove unused import: `re`"
+    },
+    "location": {
+      "column": 8,
+      "row": 15
+    },
+    "message": "`re` imported but unused",
+    "noqa_row": 15,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 24
+    },
+    "filename": "/app/code/response_quality_report.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 25
+          },
+          "location": {
+            "column": 1,
+            "row": 24
+          }
+        }
+      ],
+      "message": "Remove unused import: `corpus.tokenize`"
+    },
+    "location": {
+      "column": 20,
+      "row": 24
+    },
+    "message": "`corpus.tokenize` imported but unused",
+    "noqa_row": 24,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 15,
+      "row": 18
+    },
+    "filename": "/app/code/retrieve.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from config import (\n    BM25_WEIGHT,\n    HYBRID_CANDIDATES,\n    INDEX_VERSION,\n    LOW_BM25_THRESHOLD,\n    RERANK_BONUS_BRAND,\n    RERANK_BONUS_TEAM,\n    RERANK_BONUS_WORKSPACE,\n    TFIDF_WEIGHT,\n    TOP_K,\n)",
+          "end_location": {
+            "column": 2,
+            "row": 28
+          },
+          "location": {
+            "column": 1,
+            "row": 16
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 5,
+      "row": 18
+    },
+    "message": "`config.CACHE_PATH` imported but unused",
+    "noqa_row": 18,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 13,
+      "row": 19
+    },
+    "filename": "/app/code/retrieve.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from config import (\n    BM25_WEIGHT,\n    HYBRID_CANDIDATES,\n    INDEX_VERSION,\n    LOW_BM25_THRESHOLD,\n    RERANK_BONUS_BRAND,\n    RERANK_BONUS_TEAM,\n    RERANK_BONUS_WORKSPACE,\n    TFIDF_WEIGHT,\n    TOP_K,\n)",
+          "end_location": {
+            "column": 2,
+            "row": 28
+          },
+          "location": {
+            "column": 1,
+            "row": 16
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 5,
+      "row": 19
+    },
+    "message": "`config.DATA_DIR` imported but unused",
+    "noqa_row": 19,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 14,
+      "row": 7
+    },
+    "filename": "/app/code/tests/test_cli_main.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 8
+          },
+          "location": {
+            "column": 1,
+            "row": 7
+          }
+        }
+      ],
+      "message": "Remove unused import: `pytest`"
+    },
+    "location": {
+      "column": 8,
+      "row": 7
+    },
+    "message": "`pytest` imported but unused",
+    "noqa_row": 7,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 10,
+      "row": 4
+    },
+    "filename": "/app/code/tests/test_cross_ecosystem.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `os`"
+    },
+    "location": {
+      "column": 8,
+      "row": 4
+    },
+    "message": "`os` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 10,
+      "row": 4
+    },
+    "filename": "/app/code/tests/test_sample_routing_golden.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `os`"
+    },
+    "location": {
+      "column": 8,
+      "row": 4
+    },
+    "message": "`os` imported but unused",
+    "noqa_row": 4,
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  }
+]

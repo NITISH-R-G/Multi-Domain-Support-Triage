@@ -1,4 +1,5 @@
 """CLI exits when gold vs pred produce zero merge rows."""
+
 from __future__ import annotations
 
 import subprocess

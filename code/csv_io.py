@@ -1,4 +1,5 @@
 """Shared CSV loading and schema validation for ticket pipelines."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -26,7 +27,9 @@ def read_tickets_csv(path: Path | str, *, label: str = "CSV") -> pd.DataFrame:
             last_err = e
             continue
         except (pd.errors.ParserError, pd.errors.EmptyDataError) as e:
-            raise TicketCsvError(f"{label} could not be parsed as CSV ({p}): {e}") from e
+            raise TicketCsvError(
+                f"{label} could not be parsed as CSV ({p}): {e}"
+            ) from e
     assert last_err is not None
     raise TicketCsvError(
         f"{label} is not valid UTF-8 (or UTF-8 with BOM). Save the file as UTF-8 and retry. ({p})"
