@@ -18,11 +18,11 @@ def load_file_content(filepath):
 def generate_docs(repo_graph, root_dir):
     if OpenAI is None or not os.environ.get("OPENAI_API_KEY"):
         print(
-            "OpenAI API key not set or openai package not installed. Skipping AI generation."
+            "OpenAI API key not set or openai package not installed. Using offline fallback."
         )
         return {
-            "summary": "AI generation skipped.",
-            "onboarding_guide": "AI generation skipped.",
+            "architecture_summary": "This repository powers the HackerRank Orchestrate terminal-based AI triage agent. It parses support tickets and uses a hybrid retrieval mechanism with TF-IDF and BM25.",
+            "onboarding_guide": "To contribute, navigate to the `code/` directory, install `requirements.txt`, and run `pytest tests -q`.",
         }
 
     client = OpenAI()

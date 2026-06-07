@@ -36,3 +36,9 @@ If applicable, add screenshots to help explain your problem.
 
 **Additional context**
 Add any other context about the problem here.
+
+**Expected priority**
+A clear and concise description of the priority and impact of the bug.
+
+**Logs/Traces**
+If applicable, paste any related logs or stack traces.
