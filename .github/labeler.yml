@@ -1,0 +1,7 @@
+automation:
+  - changed-files:
+    - any-glob-to-any-file: 'automation/**/*'
+
+core-app:
+  - changed-files:
+    - any-glob-to-any-file: 'code/**/*'

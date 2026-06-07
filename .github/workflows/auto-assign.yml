@@ -1,0 +1,24 @@
+name: Auto-assign Issue or PR to Creator
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  assign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign PR/Issue to Author
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "${{ github.event_name }}" = "issues" ]; then
+            gh issue edit "${{ github.event.issue.number }}" --add-assignee "${{ github.actor }}" --repo "${{ github.repository }}"
+          elif [ "${{ github.event_name }}" = "pull_request" ]; then
+            gh pr edit "${{ github.event.pull_request.number }}" --add-assignee "${{ github.actor }}" --repo "${{ github.repository }}"
+          fi
