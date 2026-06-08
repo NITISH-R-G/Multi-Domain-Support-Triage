@@ -47,6 +47,7 @@ def post_comment(repo, issue_number, token, body):
             f"Failed to post comment. Status: {response.status_code}, Response: {response.text}"
         )
 
+
 def add_labels(repo, issue_number, token, labels):
     if not labels:
         return
@@ -119,9 +120,17 @@ def main():
     labels_to_add = []
     if "bug" in text_to_search or "error" in text_to_search or "fix" in text_to_search:
         labels_to_add.append("bug")
-    if "feature" in text_to_search or "enhancement" in text_to_search or "add" in text_to_search:
+    if (
+        "feature" in text_to_search
+        or "enhancement" in text_to_search
+        or "add" in text_to_search
+    ):
         labels_to_add.append("enhancement")
-    if "docs" in text_to_search or "documentation" in text_to_search or "readme" in text_to_search:
+    if (
+        "docs" in text_to_search
+        or "documentation" in text_to_search
+        or "readme" in text_to_search
+    ):
         labels_to_add.append("documentation")
 
     if event_type in ["Issue", "Pull Request"] and action == "opened":
