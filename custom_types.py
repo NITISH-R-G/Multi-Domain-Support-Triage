@@ -1,1 +1,1 @@
-type HybridIndex = object
+HybridIndex = object
