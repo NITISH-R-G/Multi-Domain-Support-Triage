@@ -258,6 +258,7 @@ See [`evaluation_criteria.md`](./evaluation_criteria.md) for the full rubric. De
 
 
 
+
 <!-- AUTONOMOUS_SECTION_START -->
 
 ---
@@ -269,11 +270,11 @@ See [`evaluation_criteria.md`](./evaluation_criteria.md) for the full rubric. De
 *This section is automatically maintained by the AI documentation agent.*
 
 ## System Overview
-AI generated architecture summary not available.
+This repository powers the HackerRank Orchestrate terminal-based AI triage agent. It parses support tickets and uses a hybrid retrieval mechanism with TF-IDF and BM25.
 
 ## Key Features & Technology Stack
 - **Frameworks Detected:** pytest, openai
-- Automatically traces internal dependencies across 38 python files.
+- Automatically traces internal dependencies across 41 python files.
 - Generates interactive Mermaid architectures and documentation.
 
 # Architecture Diagrams
@@ -282,240 +283,189 @@ AI generated architecture summary not available.
 
 ```mermaid
 graph TD
-    node_0["conftest.py"]
-    click node_0 href "../code/conftest.py"
-    node_1["csv_io.py"]
-    click node_1 href "../code/csv_io.py"
-    node_2["compare_outputs.py"]
-    click node_2 href "../code/compare_outputs.py"
-    node_3["risk.py"]
-    click node_3 href "../code/risk.py"
-    node_4["openai_agent.py"]
-    click node_4 href "../code/openai_agent.py"
-    node_5["main.py"]
-    click node_5 href "../code/main.py"
-    node_6["eval_sample.py"]
-    click node_6 href "../code/eval_sample.py"
-    node_7["grounding.py"]
-    click node_7 href "../code/grounding.py"
-    node_8["eval_metrics.py"]
-    click node_8 href "../code/eval_metrics.py"
-    node_9["__main__.py"]
-    click node_9 href "../code/__main__.py"
-    node_10["run_eval.py"]
-    click node_10 href "../code/run_eval.py"
-    node_11["response_quality_report.py"]
-    click node_11 href "../code/response_quality_report.py"
-    node_12["__init__.py"]
-    click node_12 href "../code/__init__.py"
-    node_13["ticket_hints.py"]
-    click node_13 href "../code/ticket_hints.py"
-    node_14["cross_ecosystem.py"]
-    click node_14 href "../code/cross_ecosystem.py"
-    node_15["postprocess.py"]
-    click node_15 href "../code/postprocess.py"
-    node_16["corpus.py"]
-    click node_16 href "../code/corpus.py"
-    node_17["config.py"]
-    click node_17 href "../code/config.py"
-    node_18["answer_synthesis.py"]
-    click node_18 href "../code/answer_synthesis.py"
-    node_19["retrieve.py"]
-    click node_19 href "../code/retrieve.py"
-    node_20["taxonomy.py"]
-    click node_20 href "../code/taxonomy.py"
-    node_21["test_sample_routing_golden.py"]
-    click node_21 href "../code/tests/test_sample_routing_golden.py"
-    node_22["test_ticket_hints.py"]
-    click node_22 href "../code/tests/test_ticket_hints.py"
-    node_23["test_eval_metrics.py"]
-    click node_23 href "../code/tests/test_eval_metrics.py"
-    node_24["test_csv_io.py"]
-    click node_24 href "../code/tests/test_csv_io.py"
-    node_25["test_cli_main.py"]
-    click node_25 href "../code/tests/test_cli_main.py"
-    node_26["test_module_invocation.py"]
-    click node_26 href "../code/tests/test_module_invocation.py"
-    node_27["test_merge_cli.py"]
-    click node_27 href "../code/tests/test_merge_cli.py"
-    node_28["test_taxonomy.py"]
-    click node_28 href "../code/tests/test_taxonomy.py"
-    node_29["test_risk.py"]
-    click node_29 href "../code/tests/test_risk.py"
-    node_30["test_cross_ecosystem.py"]
-    click node_30 href "../code/tests/test_cross_ecosystem.py"
-    node_31["capture_baseline.py"]
-    click node_31 href "../scripts/capture_baseline.py"
-    node_32["ai_qa_agent.py"]
-    click node_32 href "../automation/ai_qa_agent.py"
-    node_33["diagrams.py"]
-    click node_33 href "../automation/diagrams.py"
-    node_34["readme_generator.py"]
-    click node_34 href "../automation/readme_generator.py"
-    node_35["analyzer.py"]
-    click node_35 href "../automation/analyzer.py"
-    node_36["__init__.py"]
-    click node_36 href "../automation/__init__.py"
-    node_37["ai_agent.py"]
-    click node_37 href "../automation/ai_agent.py"
-    node_0 --> node_17
-    node_0 --> node_17
-    node_0 --> node_19
-    node_2 --> node_1
-    node_2 --> node_1
-    node_2 --> node_1
-    node_2 --> node_1
-    node_2 --> node_8
-    node_2 --> node_8
-    node_2 --> node_8
-    node_4 --> node_18
-    node_4 --> node_17
-    node_4 --> node_19
-    node_4 --> node_19
-    node_5 --> node_17
-    node_5 --> node_17
-    node_5 --> node_17
-    node_5 --> node_17
-    node_5 --> node_17
-    node_5 --> node_17
-    node_5 --> node_14
-    node_5 --> node_1
-    node_5 --> node_1
-    node_5 --> node_1
-    node_5 --> node_4
-    node_5 --> node_37
-    node_5 --> node_4
-    node_5 --> node_37
-    node_5 --> node_15
-    node_5 --> node_19
-    node_5 --> node_19
-    node_5 --> node_19
-    node_5 --> node_19
-    node_5 --> node_3
-    node_5 --> node_20
-    node_5 --> node_13
-    node_6 --> node_1
-    node_6 --> node_1
-    node_6 --> node_1
-    node_6 --> node_1
-    node_6 --> node_8
-    node_6 --> node_8
-    node_6 --> node_8
+    node_0["custom_types.py"]
+    click node_0 href "../custom_types.py"
+    node_1["fix_type.py"]
+    click node_1 href "../fix_type.py"
+    node_2["conftest.py"]
+    click node_2 href "../code/conftest.py"
+    node_3["csv_io.py"]
+    click node_3 href "../code/csv_io.py"
+    node_4["compare_outputs.py"]
+    click node_4 href "../code/compare_outputs.py"
+    node_5["risk.py"]
+    click node_5 href "../code/risk.py"
+    node_6["openai_agent.py"]
+    click node_6 href "../code/openai_agent.py"
+    node_7["main.py"]
+    click node_7 href "../code/main.py"
+    node_8["eval_sample.py"]
+    click node_8 href "../code/eval_sample.py"
+    node_9["grounding.py"]
+    click node_9 href "../code/grounding.py"
+    node_10["eval_metrics.py"]
+    click node_10 href "../code/eval_metrics.py"
+    node_11["__main__.py"]
+    click node_11 href "../code/__main__.py"
+    node_12["run_eval.py"]
+    click node_12 href "../code/run_eval.py"
+    node_13["response_quality_report.py"]
+    click node_13 href "../code/response_quality_report.py"
+    node_14["ticket_hints.py"]
+    click node_14 href "../code/ticket_hints.py"
+    node_15["cross_ecosystem.py"]
+    click node_15 href "../code/cross_ecosystem.py"
+    node_16["postprocess.py"]
+    click node_16 href "../code/postprocess.py"
+    node_17["corpus.py"]
+    click node_17 href "../code/corpus.py"
+    node_18["config.py"]
+    click node_18 href "../code/config.py"
+    node_19["answer_synthesis.py"]
+    click node_19 href "../code/answer_synthesis.py"
+    node_20["retrieve.py"]
+    click node_20 href "../code/retrieve.py"
+    node_21["taxonomy.py"]
+    click node_21 href "../code/taxonomy.py"
+    node_22["test_sample_routing_golden.py"]
+    click node_22 href "../code/tests/test_sample_routing_golden.py"
+    node_23["test_ticket_hints.py"]
+    click node_23 href "../code/tests/test_ticket_hints.py"
+    node_24["test_eval_metrics.py"]
+    click node_24 href "../code/tests/test_eval_metrics.py"
+    node_25["test_csv_io.py"]
+    click node_25 href "../code/tests/test_csv_io.py"
+    node_26["test_cli_main.py"]
+    click node_26 href "../code/tests/test_cli_main.py"
+    node_27["test_module_invocation.py"]
+    click node_27 href "../code/tests/test_module_invocation.py"
+    node_28["test_merge_cli.py"]
+    click node_28 href "../code/tests/test_merge_cli.py"
+    node_29["test_taxonomy.py"]
+    click node_29 href "../code/tests/test_taxonomy.py"
+    node_30["test_risk.py"]
+    click node_30 href "../code/tests/test_risk.py"
+    node_31["test_cross_ecosystem.py"]
+    click node_31 href "../code/tests/test_cross_ecosystem.py"
+    node_32["capture_baseline.py"]
+    click node_32 href "../scripts/capture_baseline.py"
+    node_33["ai_qa_agent.py"]
+    click node_33 href "../automation/ai_qa_agent.py"
+    node_34["diagrams.py"]
+    click node_34 href "../automation/diagrams.py"
+    node_35["readme_generator.py"]
+    click node_35 href "../automation/readme_generator.py"
+    node_36["ai_maintainer.py"]
+    click node_36 href "../automation/ai_maintainer.py"
+    node_37["analyzer.py"]
+    click node_37 href "../automation/analyzer.py"
+    node_38["__init__.py"]
+    click node_38 href "../automation/__init__.py"
+    node_39["health_dashboard.py"]
+    click node_39 href "../automation/health_dashboard.py"
+    node_40["ai_agent.py"]
+    click node_40 href "../automation/ai_agent.py"
+    node_2 --> node_18
+    node_2 --> node_18
+    node_2 --> node_20
+    node_4 --> node_3
+    node_4 --> node_3
+    node_4 --> node_3
+    node_4 --> node_3
+    node_4 --> node_10
+    node_4 --> node_10
+    node_4 --> node_10
+    node_6 --> node_19
+    node_6 --> node_18
+    node_6 --> node_20
+    node_6 --> node_20
+    node_7 --> node_18
+    node_7 --> node_18
+    node_7 --> node_18
+    node_7 --> node_18
+    node_7 --> node_18
+    node_7 --> node_18
+    node_7 --> node_15
+    node_7 --> node_3
+    node_7 --> node_3
+    node_7 --> node_3
+    node_7 --> node_6
+    node_7 --> node_40
+    node_7 --> node_6
+    node_7 --> node_40
     node_7 --> node_16
-    node_7 --> node_19
-    node_9 --> node_5
-    node_11 --> node_17
-    node_11 --> node_17
-    node_11 --> node_17
-    node_11 --> node_1
-    node_11 --> node_1
-    node_11 --> node_16
+    node_7 --> node_20
+    node_7 --> node_20
+    node_7 --> node_20
+    node_7 --> node_18
+    node_7 --> node_5
+    node_7 --> node_21
+    node_7 --> node_14
+    node_8 --> node_3
+    node_8 --> node_3
+    node_8 --> node_3
+    node_8 --> node_3
+    node_8 --> node_10
+    node_8 --> node_10
+    node_8 --> node_10
+    node_9 --> node_17
+    node_9 --> node_20
     node_11 --> node_7
-    node_11 --> node_7
-    node_11 --> node_19
-    node_11 --> node_19
-    node_15 --> node_17
-    node_15 --> node_17
-    node_15 --> node_7
-    node_15 --> node_7
-    node_15 --> node_19
-    node_15 --> node_20
-    node_15 --> node_20
-    node_15 --> node_4
-    node_15 --> node_37
-    node_18 --> node_19
-    node_19 --> node_17
-    node_19 --> node_17
-    node_19 --> node_17
-    node_19 --> node_17
-    node_19 --> node_17
-    node_19 --> node_17
-    node_19 --> node_17
-    node_19 --> node_17
-    node_19 --> node_17
-    node_19 --> node_17
-    node_19 --> node_17
-    node_19 --> node_16
-    node_19 --> node_16
-    node_19 --> node_16
-    node_20 --> node_16
+    node_13 --> node_18
+    node_13 --> node_18
+    node_13 --> node_18
+    node_13 --> node_3
+    node_13 --> node_3
+    node_13 --> node_9
+    node_13 --> node_9
+    node_13 --> node_20
+    node_13 --> node_20
+    node_16 --> node_18
+    node_16 --> node_18
+    node_16 --> node_9
+    node_16 --> node_9
+    node_16 --> node_20
+    node_16 --> node_21
+    node_16 --> node_21
+    node_16 --> node_6
+    node_16 --> node_40
+    node_19 --> node_20
+    node_20 --> node_18
+    node_20 --> node_18
+    node_20 --> node_18
+    node_20 --> node_18
+    node_20 --> node_18
+    node_20 --> node_18
+    node_20 --> node_18
+    node_20 --> node_18
+    node_20 --> node_18
+    node_20 --> node_17
+    node_20 --> node_17
+    node_20 --> node_17
     node_21 --> node_17
-    node_21 --> node_1
-    node_21 --> node_1
-    node_21 --> node_5
-    node_22 --> node_13
-    node_22 --> node_13
-    node_23 --> node_8
-    node_23 --> node_8
-    node_23 --> node_8
-    node_24 --> node_1
-    node_24 --> node_1
-    node_24 --> node_1
-    node_24 --> node_1
-    node_28 --> node_20
-    node_28 --> node_20
-    node_28 --> node_20
-    node_28 --> node_16
-    node_29 --> node_3
-    node_30 --> node_14
+    node_22 --> node_18
+    node_22 --> node_3
+    node_22 --> node_3
+    node_22 --> node_7
+    node_23 --> node_14
+    node_23 --> node_14
+    node_24 --> node_10
+    node_24 --> node_10
+    node_24 --> node_10
+    node_25 --> node_3
+    node_25 --> node_3
+    node_25 --> node_3
+    node_25 --> node_3
+    node_29 --> node_21
+    node_29 --> node_21
+    node_29 --> node_21
+    node_29 --> node_17
+    node_30 --> node_5
+    node_31 --> node_15
 ```
 
 
 ## API Documentation
-
-### File: `retrieve.py`
-
-### `rerank_hits`
-Lexical overlap rerank on top of BM25 scores.
-
-### File: `eval_metrics.py`
-
-### `token_set_f1`
-Token-overlap F1 (bag of words; labels normalized).
-
-### `compact_overlap_ratio`
-Dice-like overlap on character bags (cheap fuzzy signal vs exact match).
-
-### File: `taxonomy.py`
-
-### `looks_like_off_topic_general_knowledge`
-Entertainment / trivia / general-knowledge questions unlikely to be product support.
-
-### `map_product_area`
-Map evidence to one of CANONICAL_PRODUCT_AREAS when possible.
-
-### File: `answer_synthesis.py`
-
-### `extract_steps`
-Pull readable steps from support article bodies.
-
-### `synthesize_reply_from_hits`
-Return (user_response, source_paths_used).
-
-### File: `ticket_hints.py`
-
-### `ticket_may_span_multiple_topics`
-Heuristic: message might bundle several distinct asks (no NLP; best-effort).
-
-### `maybe_append_multi_topic_justification`
-Append a transparency note to justification only (does not change response body).
-
-### File: `grounding.py`
-
-### `lexical_overlap`
-Return fraction of non-trivial response tokens present in retrieved chunk text.
-
-### `has_unsupported_numbers`
-Flag digit-heavy claims not present in evidence (rough guardrail).
-
-### File: `cross_ecosystem.py`
-
-### `cross_ecosystem_escalation_reason`
-Return human-readable escalate reason, or None.
-
-Conservative pairwise checks avoid false positives such as "HackerRank visa sponsorship"
-(mentions Visa immigration language without Visa-the-network product context).
-Disable entirely with ``ORCHESTRATE_DISABLE_CROSS_ECOSYSTEM_ESCALATE=1``.
 
 ### File: `csv_io.py`
 
@@ -531,12 +481,67 @@ Case-insensitive rename of agent output columns to Pred_* names for gold merges.
 ### `canonicalize_ticket_columns`
 Ensure Issue / Subject / Company column names (case-insensitive).
 
+### File: `grounding.py`
+
+### `lexical_overlap`
+Return fraction of non-trivial response tokens present in retrieved chunk text.
+
+### `has_unsupported_numbers`
+Flag digit-heavy claims not present in evidence (rough guardrail).
+
+### File: `eval_metrics.py`
+
+### `token_set_f1`
+Token-overlap F1 (bag of words; labels normalized).
+
+### `compact_overlap_ratio`
+Dice-like overlap on character bags (cheap fuzzy signal vs exact match).
+
+### File: `ticket_hints.py`
+
+### `ticket_may_span_multiple_topics`
+Heuristic: message might bundle several distinct asks (no NLP; best-effort).
+
+### `maybe_append_multi_topic_justification`
+Append a transparency note to justification only (does not change response body).
+
+### File: `cross_ecosystem.py`
+
+### `cross_ecosystem_escalation_reason`
+Return human-readable escalate reason, or None.
+
+Conservative pairwise checks avoid false positives such as "HackerRank visa sponsorship"
+(mentions Visa immigration language without Visa-the-network product context).
+Disable entirely with ``ORCHESTRATE_DISABLE_CROSS_ECOSYSTEM_ESCALATE=1``.
+
+### File: `answer_synthesis.py`
+
+### `extract_steps`
+Pull readable steps from support article bodies.
+
+### `synthesize_reply_from_hits`
+Return (user_response, source_paths_used).
+
+### File: `retrieve.py`
+
+### `rerank_hits`
+Lexical overlap rerank on top of BM25 scores.
+
+### File: `taxonomy.py`
+
+### `looks_like_off_topic_general_knowledge`
+Entertainment / trivia / general-knowledge questions unlikely to be product support.
+
+### `map_product_area`
+Map evidence to one of CANONICAL_PRODUCT_AREAS when possible.
+
 
 
 ## Automation Onboarding & Contribution
-AI generation skipped.
+To contribute, navigate to the `code/` directory, install `requirements.txt`, and run `pytest tests -q`.
 
 <!-- AUTONOMOUS_SECTION_END -->
+
 
 
 
