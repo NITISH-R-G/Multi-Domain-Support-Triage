@@ -255,6 +255,9 @@ See [`evaluation_criteria.md`](./evaluation_criteria.md) for the full rubric. De
 
 
 
+
+
+
 <!-- AUTONOMOUS_SECTION_START -->
 
 ---
@@ -456,6 +459,78 @@ graph TD
     node_29 --> node_3
     node_30 --> node_14
 ```
+
+
+## API Documentation
+
+### File: `retrieve.py`
+
+### `rerank_hits`
+Lexical overlap rerank on top of BM25 scores.
+
+### File: `eval_metrics.py`
+
+### `token_set_f1`
+Token-overlap F1 (bag of words; labels normalized).
+
+### `compact_overlap_ratio`
+Dice-like overlap on character bags (cheap fuzzy signal vs exact match).
+
+### File: `taxonomy.py`
+
+### `looks_like_off_topic_general_knowledge`
+Entertainment / trivia / general-knowledge questions unlikely to be product support.
+
+### `map_product_area`
+Map evidence to one of CANONICAL_PRODUCT_AREAS when possible.
+
+### File: `answer_synthesis.py`
+
+### `extract_steps`
+Pull readable steps from support article bodies.
+
+### `synthesize_reply_from_hits`
+Return (user_response, source_paths_used).
+
+### File: `ticket_hints.py`
+
+### `ticket_may_span_multiple_topics`
+Heuristic: message might bundle several distinct asks (no NLP; best-effort).
+
+### `maybe_append_multi_topic_justification`
+Append a transparency note to justification only (does not change response body).
+
+### File: `grounding.py`
+
+### `lexical_overlap`
+Return fraction of non-trivial response tokens present in retrieved chunk text.
+
+### `has_unsupported_numbers`
+Flag digit-heavy claims not present in evidence (rough guardrail).
+
+### File: `cross_ecosystem.py`
+
+### `cross_ecosystem_escalation_reason`
+Return human-readable escalate reason, or None.
+
+Conservative pairwise checks avoid false positives such as "HackerRank visa sponsorship"
+(mentions Visa immigration language without Visa-the-network product context).
+Disable entirely with ``ORCHESTRATE_DISABLE_CROSS_ECOSYSTEM_ESCALATE=1``.
+
+### File: `csv_io.py`
+
+### `TicketCsvError`
+User-fixable CSV / path issues (exit code 2).
+
+### `read_tickets_csv`
+Read UTF-8 / UTF-8-BOM; raise clear errors for missing path or encoding.
+
+### `rename_prediction_columns`
+Case-insensitive rename of agent output columns to Pred_* names for gold merges.
+
+### `canonicalize_ticket_columns`
+Ensure Issue / Subject / Company column names (case-insensitive).
+
 
 
 ## Automation Onboarding & Contribution

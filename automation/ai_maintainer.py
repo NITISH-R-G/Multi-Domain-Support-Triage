@@ -47,6 +47,23 @@ def post_comment(repo, issue_number, token, body):
             f"Failed to post comment. Status: {response.status_code}, Response: {response.text}"
         )
 
+def add_labels(repo, issue_number, token, labels):
+    if not labels:
+        return
+    url = f"https://api.github.com/repos/{repo}/issues/{issue_number}/labels"
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github.v3+json",
+    }
+    data = {"labels": labels}
+    response = requests.post(url, headers=headers, json=data)
+    if response.status_code == 200:
+        print(f"Successfully added labels: {labels}")
+    else:
+        print(
+            f"Failed to add labels. Status: {response.status_code}, Response: {response.text}"
+        )
+
 
 def main():
     event_path = os.environ.get("GITHUB_EVENT_PATH")
@@ -96,6 +113,19 @@ def main():
     if not issue_number:
         print("Could not determine issue number.")
         return
+
+    # Basic rule-based triage
+    text_to_search = (str(title) + " " + str(body)).lower()
+    labels_to_add = []
+    if "bug" in text_to_search or "error" in text_to_search or "fix" in text_to_search:
+        labels_to_add.append("bug")
+    if "feature" in text_to_search or "enhancement" in text_to_search or "add" in text_to_search:
+        labels_to_add.append("enhancement")
+    if "docs" in text_to_search or "documentation" in text_to_search or "readme" in text_to_search:
+        labels_to_add.append("documentation")
+
+    if event_type in ["Issue", "Pull Request"] and action == "opened":
+        add_labels(repo, issue_number, token, labels_to_add)
 
     prompt = f"Review the following {event_type}:\n\nTitle: {title}\n\nBody: {body}\n\nPlease provide a helpful response as the AI Maintainer."
     print(f"Generating response for {event_type} #{issue_number}...")

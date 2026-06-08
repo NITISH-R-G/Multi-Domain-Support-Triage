@@ -39,6 +39,39 @@ def generate_readme():
         with open(readme_path, "r", encoding="utf-8") as f:
             original_readme = f.read()
 
+    # Extract some simple docstrings for API Documentation
+    api_docs = "## API Documentation\n\n"
+    try:
+        import ast
+        code_dir = os.path.join(root_dir, "code")
+        if os.path.exists(code_dir):
+            for root, _, files in os.walk(code_dir):
+                if "__pycache__" in root or ".pytest_cache" in root or "tests" in root:
+                    continue
+                for file in files:
+                    if file.endswith(".py") and file != "__init__.py" and file != "__main__.py":
+                        file_path = os.path.join(root, file)
+                        try:
+                            with open(file_path, "r", encoding="utf-8") as f:
+                                tree = ast.parse(f.read())
+
+                            file_api_docs = ""
+                            for node in tree.body:
+                                if isinstance(node, ast.FunctionDef) or isinstance(node, ast.ClassDef):
+                                    # Skip private functions
+                                    if node.name.startswith("_"):
+                                        continue
+                                    docstring = ast.get_docstring(node)
+                                    if docstring:
+                                        file_api_docs += f"### `{node.name}`\n{docstring}\n\n"
+
+                            if file_api_docs:
+                                api_docs += f"### File: `{file}`\n\n" + file_api_docs
+                        except Exception as file_e:
+                            pass
+    except Exception as e:
+        api_docs = f"Failed to generate API docs: {e}"
+
     # Define the automation section
     automation_section = f"""
 ---
@@ -58,6 +91,8 @@ def generate_readme():
 - Generates interactive Mermaid architectures and documentation.
 
 {diagrams}
+
+{api_docs}
 
 ## Automation Onboarding & Contribution
 {ai_docs.get("onboarding_guide", "Contributions are welcome! Please run the automation scripts or let GitHub Actions update docs on PRs.")}

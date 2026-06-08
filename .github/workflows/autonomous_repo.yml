@@ -32,7 +32,7 @@ jobs:
         run: pip install -r automation/requirements.txt || true
 
       - name: Install Linting & Security Tools
-        run: pip install flake8 bandit safety
+        run: pip install ruff bandit safety
 
       - name: Run Tests
         working-directory: code
@@ -41,7 +41,9 @@ jobs:
           python -m pytest tests -q
 
       - name: Linting
-        run: flake8 code/ || echo "Linting issues found"
+        run: |
+          ruff check code/ || echo "Ruff check issues found"
+          ruff format code/ --check || echo "Ruff format issues found"
 
       - name: Security Scans
         run: bandit -r code/ || echo "Bandit issues found"
@@ -74,6 +76,7 @@ jobs:
           if [ -f "automation/requirements.txt" ]; then
             pip install -r automation/requirements.txt
           fi
+          pip install vulture ruff
 
       - name: Run Autonomous Repository Analysis
         run: python automation/analyzer.py

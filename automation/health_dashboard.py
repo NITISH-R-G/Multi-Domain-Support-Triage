@@ -51,6 +51,21 @@ def generate_health_dashboard():
         except Exception:
             pass
 
+    # Run vulture
+    vulture_cmd = f"vulture {code_dir}"
+    vulture_out, vulture_rc = run_command(vulture_cmd)
+    dead_code_issues = len(vulture_out.strip().split("\n")) if vulture_out.strip() else 0
+
+    # Run ruff
+    ruff_cmd = f"ruff check {code_dir} --output-format=json"
+    ruff_out, _ = run_command(ruff_cmd)
+    ruff_issues = 0
+    try:
+        ruff_data = json.loads(ruff_out)
+        ruff_issues = len(ruff_data)
+    except Exception:
+        pass
+
     # Run tests to get count
     test_cmd = f"cd {code_dir} && python -m pytest tests -q"
     test_out, test_rc = run_command(test_cmd)
@@ -64,7 +79,9 @@ def generate_health_dashboard():
     health_score -= (bandit_issues - bandit_high) * 2
     health_score -= safety_issues * 10
     if test_status == "Fail":
-        health_score -= 40
+        health_score -= 20
+    health_score -= (dead_code_issues * 2)
+    health_score -= (ruff_issues)
 
     health_score = max(0, min(100, health_score))
 
@@ -81,6 +98,8 @@ def generate_health_dashboard():
 | **Test Suite** | {"✅" if test_status == "Pass" else "❌"} {test_status} |
 | **Security Issues (Bandit)** | {bandit_issues} total ({bandit_high} HIGH) |
 | **Vulnerable Dependencies (Safety)** | {safety_issues} |
+| **Dead Code (Vulture)** | {dead_code_issues} issues |
+| **Code Quality (Ruff)** | {ruff_issues} issues |
 
 ## Details
 
@@ -89,6 +108,10 @@ def generate_health_dashboard():
 
 ### Dependencies
 {"✅ No known vulnerabilities in dependencies." if safety_issues == 0 else f"❌ Found {safety_issues} vulnerable dependencies. Run `safety check` and update them."}
+
+### Code Quality
+{"✅ No dead code found." if dead_code_issues == 0 else f"⚠️ Found {dead_code_issues} potential dead code issues. Please review Vulture reports."}
+{"✅ No linting issues found." if ruff_issues == 0 else f"⚠️ Found {ruff_issues} linting issues. Please review Ruff reports."}
 
 ---
 *This dashboard is generated automatically by the AI Maintainer system.*
