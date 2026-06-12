@@ -4,23 +4,14 @@ import subprocess
 from datetime import datetime
 
 
-def run_command(command, cwd=None):
-    try:
-        import shlex
-
-        if isinstance(command, str):
-            command = shlex.split(command)
-        result = subprocess.run(
-            command, shell=False, capture_output=True, text=True, cwd=cwd
-        )
-        return result.stdout, result.returncode
-    except Exception as e:
-        return str(e), 1
-
-
 def get_bandit_metrics(code_dir):
-    bandit_cmd = f"bandit -r {code_dir} -f json"
-    bandit_out, _ = run_command(bandit_cmd)
+    try:
+        result = subprocess.run(
+            ["bandit", "-r", code_dir, "-f", "json"], shell=False, capture_output=True, text=True, check=False
+        )
+        bandit_out = result.stdout
+    except Exception:
+        bandit_out = "{}"
 
     issues = 0
     high_issues = 0
@@ -40,8 +31,14 @@ def get_bandit_metrics(code_dir):
 def get_safety_metrics(req_file):
     issues = 0
     if os.path.exists(req_file):
-        safety_cmd = f"safety check -r {req_file} --json"
-        safety_out, _ = run_command(safety_cmd)
+        try:
+            result = subprocess.run(
+                ["safety", "check", "-r", req_file, "--json"], shell=False, capture_output=True, text=True, check=False
+            )
+            safety_out = result.stdout
+        except Exception:
+            safety_out = "{}"
+
         try:
             safety_data = json.loads(safety_out)
             if isinstance(safety_data, dict) and "vulnerabilities" in safety_data:
@@ -105,8 +102,14 @@ def generate_health_dashboard():
     req_file = os.path.join(code_dir, "requirements.txt")
     safety_issues = get_safety_metrics(req_file)
 
-    test_cmd = "python -m pytest tests -q"
-    _, test_rc = run_command(test_cmd, cwd=code_dir)
+    try:
+        result = subprocess.run(
+            ["python", "-m", "pytest", "tests", "-q"], shell=False, capture_output=True, text=True, cwd=code_dir, check=False
+        )
+        test_rc = result.returncode
+    except Exception:
+        test_rc = 1
+
     test_status = "Pass" if test_rc == 0 else "Fail"
 
     health_score = compute_health_score(
