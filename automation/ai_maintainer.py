@@ -39,14 +39,13 @@ def post_comment(repo, issue_number, token, body):
         "Accept": "application/vnd.github.v3+json",
     }
     data = {"body": body}
-    response = requests.post(url, headers=headers, json=data)
+    response = requests.post(url, headers=headers, json=data, timeout=10)
     if response.status_code == 201:
         print("Successfully posted comment.")
     else:
         print(
             f"Failed to post comment. Status: {response.status_code}, Response: {response.text}"
         )
-
 
 def add_labels(repo, issue_number, token, labels):
     if not labels:
@@ -57,7 +56,7 @@ def add_labels(repo, issue_number, token, labels):
         "Accept": "application/vnd.github.v3+json",
     }
     data = {"labels": labels}
-    response = requests.post(url, headers=headers, json=data)
+    response = requests.post(url, headers=headers, json=data, timeout=10)
     if response.status_code == 200:
         print(f"Successfully added labels: {labels}")
     else:
@@ -120,17 +119,9 @@ def main():
     labels_to_add = []
     if "bug" in text_to_search or "error" in text_to_search or "fix" in text_to_search:
         labels_to_add.append("bug")
-    if (
-        "feature" in text_to_search
-        or "enhancement" in text_to_search
-        or "add" in text_to_search
-    ):
+    if "feature" in text_to_search or "enhancement" in text_to_search or "add" in text_to_search:
         labels_to_add.append("enhancement")
-    if (
-        "docs" in text_to_search
-        or "documentation" in text_to_search
-        or "readme" in text_to_search
-    ):
+    if "docs" in text_to_search or "documentation" in text_to_search or "readme" in text_to_search:
         labels_to_add.append("documentation")
 
     if event_type in ["Issue", "Pull Request"] and action == "opened":
