@@ -7,11 +7,7 @@ from datetime import datetime
 def get_bandit_metrics(code_dir):
     try:
         result = subprocess.run(
-            ["bandit", "-r", code_dir, "-f", "json"],
-            shell=False,
-            capture_output=True,
-            text=True,
-            check=False,
+            ["bandit", "-r", code_dir, "-f", "json"], shell=False, capture_output=True, text=True, check=False
         )
         bandit_out = result.stdout
     except Exception:
@@ -37,11 +33,7 @@ def get_safety_metrics(req_file):
     if os.path.exists(req_file):
         try:
             result = subprocess.run(
-                ["safety", "check", "-r", req_file, "--json"],
-                shell=False,
-                capture_output=True,
-                text=True,
-                check=False,
+                ["safety", "check", "-r", req_file, "--json"], shell=False, capture_output=True, text=True, check=False
             )
             safety_out = result.stdout
         except Exception:
@@ -112,12 +104,7 @@ def generate_health_dashboard():
 
     try:
         result = subprocess.run(
-            ["python", "-m", "pytest", "tests", "-q"],
-            shell=False,
-            capture_output=True,
-            text=True,
-            cwd=code_dir,
-            check=False,
+            ["python", "-m", "pytest", "tests", "-q"], shell=False, capture_output=True, text=True, cwd=code_dir, check=False
         )
         test_rc = result.returncode
     except Exception:
