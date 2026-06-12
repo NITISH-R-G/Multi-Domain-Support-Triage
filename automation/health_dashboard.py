@@ -12,30 +12,22 @@ def run_command(command_list, cwd=None):
         return str(e), 1
 
 
-def generate_health_dashboard():
-    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    code_dir = os.path.join(root_dir, "code")
-
-    print("Running security and dependency checks...")
-
-    # Run bandit
+def run_bandit_check(code_dir):
     bandit_cmd = ["bandit", "-r", code_dir, "-f", "json"]
     bandit_out, _ = run_command(bandit_cmd)
-
     bandit_issues = 0
     bandit_high = 0
     try:
         bandit_data = json.loads(bandit_out)
         bandit_issues = len(bandit_data.get("results", []))
         bandit_high = sum(
-            1
-            for r in bandit_data.get("results", [])
-            if r.get("issue_severity") == "HIGH"
+            1 for r in bandit_data.get("results", []) if r.get("issue_severity") == "HIGH"
         )
     except Exception:
         pass
+    return bandit_issues, bandit_high
 
-    # Run safety
+def run_safety_check(code_dir):
     req_file = os.path.join(code_dir, "requirements.txt")
     safety_issues = 0
     if os.path.exists(req_file):
@@ -43,36 +35,45 @@ def generate_health_dashboard():
         safety_out, _ = run_command(safety_cmd)
         try:
             safety_data = json.loads(safety_out)
-            # safety output structure can vary, typically vulnerabilities is a list
             if isinstance(safety_data, dict) and "vulnerabilities" in safety_data:
                 safety_issues = len(safety_data["vulnerabilities"])
             elif isinstance(safety_data, list):
                 safety_issues = len(safety_data)
         except Exception:
             pass
+    return safety_issues
 
-    # Run vulture
+def run_vulture_check(code_dir):
     vulture_cmd = ["vulture", code_dir]
     vulture_out, _ = run_command(vulture_cmd)
-    dead_code_issues = (
-        len(vulture_out.strip().split("\n")) if vulture_out.strip() else 0
-    )
+    return len(vulture_out.strip().split("\n")) if vulture_out.strip() else 0
 
-    # Run ruff
+def run_ruff_check(code_dir):
     ruff_cmd = ["ruff", "check", code_dir, "--output-format=json"]
     ruff_out, _ = run_command(ruff_cmd)
-    ruff_issues = 0
     try:
         ruff_data = json.loads(ruff_out)
-        ruff_issues = len(ruff_data)
+        return len(ruff_data)
     except Exception:
-        pass
+        return 0
 
-    # Run tests to get count
+def run_pytest_check(code_dir):
     test_cmd = ["python", "-m", "pytest", "tests", "-q"]
     _, test_rc = run_command(test_cmd, cwd=code_dir)
+    return "Pass" if test_rc == 0 else "Fail"
 
-    test_status = "Pass" if test_rc == 0 else "Fail"
+
+def generate_health_dashboard():
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    code_dir = os.path.join(root_dir, "code")
+
+    print("Running security and dependency checks...")
+
+    bandit_issues, bandit_high = run_bandit_check(code_dir)
+    safety_issues = run_safety_check(code_dir)
+    dead_code_issues = run_vulture_check(code_dir)
+    ruff_issues = run_ruff_check(code_dir)
+    test_status = run_pytest_check(code_dir)
 
     # Calculate simple health score
     health_score = 100
@@ -82,8 +83,8 @@ def generate_health_dashboard():
     health_score -= safety_issues * 10
     if test_status == "Fail":
         health_score -= 20
-    health_score -= dead_code_issues * 2
-    health_score -= ruff_issues
+    health_score -= (dead_code_issues * 2)
+    health_score -= (ruff_issues)
 
     health_score = max(0, min(100, health_score))
 

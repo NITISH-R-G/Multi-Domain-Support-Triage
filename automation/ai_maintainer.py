@@ -47,7 +47,6 @@ def post_comment(repo, issue_number, token, body):
             f"Failed to post comment. Status: {response.status_code}, Response: {response.text}"
         )
 
-
 def add_labels(repo, issue_number, token, labels):
     if not labels:
         return
@@ -66,6 +65,57 @@ def add_labels(repo, issue_number, token, labels):
         )
 
 
+def parse_event_data(event_data):
+    action = event_data.get("action")
+    if "pull_request" in event_data and action in ["opened", "edited"]:
+        return (
+            event_data["pull_request"]["number"],
+            event_data["pull_request"]["title"],
+            event_data["pull_request"]["body"] or "",
+            "Pull Request",
+            action
+        )
+    elif (
+        "issue" in event_data
+        and action in ["opened", "edited"]
+        and "pull_request" not in event_data["issue"]
+    ):
+        return (
+            event_data["issue"]["number"],
+            event_data["issue"]["title"],
+            event_data["issue"]["body"] or "",
+            "Issue",
+            action
+        )
+    elif "comment" in event_data and action == "created":
+        if event_data["comment"]["user"]["login"] == "github-actions[bot]":
+            return None, "", "", "", ""
+        return (
+            event_data["issue"]["number"],
+            event_data["issue"]["title"],
+            event_data["comment"]["body"],
+            "Comment",
+            action
+        )
+    return None, "", "", "", ""
+
+
+def apply_triage_labels(repo, issue_number, token, title, body, event_type, action):
+    if event_type not in ["Issue", "Pull Request"] or action != "opened":
+        return
+
+    text_to_search = (str(title) + " " + str(body)).lower()
+    labels_to_add = []
+    if "bug" in text_to_search or "error" in text_to_search or "fix" in text_to_search:
+        labels_to_add.append("bug")
+    if "feature" in text_to_search or "enhancement" in text_to_search or "add" in text_to_search:
+        labels_to_add.append("enhancement")
+    if "docs" in text_to_search or "documentation" in text_to_search or "readme" in text_to_search:
+        labels_to_add.append("documentation")
+
+    add_labels(repo, issue_number, token, labels_to_add)
+
+
 def main():
     event_path = os.environ.get("GITHUB_EVENT_PATH")
     repo = os.environ.get("GITHUB_REPOSITORY")
@@ -76,65 +126,13 @@ def main():
         return
 
     event_data = get_event_data(event_path)
+    issue_number, title, body, event_type, action = parse_event_data(event_data)
 
-    action = event_data.get("action")
-
-    issue_number = None
-    title = ""
-    body = ""
-    event_type = ""
-
-    if "pull_request" in event_data and action in ["opened", "edited"]:
-        issue_number = event_data["pull_request"]["number"]
-        title = event_data["pull_request"]["title"]
-        body = event_data["pull_request"]["body"] or ""
-        event_type = "Pull Request"
-    elif (
-        "issue" in event_data
-        and action in ["opened", "edited"]
-        and "pull_request" not in event_data["issue"]
-    ):
-        issue_number = event_data["issue"]["number"]
-        title = event_data["issue"]["title"]
-        body = event_data["issue"]["body"] or ""
-        event_type = "Issue"
-    elif "comment" in event_data and action == "created":
-        issue_number = event_data["issue"]["number"]
-        comment_body = event_data["comment"]["body"]
-        # Skip responding to ourselves
-        if event_data["comment"]["user"]["login"] == "github-actions[bot]":
-            return
-        title = event_data["issue"]["title"]
-        body = comment_body
-        event_type = "Comment"
-    else:
-        print("Unsupported event or action.")
+    if not event_type or not issue_number:
+        print("Unsupported event, action, or missing issue number.")
         return
 
-    if not issue_number:
-        print("Could not determine issue number.")
-        return
-
-    # Basic rule-based triage
-    text_to_search = (str(title) + " " + str(body)).lower()
-    labels_to_add = []
-    if "bug" in text_to_search or "error" in text_to_search or "fix" in text_to_search:
-        labels_to_add.append("bug")
-    if (
-        "feature" in text_to_search
-        or "enhancement" in text_to_search
-        or "add" in text_to_search
-    ):
-        labels_to_add.append("enhancement")
-    if (
-        "docs" in text_to_search
-        or "documentation" in text_to_search
-        or "readme" in text_to_search
-    ):
-        labels_to_add.append("documentation")
-
-    if event_type in ["Issue", "Pull Request"] and action == "opened":
-        add_labels(repo, issue_number, token, labels_to_add)
+    apply_triage_labels(repo, issue_number, token, title, body, event_type, action)
 
     prompt = f"Review the following {event_type}:\n\nTitle: {title}\n\nBody: {body}\n\nPlease provide a helpful response as the AI Maintainer."
     print(f"Generating response for {event_type} #{issue_number}...")
