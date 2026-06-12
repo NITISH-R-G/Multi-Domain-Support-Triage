@@ -43,13 +43,18 @@ def generate_readme():
     api_docs = "## API Documentation\n\n"
     try:
         import ast
+
         code_dir = os.path.join(root_dir, "code")
         if os.path.exists(code_dir):
             for root, _, files in os.walk(code_dir):
                 if "__pycache__" in root or ".pytest_cache" in root or "tests" in root:
                     continue
                 for file in files:
-                    if file.endswith(".py") and file != "__init__.py" and file != "__main__.py":
+                    if (
+                        file.endswith(".py")
+                        and file != "__init__.py"
+                        and file != "__main__.py"
+                    ):
                         file_path = os.path.join(root, file)
                         try:
                             with open(file_path, "r", encoding="utf-8") as f:
@@ -57,13 +62,17 @@ def generate_readme():
 
                             file_api_docs = ""
                             for node in tree.body:
-                                if isinstance(node, ast.FunctionDef) or isinstance(node, ast.ClassDef):
+                                if isinstance(node, ast.FunctionDef) or isinstance(
+                                    node, ast.ClassDef
+                                ):
                                     # Skip private functions
                                     if node.name.startswith("_"):
                                         continue
                                     docstring = ast.get_docstring(node)
                                     if docstring:
-                                        file_api_docs += f"### `{node.name}`\n{docstring}\n\n"
+                                        file_api_docs += (
+                                            f"### `{node.name}`\n{docstring}\n\n"
+                                        )
 
                             if file_api_docs:
                                 api_docs += f"### File: `{file}`\n\n" + file_api_docs

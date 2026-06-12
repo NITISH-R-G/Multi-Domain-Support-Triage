@@ -54,7 +54,9 @@ def generate_health_dashboard():
     # Run vulture
     vulture_cmd = ["vulture", code_dir]
     vulture_out, _ = run_command(vulture_cmd)
-    dead_code_issues = len(vulture_out.strip().split("\n")) if vulture_out.strip() else 0
+    dead_code_issues = (
+        len(vulture_out.strip().split("\n")) if vulture_out.strip() else 0
+    )
 
     # Run ruff
     ruff_cmd = ["ruff", "check", code_dir, "--output-format=json"]
@@ -80,8 +82,8 @@ def generate_health_dashboard():
     health_score -= safety_issues * 10
     if test_status == "Fail":
         health_score -= 20
-    health_score -= (dead_code_issues * 2)
-    health_score -= (ruff_issues)
+    health_score -= dead_code_issues * 2
+    health_score -= ruff_issues
 
     health_score = max(0, min(100, health_score))
 
