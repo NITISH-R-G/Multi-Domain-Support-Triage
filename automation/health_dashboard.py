@@ -4,60 +4,56 @@ import subprocess
 from datetime import datetime
 
 
-def run_command(command):
+def run_command(command, cwd=None):
     try:
-        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        import shlex
+
+        if isinstance(command, str):
+            command = shlex.split(command)
+        result = subprocess.run(
+            command, shell=False, capture_output=True, text=True, cwd=cwd
+        )
         return result.stdout, result.returncode
     except Exception as e:
         return str(e), 1
 
 
-def generate_health_dashboard():
-    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    code_dir = os.path.join(root_dir, "code")
-
-    print("Running security and dependency checks...")
-
-    # Run bandit
+def get_bandit_metrics(code_dir):
     bandit_cmd = f"bandit -r {code_dir} -f json"
     bandit_out, _ = run_command(bandit_cmd)
 
-    bandit_issues = 0
-    bandit_high = 0
+    issues = 0
+    high_issues = 0
     try:
         bandit_data = json.loads(bandit_out)
-        bandit_issues = len(bandit_data.get("results", []))
-        bandit_high = sum(
+        issues = len(bandit_data.get("results", []))
+        high_issues = sum(
             1
             for r in bandit_data.get("results", [])
             if r.get("issue_severity") == "HIGH"
         )
     except Exception:
         pass
+    return issues, high_issues
 
-    # Run safety
-    req_file = os.path.join(code_dir, "requirements.txt")
-    safety_issues = 0
+
+def get_safety_metrics(req_file):
+    issues = 0
     if os.path.exists(req_file):
         safety_cmd = f"safety check -r {req_file} --json"
         safety_out, _ = run_command(safety_cmd)
         try:
             safety_data = json.loads(safety_out)
-            # safety output structure can vary, typically vulnerabilities is a list
             if isinstance(safety_data, dict) and "vulnerabilities" in safety_data:
-                safety_issues = len(safety_data["vulnerabilities"])
+                issues = len(safety_data["vulnerabilities"])
             elif isinstance(safety_data, list):
-                safety_issues = len(safety_data)
+                issues = len(safety_data)
         except Exception:
             pass
+    return issues
 
-    # Run tests to get count
-    test_cmd = f"cd {code_dir} && python -m pytest tests -q"
-    test_out, test_rc = run_command(test_cmd)
 
-    test_status = "Pass" if test_rc == 0 else "Fail"
-
-    # Calculate simple health score
+def compute_health_score(bandit_issues, bandit_high, safety_issues, test_status):
     health_score = 100
     if bandit_high > 0:
         health_score -= 30
@@ -66,11 +62,14 @@ def generate_health_dashboard():
     if test_status == "Fail":
         health_score -= 40
 
-    health_score = max(0, min(100, health_score))
+    return max(0, min(100, health_score))
 
+
+def generate_dashboard_content(
+    health_score, test_status, bandit_issues, bandit_high, safety_issues
+):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    dashboard_content = f"""# Repository Health Dashboard
+    return f"""# Repository Health Dashboard
 
 *Last updated: {timestamp}*
 
@@ -93,6 +92,30 @@ def generate_health_dashboard():
 ---
 *This dashboard is generated automatically by the AI Maintainer system.*
 """
+
+
+def generate_health_dashboard():
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    code_dir = os.path.join(root_dir, "code")
+
+    print("Running security and dependency checks...")
+
+    bandit_issues, bandit_high = get_bandit_metrics(code_dir)
+
+    req_file = os.path.join(code_dir, "requirements.txt")
+    safety_issues = get_safety_metrics(req_file)
+
+    test_cmd = "python -m pytest tests -q"
+    _, test_rc = run_command(test_cmd, cwd=code_dir)
+    test_status = "Pass" if test_rc == 0 else "Fail"
+
+    health_score = compute_health_score(
+        bandit_issues, bandit_high, safety_issues, test_status
+    )
+
+    dashboard_content = generate_dashboard_content(
+        health_score, test_status, bandit_issues, bandit_high, safety_issues
+    )
 
     docs_dir = os.path.join(root_dir, "docs")
     os.makedirs(docs_dir, exist_ok=True)
