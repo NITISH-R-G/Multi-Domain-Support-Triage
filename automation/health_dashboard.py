@@ -21,11 +21,14 @@ def run_bandit_check(code_dir):
         bandit_data = json.loads(bandit_out)
         bandit_issues = len(bandit_data.get("results", []))
         bandit_high = sum(
-            1 for r in bandit_data.get("results", []) if r.get("issue_severity") == "HIGH"
+            1
+            for r in bandit_data.get("results", [])
+            if r.get("issue_severity") == "HIGH"
         )
     except Exception:
         pass
     return bandit_issues, bandit_high
+
 
 def run_safety_check(code_dir):
     req_file = os.path.join(code_dir, "requirements.txt")
@@ -43,10 +46,12 @@ def run_safety_check(code_dir):
             pass
     return safety_issues
 
+
 def run_vulture_check(code_dir):
     vulture_cmd = ["vulture", code_dir]
     vulture_out, _ = run_command(vulture_cmd)
     return len(vulture_out.strip().split("\n")) if vulture_out.strip() else 0
+
 
 def run_ruff_check(code_dir):
     ruff_cmd = ["ruff", "check", code_dir, "--output-format=json"]
@@ -56,6 +61,7 @@ def run_ruff_check(code_dir):
         return len(ruff_data)
     except Exception:
         return 0
+
 
 def run_pytest_check(code_dir):
     test_cmd = ["python", "-m", "pytest", "tests", "-q"]
@@ -83,8 +89,8 @@ def generate_health_dashboard():
     health_score -= safety_issues * 10
     if test_status == "Fail":
         health_score -= 20
-    health_score -= (dead_code_issues * 2)
-    health_score -= (ruff_issues)
+    health_score -= dead_code_issues * 2
+    health_score -= ruff_issues
 
     health_score = max(0, min(100, health_score))
 

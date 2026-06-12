@@ -47,6 +47,7 @@ def post_comment(repo, issue_number, token, body):
             f"Failed to post comment. Status: {response.status_code}, Response: {response.text}"
         )
 
+
 def add_labels(repo, issue_number, token, labels):
     if not labels:
         return
@@ -73,7 +74,7 @@ def parse_event_data(event_data):
             event_data["pull_request"]["title"],
             event_data["pull_request"]["body"] or "",
             "Pull Request",
-            action
+            action,
         )
     elif (
         "issue" in event_data
@@ -85,7 +86,7 @@ def parse_event_data(event_data):
             event_data["issue"]["title"],
             event_data["issue"]["body"] or "",
             "Issue",
-            action
+            action,
         )
     elif "comment" in event_data and action == "created":
         if event_data["comment"]["user"]["login"] == "github-actions[bot]":
@@ -95,7 +96,7 @@ def parse_event_data(event_data):
             event_data["issue"]["title"],
             event_data["comment"]["body"],
             "Comment",
-            action
+            action,
         )
     return None, "", "", "", ""
 
@@ -108,9 +109,17 @@ def apply_triage_labels(repo, issue_number, token, title, body, event_type, acti
     labels_to_add = []
     if "bug" in text_to_search or "error" in text_to_search or "fix" in text_to_search:
         labels_to_add.append("bug")
-    if "feature" in text_to_search or "enhancement" in text_to_search or "add" in text_to_search:
+    if (
+        "feature" in text_to_search
+        or "enhancement" in text_to_search
+        or "add" in text_to_search
+    ):
         labels_to_add.append("enhancement")
-    if "docs" in text_to_search or "documentation" in text_to_search or "readme" in text_to_search:
+    if (
+        "docs" in text_to_search
+        or "documentation" in text_to_search
+        or "readme" in text_to_search
+    ):
         labels_to_add.append("documentation")
 
     add_labels(repo, issue_number, token, labels_to_add)

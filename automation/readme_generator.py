@@ -6,6 +6,7 @@ def extract_api_docs(root_dir):
     api_docs = "## API Documentation\n\n"
     try:
         import ast
+
         code_dir = os.path.join(root_dir, "code")
         if not os.path.exists(code_dir):
             return api_docs
@@ -25,7 +26,9 @@ def extract_api_docs(root_dir):
                                     continue
                                 docstring = ast.get_docstring(node)
                                 if docstring:
-                                    file_api_docs += f"### `{node.name}`\n{docstring}\n\n"
+                                    file_api_docs += (
+                                        f"### `{node.name}`\n{docstring}\n\n"
+                                    )
                         if file_api_docs:
                             api_docs += f"### File: `{file}`\n\n" + file_api_docs
                     except Exception:
