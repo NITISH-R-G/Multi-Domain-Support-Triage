@@ -7,9 +7,7 @@ from datetime import datetime
 
 def run_command(command):
     try:
-        result = subprocess.run(
-            shlex.split(command), shell=False, capture_output=True, text=True
-        )
+        result = subprocess.run(shlex.split(command), shell=False, capture_output=True, text=True)
         return result.stdout, result.returncode
     except Exception as e:
         return str(e), 1
@@ -32,7 +30,6 @@ def _run_bandit(code_dir):
         pass
     return bandit_issues, bandit_high
 
-
 def _run_safety(code_dir):
     req_file = os.path.join(code_dir, "requirements.txt")
     safety_issues = 0
@@ -40,7 +37,12 @@ def _run_safety(code_dir):
         safety_cmd = f"safety check -r {req_file} --json"
         safety_out, _ = run_command(safety_cmd)
         try:
-            safety_data = json.loads(safety_out)
+            start = safety_out.find("{")
+            end = safety_out.rfind("}") + 1
+            if start >= 0 and end > start:
+                safety_data = json.loads(safety_out[start:end])
+            else:
+                safety_data = json.loads(safety_out)
             if isinstance(safety_data, dict) and "vulnerabilities" in safety_data:
                 safety_issues = len(safety_data["vulnerabilities"])
             elif isinstance(safety_data, list):
@@ -48,7 +50,6 @@ def _run_safety(code_dir):
         except Exception:
             pass
     return safety_issues
-
 
 def _calculate_score(bandit_issues, bandit_high, safety_issues, test_status):
     health_score = 100
@@ -59,7 +60,6 @@ def _calculate_score(bandit_issues, bandit_high, safety_issues, test_status):
     if test_status == "Fail":
         health_score -= 40
     return max(0, min(100, health_score))
-
 
 def generate_health_dashboard():
     root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -74,9 +74,7 @@ def generate_health_dashboard():
     _, test_rc = run_command(test_cmd)
     test_status = "Pass" if test_rc == 0 else "Fail"
 
-    health_score = _calculate_score(
-        bandit_issues, bandit_high, safety_issues, test_status
-    )
+    health_score = _calculate_score(bandit_issues, bandit_high, safety_issues, test_status)
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 

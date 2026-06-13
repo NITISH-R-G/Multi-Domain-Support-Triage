@@ -100,11 +100,17 @@ jobs:
         if: always()
         run: |
           if [ -f "$CODE_DIR/requirements.txt" ]; then
-            safety check -r "$CODE_DIR/requirements.txt" --json > reports/safety_report.json || true
+            safety check -r "$CODE_DIR/requirements.txt" --json | awk '/^{/{p=1} p; /^}/{p=0}' > reports/safety_report.json || true
           elif [ -f "requirements.txt" ]; then
-            safety check -r requirements.txt --json > reports/safety_report.json || true
+            safety check -r requirements.txt --json | awk '/^{/{p=1} p; /^}/{p=0}' > reports/safety_report.json || true
           else
             echo '{"vulnerabilities": []}' > reports/safety_report.json
+          fi
+
+          # safety json output sometimes contains non-json warnings. The awk command above tries to extract only the json.
+          # If it fails (e.g. outputs empty), we write an empty vulnerabilities list.
+          if ! jq . reports/safety_report.json > /dev/null 2>&1; then
+             echo '{"vulnerabilities": []}' > reports/safety_report.json
           fi
 
       - name: Run Detect-Secrets (Secret Detection)

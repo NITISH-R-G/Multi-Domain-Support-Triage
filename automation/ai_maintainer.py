@@ -56,7 +56,6 @@ def _parse_pr_event(event_data):
         "Pull Request",
     )
 
-
 def _parse_issue_event(event_data):
     return (
         event_data["issue"]["number"],
@@ -64,7 +63,6 @@ def _parse_issue_event(event_data):
         event_data["issue"]["body"] or "",
         "Issue",
     )
-
 
 def _parse_comment_event(event_data):
     if event_data["comment"]["user"]["login"] == "github-actions[bot]":
@@ -75,7 +73,6 @@ def _parse_comment_event(event_data):
         event_data["comment"]["body"],
         "Comment",
     )
-
 
 def _parse_event(event_data, action):
     if "pull_request" in event_data and action in ["opened", "edited"]:
@@ -89,7 +86,6 @@ def _parse_event(event_data, action):
     if "comment" in event_data and action == "created":
         return _parse_comment_event(event_data)
     return None, "", "", ""
-
 
 def main():
     event_path = os.environ.get("GITHUB_EVENT_PATH")
