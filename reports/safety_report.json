@@ -1,0 +1,172 @@
+{
+    "report_meta": {
+        "scan_target": "files",
+        "scanned": [
+            "code/requirements.txt"
+        ],
+        "scanned_full_path": [
+            "/app/code/requirements.txt"
+        ],
+        "target_languages": [
+            "python"
+        ],
+        "policy_file": null,
+        "policy_file_source": "local",
+        "audit_and_monitor": false,
+        "api_key": false,
+        "account": "",
+        "local_database_path": null,
+        "safety_version": "3.8.1",
+        "timestamp": "2026-06-13 18:15:32",
+        "packages_found": 7,
+        "vulnerabilities_found": 0,
+        "vulnerabilities_ignored": 0,
+        "remediations_recommended": 0,
+        "telemetry": {
+            "safety_options": {
+                "files": {
+                    "-r": 1
+                },
+                "json": {
+                    "--json": 1
+                }
+            },
+            "safety_version": "3.8.1",
+            "safety_source": "cli",
+            "os_type": "Linux",
+            "os_release": "6.8.0",
+            "os_description": "Linux-6.8.0-x86_64-with-glibc2.39",
+            "python_version": "3.12.13",
+            "safety_command": "check"
+        },
+        "git": {
+            "branch": "jules-10043369364956923188-db4b3bf6",
+            "tag": "",
+            "commit": "5643238c69b2fb6d877a1b0c4742dc57dac97dc6",
+            "dirty": "True",
+            "origin": "https://github.com/NITISH-R-G/Multi-Domain-Support-Triage"
+        },
+        "project": null,
+        "json_version": "1.1",
+        "remediations_attempted": 0,
+        "remediations_completed": 0,
+        "remediation_mode": "NON_INTERACTIVE"
+    },
+    "scanned_packages": {
+        "pandas": {
+            "name": "pandas",
+            "version": "3.0.3",
+            "requirements": [
+                {
+                    "raw": "pandas==3.0.3",
+                    "extras": [],
+                    "marker": null,
+                    "name": "pandas",
+                    "specifier": "==3.0.3",
+                    "url": null,
+                    "found": "/app/code/requirements.txt"
+                }
+            ]
+        },
+        "numpy": {
+            "name": "numpy",
+            "version": "2.4.6",
+            "requirements": [
+                {
+                    "raw": "numpy==2.4.6",
+                    "extras": [],
+                    "marker": null,
+                    "name": "numpy",
+                    "specifier": "==2.4.6",
+                    "url": null,
+                    "found": "/app/code/requirements.txt"
+                }
+            ]
+        },
+        "rank-bm25": {
+            "name": "rank-bm25",
+            "version": "0.2.2",
+            "requirements": [
+                {
+                    "raw": "rank-bm25==0.2.2",
+                    "extras": [],
+                    "marker": null,
+                    "name": "rank-bm25",
+                    "specifier": "==0.2.2",
+                    "url": null,
+                    "found": "/app/code/requirements.txt"
+                }
+            ]
+        },
+        "openai": {
+            "name": "openai",
+            "version": "2.41.1",
+            "requirements": [
+                {
+                    "raw": "openai==2.41.1",
+                    "extras": [],
+                    "marker": null,
+                    "name": "openai",
+                    "specifier": "==2.41.1",
+                    "url": null,
+                    "found": "/app/code/requirements.txt"
+                }
+            ]
+        },
+        "python-dotenv": {
+            "name": "python-dotenv",
+            "version": "1.2.2",
+            "requirements": [
+                {
+                    "raw": "python-dotenv==1.2.2",
+                    "extras": [],
+                    "marker": null,
+                    "name": "python-dotenv",
+                    "specifier": "==1.2.2",
+                    "url": null,
+                    "found": "/app/code/requirements.txt"
+                }
+            ]
+        },
+        "tqdm": {
+            "name": "tqdm",
+            "version": "4.68.2",
+            "requirements": [
+                {
+                    "raw": "tqdm==4.68.2",
+                    "extras": [],
+                    "marker": null,
+                    "name": "tqdm",
+                    "specifier": "==4.68.2",
+                    "url": null,
+                    "found": "/app/code/requirements.txt"
+                }
+            ]
+        },
+        "pytest": {
+            "name": "pytest",
+            "version": "9.0.3",
+            "requirements": [
+                {
+                    "raw": "pytest==9.0.3",
+                    "extras": [],
+                    "marker": null,
+                    "name": "pytest",
+                    "specifier": "==9.0.3",
+                    "url": null,
+                    "found": "/app/code/requirements.txt"
+                }
+            ]
+        }
+    },
+    "affected_packages": {},
+    "announcements": [],
+    "vulnerabilities": [],
+    "ignored_vulnerabilities": [],
+    "remediations": {},
+    "remediations_results": {
+        "vulnerabilities_fixed": [],
+        "remediations_applied": {},
+        "remediations_skipped": {}
+    }
+}
