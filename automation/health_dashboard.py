@@ -6,7 +6,9 @@ from datetime import datetime
 
 def run_command(command):
     try:
-        result = subprocess.run(command.split(), shell=False, capture_output=True, text=True)
+        result = subprocess.run(
+            command.split(), shell=False, capture_output=True, text=True
+        )
         return result.stdout, result.returncode
     except Exception as e:
         return str(e), 1
@@ -29,6 +31,7 @@ def _run_bandit(code_dir):
         pass
     return bandit_issues, bandit_high
 
+
 def _run_safety(code_dir):
     req_file = os.path.join(code_dir, "requirements.txt")
     safety_issues = 0
@@ -45,6 +48,7 @@ def _run_safety(code_dir):
             pass
     return safety_issues
 
+
 def _calculate_score(bandit_issues, bandit_high, safety_issues, test_status):
     health_score = 100
     if bandit_high > 0:
@@ -54,6 +58,7 @@ def _calculate_score(bandit_issues, bandit_high, safety_issues, test_status):
     if test_status == "Fail":
         health_score -= 40
     return max(0, min(100, health_score))
+
 
 def generate_health_dashboard():
     root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -68,7 +73,9 @@ def generate_health_dashboard():
     _, test_rc = run_command(test_cmd)
     test_status = "Pass" if test_rc == 0 else "Fail"
 
-    health_score = _calculate_score(bandit_issues, bandit_high, safety_issues, test_status)
+    health_score = _calculate_score(
+        bandit_issues, bandit_high, safety_issues, test_status
+    )
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
