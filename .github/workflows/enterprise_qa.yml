@@ -100,9 +100,9 @@ jobs:
         if: always()
         run: |
           if [ -f "$CODE_DIR/requirements.txt" ]; then
-            safety check -r "$CODE_DIR/requirements.txt" --json > reports/safety_report.json || true
+            safety check -r "$CODE_DIR/requirements.txt" --json | awk '/^{/ {p=1} p' | sed '/^+/,$d' > reports/safety_report.json || true
           elif [ -f "requirements.txt" ]; then
-            safety check -r requirements.txt --json > reports/safety_report.json || true
+            safety check -r requirements.txt --json | awk '/^{/ {p=1} p' | sed '/^+/,$d' > reports/safety_report.json || true
           else
             echo '{"vulnerabilities": []}' > reports/safety_report.json
           fi
@@ -121,7 +121,7 @@ jobs:
       - name: Run CycloneDX (SBOM Generation)
         id: cyclonedx
         if: always()
-        run: cyclonedx-py environment --outfile reports/sbom.json || true
+        run: cyclonedx-py environment -o reports/sbom.json || true
 
       - name: Run AI QA Agent
         if: always()
@@ -174,9 +174,10 @@ jobs:
 
           # Check for Safety issues
           if [ -s reports/safety_report.json ] && grep -q '"vulnerabilities"' reports/safety_report.json 2>/dev/null; then
-             # Since safety json format can vary, a simple check might just see if we got an error output, but here we just check if string is present.
-             echo "Safety found dependency vulnerabilities."
-             EXIT_CODE=1
+             if [ "$(jq '.vulnerabilities | length' reports/safety_report.json)" -gt 0 ]; then
+                 echo "Safety found dependency vulnerabilities."
+                 EXIT_CODE=1
+             fi
           fi
 
           # Check for secrets

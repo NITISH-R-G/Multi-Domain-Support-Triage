@@ -39,28 +39,20 @@ def post_comment(repo, issue_number, token, body):
         "Accept": "application/vnd.github.v3+json",
     }
     data = {"body": body}
-    response = requests.post(url, headers=headers, json=data)
-    if response.status_code == 201:
-        print("Successfully posted comment.")
-    else:
-        print(
-            f"Failed to post comment. Status: {response.status_code}, Response: {response.text}"
-        )
+    try:
+        response = requests.post(url, headers=headers, json=data, timeout=10)
+        if response.status_code == 201:
+            print("Successfully posted comment.")
+        else:
+            print(
+                f"Failed to post comment. Status: {response.status_code}, Response: {response.text}"
+            )
+    except requests.exceptions.RequestException as e:
+        print(f"Failed to post comment due to network error: {e}")
 
 
-def main():
-    event_path = os.environ.get("GITHUB_EVENT_PATH")
-    repo = os.environ.get("GITHUB_REPOSITORY")
-    token = os.environ.get("GITHUB_TOKEN")
-
-    if not event_path or not repo or not token:
-        print("Missing required environment variables.")
-        return
-
-    event_data = get_event_data(event_path)
-
+def parse_event_payload(event_data):
     action = event_data.get("action")
-
     issue_number = None
     title = ""
     body = ""
@@ -85,11 +77,28 @@ def main():
         comment_body = event_data["comment"]["body"]
         # Skip responding to ourselves
         if event_data["comment"]["user"]["login"] == "github-actions[bot]":
-            return
+            return None, "", "", ""
         title = event_data["issue"]["title"]
         body = comment_body
         event_type = "Comment"
-    else:
+
+    return issue_number, title, body, event_type
+
+
+def main():
+    event_path = os.environ.get("GITHUB_EVENT_PATH")
+    repo = os.environ.get("GITHUB_REPOSITORY")
+    token = os.environ.get("GITHUB_TOKEN")
+
+    if not event_path or not repo or not token:
+        print("Missing required environment variables.")
+        return
+
+    event_data = get_event_data(event_path)
+
+    issue_number, title, body, event_type = parse_event_payload(event_data)
+
+    if not event_type:
         print("Unsupported event or action.")
         return
 
