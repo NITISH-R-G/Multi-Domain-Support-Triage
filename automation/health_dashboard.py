@@ -44,18 +44,21 @@ def run_safety(req_file):
         # Let's try to extract just the JSON part
         try:
             # find first {
-            start_idx = safety_out.find('{')
+            start_idx = safety_out.find("{")
             if start_idx != -1:
-                 # find last }
-                 end_idx = safety_out.rfind('}')
-                 if end_idx != -1:
-                      json_str = safety_out[start_idx:end_idx+1]
-                      safety_data = json.loads(json_str)
-                      # safety output structure can vary, typically vulnerabilities is a list
-                      if isinstance(safety_data, dict) and "vulnerabilities" in safety_data:
-                          safety_issues = len(safety_data["vulnerabilities"])
-                      elif isinstance(safety_data, list):
-                          safety_issues = len(safety_data)
+                # find last }
+                end_idx = safety_out.rfind("}")
+                if end_idx != -1:
+                    json_str = safety_out[start_idx : end_idx + 1]
+                    safety_data = json.loads(json_str)
+                    # safety output structure can vary, typically vulnerabilities is a list
+                    if (
+                        isinstance(safety_data, dict)
+                        and "vulnerabilities" in safety_data
+                    ):
+                        safety_issues = len(safety_data["vulnerabilities"])
+                    elif isinstance(safety_data, list):
+                        safety_issues = len(safety_data)
         except Exception:
             pass
     return safety_issues
