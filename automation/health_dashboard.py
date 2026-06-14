@@ -4,22 +4,18 @@ import subprocess
 from datetime import datetime
 
 
-def run_command(command):
+def run_command(command, cwd=None):
     try:
-        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        result = subprocess.run(
+            command, cwd=cwd, capture_output=True, text=True, check=False
+        )
         return result.stdout, result.returncode
     except Exception as e:
         return str(e), 1
 
 
-def generate_health_dashboard():
-    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    code_dir = os.path.join(root_dir, "code")
-
-    print("Running security and dependency checks...")
-
-    # Run bandit
-    bandit_cmd = f"bandit -r {code_dir} -f json"
+def run_bandit(code_dir):
+    bandit_cmd = ["bandit", "-r", code_dir, "-f", "json"]
     bandit_out, _ = run_command(bandit_cmd)
 
     bandit_issues = 0
@@ -35,11 +31,13 @@ def generate_health_dashboard():
     except Exception:
         pass
 
-    # Run safety
-    req_file = os.path.join(code_dir, "requirements.txt")
+    return bandit_issues, bandit_high
+
+
+def run_safety(req_file):
     safety_issues = 0
     if os.path.exists(req_file):
-        safety_cmd = f"safety check -r {req_file} --json"
+        safety_cmd = ["safety", "check", "-r", req_file, "--json"]
         safety_out, _ = run_command(safety_cmd)
         try:
             safety_data = json.loads(safety_out)
@@ -50,12 +48,30 @@ def generate_health_dashboard():
                 safety_issues = len(safety_data)
         except Exception:
             pass
+    return safety_issues
+
+
+def run_pytest(code_dir):
+    test_cmd = ["python", "-m", "pytest", "tests", "-q"]
+    test_out, test_rc = run_command(test_cmd, cwd=code_dir)
+    return "Pass" if test_rc == 0 else "Fail"
+
+
+def generate_health_dashboard():
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    code_dir = os.path.join(root_dir, "code")
+
+    print("Running security and dependency checks...")
+
+    # Run bandit
+    bandit_issues, bandit_high = run_bandit(code_dir)
+
+    # Run safety
+    req_file = os.path.join(code_dir, "requirements.txt")
+    safety_issues = run_safety(req_file)
 
     # Run tests to get count
-    test_cmd = f"cd {code_dir} && python -m pytest tests -q"
-    test_out, test_rc = run_command(test_cmd)
-
-    test_status = "Pass" if test_rc == 0 else "Fail"
+    test_status = run_pytest(code_dir)
 
     # Calculate simple health score
     health_score = 100
