@@ -39,13 +39,23 @@ def run_safety(req_file):
     if os.path.exists(req_file):
         safety_cmd = ["safety", "check", "-r", req_file, "--json"]
         safety_out, _ = run_command(safety_cmd)
+
+        # The safety output might have the deprecation warning before the JSON
+        # Let's try to extract just the JSON part
         try:
-            safety_data = json.loads(safety_out)
-            # safety output structure can vary, typically vulnerabilities is a list
-            if isinstance(safety_data, dict) and "vulnerabilities" in safety_data:
-                safety_issues = len(safety_data["vulnerabilities"])
-            elif isinstance(safety_data, list):
-                safety_issues = len(safety_data)
+            # find first {
+            start_idx = safety_out.find('{')
+            if start_idx != -1:
+                 # find last }
+                 end_idx = safety_out.rfind('}')
+                 if end_idx != -1:
+                      json_str = safety_out[start_idx:end_idx+1]
+                      safety_data = json.loads(json_str)
+                      # safety output structure can vary, typically vulnerabilities is a list
+                      if isinstance(safety_data, dict) and "vulnerabilities" in safety_data:
+                          safety_issues = len(safety_data["vulnerabilities"])
+                      elif isinstance(safety_data, list):
+                          safety_issues = len(safety_data)
         except Exception:
             pass
     return safety_issues
