@@ -25,11 +25,15 @@ def extract_docstrings(directory):
                         if isinstance(node, ast.FunctionDef):
                             func_doc = ast.get_docstring(node)
                             if func_doc:
-                                file_docs.append(f"**Function `{node.name}`:**\n{func_doc}\n")
+                                file_docs.append(
+                                    f"**Function `{node.name}`:**\n{func_doc}\n"
+                                )
                         elif isinstance(node, ast.ClassDef):
                             class_doc = ast.get_docstring(node)
                             if class_doc:
-                                file_docs.append(f"**Class `{node.name}`:**\n{class_doc}\n")
+                                file_docs.append(
+                                    f"**Class `{node.name}`:**\n{class_doc}\n"
+                                )
 
                     if len(file_docs) > 1:
                         api_docs.extend(file_docs)

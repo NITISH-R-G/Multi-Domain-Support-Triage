@@ -75,7 +75,9 @@ def generate_health_dashboard():
     bandit_issues, bandit_high = run_bandit_check(code_dir)
     safety_issues = run_safety_check(code_dir)
     test_status = run_pytest(code_dir)
-    health_score = calculate_health_score(bandit_high, bandit_issues, safety_issues, test_status)
+    health_score = calculate_health_score(
+        bandit_high, bandit_issues, safety_issues, test_status
+    )
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
