@@ -6,9 +6,7 @@ from datetime import datetime
 
 def run_bandit_check(code_dir):
     try:
-        result = subprocess.run(
-            ["bandit", "-r", code_dir, "-f", "json"], capture_output=True, text=True
-        )
+        result = subprocess.run(["bandit", "-r", code_dir, "-f", "json"], capture_output=True, text=True)
         bandit_out = result.stdout
     except Exception:
         bandit_out = "{}"
@@ -34,11 +32,7 @@ def run_safety_check(code_dir):
     safety_issues = 0
     if os.path.exists(req_file):
         try:
-            result = subprocess.run(
-                ["safety", "check", "-r", req_file, "--json"],
-                capture_output=True,
-                text=True,
-            )
+            result = subprocess.run(["safety", "check", "-r", req_file, "--json"], capture_output=True, text=True)
             safety_out = result.stdout
         except Exception:
             safety_out = "[]"
@@ -55,12 +49,7 @@ def run_safety_check(code_dir):
 
 def run_pytest(code_dir):
     try:
-        result = subprocess.run(
-            ["python", "-m", "pytest", "tests", "-q"],
-            cwd=code_dir,
-            capture_output=True,
-            text=True,
-        )
+        result = subprocess.run(["python", "-m", "pytest", "tests", "-q"], cwd=code_dir, capture_output=True, text=True)
         test_rc = result.returncode
     except Exception:
         test_rc = 1
@@ -87,9 +76,7 @@ def generate_health_dashboard():
     bandit_issues, bandit_high = run_bandit_check(code_dir)
     safety_issues = run_safety_check(code_dir)
     test_status = run_pytest(code_dir)
-    health_score = calculate_health_score(
-        bandit_high, bandit_issues, safety_issues, test_status
-    )
+    health_score = calculate_health_score(bandit_high, bandit_issues, safety_issues, test_status)
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 

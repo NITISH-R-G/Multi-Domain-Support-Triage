@@ -256,7 +256,6 @@ See [`evaluation_criteria.md`](./evaluation_criteria.md) for the full rubric. De
 
 
 
-
 <!-- AUTONOMOUS_SECTION_START -->
 
 ---
@@ -268,11 +267,11 @@ See [`evaluation_criteria.md`](./evaluation_criteria.md) for the full rubric. De
 *This section is automatically maintained by the AI documentation agent.*
 
 ## System Overview
-This repository powers the HackerRank Orchestrate terminal-based AI triage agent. It parses support tickets and uses a hybrid retrieval mechanism with TF-IDF and BM25.
+AI generated architecture summary not available.
 
 ## Key Features & Technology Stack
 - **Frameworks Detected:** pytest, openai
-- Automatically traces internal dependencies across 39 python files.
+- Automatically traces internal dependencies across 38 python files.
 - Generates interactive Mermaid architectures and documentation.
 
 # Architecture Diagrams
@@ -281,265 +280,187 @@ This repository powers the HackerRank Orchestrate terminal-based AI triage agent
 
 ```mermaid
 graph TD
-    node_0["capture_baseline.py"]
-    click node_0 href "../scripts/capture_baseline.py"
-    node_1["diagrams.py"]
-    click node_1 href "../automation/diagrams.py"
-    node_2["__init__.py"]
-    click node_2 href "../automation/__init__.py"
-    node_3["ai_maintainer.py"]
-    click node_3 href "../automation/ai_maintainer.py"
-    node_4["analyzer.py"]
-    click node_4 href "../automation/analyzer.py"
-    node_5["readme_generator.py"]
-    click node_5 href "../automation/readme_generator.py"
-    node_6["health_dashboard.py"]
-    click node_6 href "../automation/health_dashboard.py"
-    node_7["ai_qa_agent.py"]
-    click node_7 href "../automation/ai_qa_agent.py"
-    node_8["ai_agent.py"]
-    click node_8 href "../automation/ai_agent.py"
-    node_9["response_quality_report.py"]
-    click node_9 href "../code/response_quality_report.py"
-    node_10["config.py"]
-    click node_10 href "../code/config.py"
-    node_11["eval_metrics.py"]
-    click node_11 href "../code/eval_metrics.py"
-    node_12["compare_outputs.py"]
-    click node_12 href "../code/compare_outputs.py"
-    node_13["run_eval.py"]
-    click node_13 href "../code/run_eval.py"
-    node_14["postprocess.py"]
-    click node_14 href "../code/postprocess.py"
-    node_15["grounding.py"]
-    click node_15 href "../code/grounding.py"
+    node_0["conftest.py"]
+    click node_0 href "../code/conftest.py"
+    node_1["csv_io.py"]
+    click node_1 href "../code/csv_io.py"
+    node_2["compare_outputs.py"]
+    click node_2 href "../code/compare_outputs.py"
+    node_3["risk.py"]
+    click node_3 href "../code/risk.py"
+    node_4["openai_agent.py"]
+    click node_4 href "../code/openai_agent.py"
+    node_5["main.py"]
+    click node_5 href "../code/main.py"
+    node_6["eval_sample.py"]
+    click node_6 href "../code/eval_sample.py"
+    node_7["grounding.py"]
+    click node_7 href "../code/grounding.py"
+    node_8["eval_metrics.py"]
+    click node_8 href "../code/eval_metrics.py"
+    node_9["__main__.py"]
+    click node_9 href "../code/__main__.py"
+    node_10["run_eval.py"]
+    click node_10 href "../code/run_eval.py"
+    node_11["response_quality_report.py"]
+    click node_11 href "../code/response_quality_report.py"
+    node_12["__init__.py"]
+    click node_12 href "../code/__init__.py"
+    node_13["ticket_hints.py"]
+    click node_13 href "../code/ticket_hints.py"
+    node_14["cross_ecosystem.py"]
+    click node_14 href "../code/cross_ecosystem.py"
+    node_15["postprocess.py"]
+    click node_15 href "../code/postprocess.py"
     node_16["corpus.py"]
     click node_16 href "../code/corpus.py"
-    node_17["ticket_hints.py"]
-    click node_17 href "../code/ticket_hints.py"
-    node_18["retrieve.py"]
-    click node_18 href "../code/retrieve.py"
-    node_19["eval_sample.py"]
-    click node_19 href "../code/eval_sample.py"
-    node_20["risk.py"]
-    click node_20 href "../code/risk.py"
-    node_21["conftest.py"]
-    click node_21 href "../code/conftest.py"
-    node_22["main.py"]
-    click node_22 href "../code/main.py"
-    node_23["openai_agent.py"]
-    click node_23 href "../code/openai_agent.py"
-    node_24["csv_io.py"]
-    click node_24 href "../code/csv_io.py"
-    node_25["cross_ecosystem.py"]
-    click node_25 href "../code/cross_ecosystem.py"
-    node_26["taxonomy.py"]
-    click node_26 href "../code/taxonomy.py"
-    node_27["__main__.py"]
-    click node_27 href "../code/__main__.py"
-    node_28["answer_synthesis.py"]
-    click node_28 href "../code/answer_synthesis.py"
-    node_29["test_merge_cli.py"]
-    click node_29 href "../code/tests/test_merge_cli.py"
-    node_30["test_cli_main.py"]
-    click node_30 href "../code/tests/test_cli_main.py"
-    node_31["test_risk.py"]
-    click node_31 href "../code/tests/test_risk.py"
-    node_32["test_taxonomy.py"]
-    click node_32 href "../code/tests/test_taxonomy.py"
-    node_33["test_csv_io.py"]
-    click node_33 href "../code/tests/test_csv_io.py"
-    node_34["test_ticket_hints.py"]
-    click node_34 href "../code/tests/test_ticket_hints.py"
-    node_35["test_sample_routing_golden.py"]
-    click node_35 href "../code/tests/test_sample_routing_golden.py"
-    node_36["test_cross_ecosystem.py"]
-    click node_36 href "../code/tests/test_cross_ecosystem.py"
-    node_37["test_module_invocation.py"]
-    click node_37 href "../code/tests/test_module_invocation.py"
-    node_38["test_eval_metrics.py"]
-    click node_38 href "../code/tests/test_eval_metrics.py"
-    node_9 --> node_10
-    node_9 --> node_10
-    node_9 --> node_10
-    node_9 --> node_24
-    node_9 --> node_24
-    node_9 --> node_15
-    node_9 --> node_15
-    node_9 --> node_18
-    node_9 --> node_18
-    node_12 --> node_24
-    node_12 --> node_24
-    node_12 --> node_24
-    node_12 --> node_24
-    node_12 --> node_11
-    node_12 --> node_11
-    node_12 --> node_11
-    node_14 --> node_10
-    node_14 --> node_10
-    node_14 --> node_15
-    node_14 --> node_15
-    node_14 --> node_18
-    node_14 --> node_26
-    node_14 --> node_26
-    node_14 --> node_8
-    node_14 --> node_23
-    node_15 --> node_16
-    node_15 --> node_18
-    node_18 --> node_10
-    node_18 --> node_10
-    node_18 --> node_10
-    node_18 --> node_10
-    node_18 --> node_10
-    node_18 --> node_10
-    node_18 --> node_10
-    node_18 --> node_10
-    node_18 --> node_10
-    node_18 --> node_16
-    node_18 --> node_16
-    node_18 --> node_16
-    node_19 --> node_24
-    node_19 --> node_24
-    node_19 --> node_24
-    node_19 --> node_24
-    node_19 --> node_11
-    node_19 --> node_11
-    node_19 --> node_11
-    node_21 --> node_10
-    node_21 --> node_10
-    node_21 --> node_18
-    node_22 --> node_10
-    node_22 --> node_10
-    node_22 --> node_10
-    node_22 --> node_10
-    node_22 --> node_10
-    node_22 --> node_10
-    node_22 --> node_25
-    node_22 --> node_24
-    node_22 --> node_24
-    node_22 --> node_24
-    node_22 --> node_8
-    node_22 --> node_23
-    node_22 --> node_8
-    node_22 --> node_23
-    node_22 --> node_14
-    node_22 --> node_18
-    node_22 --> node_18
-    node_22 --> node_18
-    node_22 --> node_10
-    node_22 --> node_20
-    node_22 --> node_26
-    node_22 --> node_17
-    node_23 --> node_28
-    node_23 --> node_10
-    node_23 --> node_18
-    node_23 --> node_18
-    node_26 --> node_16
-    node_27 --> node_22
-    node_28 --> node_18
-    node_31 --> node_20
-    node_32 --> node_26
-    node_32 --> node_26
-    node_32 --> node_26
-    node_32 --> node_16
-    node_33 --> node_24
-    node_33 --> node_24
-    node_33 --> node_24
-    node_33 --> node_24
-    node_34 --> node_17
-    node_34 --> node_17
-    node_35 --> node_10
-    node_35 --> node_24
-    node_35 --> node_24
-    node_35 --> node_22
-    node_36 --> node_25
-    node_38 --> node_11
-    node_38 --> node_11
-    node_38 --> node_11
+    node_17["config.py"]
+    click node_17 href "../code/config.py"
+    node_18["answer_synthesis.py"]
+    click node_18 href "../code/answer_synthesis.py"
+    node_19["retrieve.py"]
+    click node_19 href "../code/retrieve.py"
+    node_20["taxonomy.py"]
+    click node_20 href "../code/taxonomy.py"
+    node_21["test_sample_routing_golden.py"]
+    click node_21 href "../code/tests/test_sample_routing_golden.py"
+    node_22["test_ticket_hints.py"]
+    click node_22 href "../code/tests/test_ticket_hints.py"
+    node_23["test_eval_metrics.py"]
+    click node_23 href "../code/tests/test_eval_metrics.py"
+    node_24["test_csv_io.py"]
+    click node_24 href "../code/tests/test_csv_io.py"
+    node_25["test_cli_main.py"]
+    click node_25 href "../code/tests/test_cli_main.py"
+    node_26["test_module_invocation.py"]
+    click node_26 href "../code/tests/test_module_invocation.py"
+    node_27["test_merge_cli.py"]
+    click node_27 href "../code/tests/test_merge_cli.py"
+    node_28["test_taxonomy.py"]
+    click node_28 href "../code/tests/test_taxonomy.py"
+    node_29["test_risk.py"]
+    click node_29 href "../code/tests/test_risk.py"
+    node_30["test_cross_ecosystem.py"]
+    click node_30 href "../code/tests/test_cross_ecosystem.py"
+    node_31["capture_baseline.py"]
+    click node_31 href "../scripts/capture_baseline.py"
+    node_32["ai_qa_agent.py"]
+    click node_32 href "../automation/ai_qa_agent.py"
+    node_33["diagrams.py"]
+    click node_33 href "../automation/diagrams.py"
+    node_34["readme_generator.py"]
+    click node_34 href "../automation/readme_generator.py"
+    node_35["analyzer.py"]
+    click node_35 href "../automation/analyzer.py"
+    node_36["__init__.py"]
+    click node_36 href "../automation/__init__.py"
+    node_37["ai_agent.py"]
+    click node_37 href "../automation/ai_agent.py"
+    node_0 --> node_17
+    node_0 --> node_17
+    node_0 --> node_19
+    node_2 --> node_1
+    node_2 --> node_1
+    node_2 --> node_1
+    node_2 --> node_1
+    node_2 --> node_8
+    node_2 --> node_8
+    node_2 --> node_8
+    node_4 --> node_18
+    node_4 --> node_17
+    node_4 --> node_19
+    node_4 --> node_19
+    node_5 --> node_17
+    node_5 --> node_17
+    node_5 --> node_17
+    node_5 --> node_17
+    node_5 --> node_17
+    node_5 --> node_17
+    node_5 --> node_14
+    node_5 --> node_1
+    node_5 --> node_1
+    node_5 --> node_1
+    node_5 --> node_4
+    node_5 --> node_37
+    node_5 --> node_4
+    node_5 --> node_37
+    node_5 --> node_15
+    node_5 --> node_19
+    node_5 --> node_19
+    node_5 --> node_19
+    node_5 --> node_19
+    node_5 --> node_3
+    node_5 --> node_20
+    node_5 --> node_13
+    node_6 --> node_1
+    node_6 --> node_1
+    node_6 --> node_1
+    node_6 --> node_1
+    node_6 --> node_8
+    node_6 --> node_8
+    node_6 --> node_8
+    node_7 --> node_16
+    node_7 --> node_19
+    node_9 --> node_5
+    node_11 --> node_17
+    node_11 --> node_17
+    node_11 --> node_17
+    node_11 --> node_1
+    node_11 --> node_1
+    node_11 --> node_16
+    node_11 --> node_7
+    node_11 --> node_7
+    node_11 --> node_19
+    node_11 --> node_19
+    node_15 --> node_17
+    node_15 --> node_17
+    node_15 --> node_7
+    node_15 --> node_7
+    node_15 --> node_19
+    node_15 --> node_20
+    node_15 --> node_20
+    node_15 --> node_4
+    node_15 --> node_37
+    node_18 --> node_19
+    node_19 --> node_17
+    node_19 --> node_17
+    node_19 --> node_17
+    node_19 --> node_17
+    node_19 --> node_17
+    node_19 --> node_17
+    node_19 --> node_17
+    node_19 --> node_17
+    node_19 --> node_17
+    node_19 --> node_17
+    node_19 --> node_17
+    node_19 --> node_16
+    node_19 --> node_16
+    node_19 --> node_16
+    node_20 --> node_16
+    node_21 --> node_17
+    node_21 --> node_1
+    node_21 --> node_1
+    node_21 --> node_5
+    node_22 --> node_13
+    node_22 --> node_13
+    node_23 --> node_8
+    node_23 --> node_8
+    node_23 --> node_8
+    node_24 --> node_1
+    node_24 --> node_1
+    node_24 --> node_1
+    node_24 --> node_1
+    node_28 --> node_20
+    node_28 --> node_20
+    node_28 --> node_20
+    node_28 --> node_16
+    node_29 --> node_3
+    node_30 --> node_14
 ```
 
 
 ## API Documentation
 
-### `response_quality_report.py`
-**Module Docstring:**
-Offline quality diagnostics for generated CSV outputs.
-
-Computes cheap, interpretable metrics without needing hidden labels:
-- response length (chars / words)
-- escalation rate
-- numeric-string leakage heuristic (digits sequences not present in retrieved evidence)
-- lexical overlap between response tokens and retrieved chunk tokens (requires rebuilding retrieval hits)
-
-This is meant for hackathon iteration: catch verbose outputs and grounding drift early.
-
----
-### `config.py`
-**Module Docstring:**
-Paths and deterministic defaults.
-
----
-### `eval_metrics.py`
-**Module Docstring:**
-Cheap text metrics for regression checks against labeled sample CSVs.
-
-**Function `token_set_f1`:**
-Token-overlap F1 (bag of words; labels normalized).
-
-**Function `compact_overlap_ratio`:**
-Dice-like overlap on character bags (cheap fuzzy signal vs exact match).
-
----
-### `compare_outputs.py`
-**Module Docstring:**
-Compare two prediction CSVs to a labeled gold CSV (optional justification column).
-
-Usage (from repo root or code/):
-
-  python compare_outputs.py --gold support_tickets/sample_support_tickets.csv \
-      --pred support_tickets/sample_pred.csv
-
-Uses the same merge keys as eval_sample (Issue, Subject, Company) and reports
-token F1 / compact overlap for Response and Justification when gold columns exist.
-
----
-### `run_eval.py`
-**Module Docstring:**
-Convenience wrapper: regenerate preds for sample_support_tickets.csv and print eval_sample metrics.
-
----
-### `postprocess.py`
-**Module Docstring:**
-Post-processing decisions for taxonomy alignment + grounding checks.
-
----
-### `grounding.py`
-**Module Docstring:**
-Cheap grounding checks: ensure responses don't drift far from retrieved evidence.
-
-**Function `lexical_overlap`:**
-Return fraction of non-trivial response tokens present in retrieved chunk text.
-
-**Function `has_unsupported_numbers`:**
-Flag digit-heavy claims not present in evidence (rough guardrail).
-
----
-### `corpus.py`
-**Module Docstring:**
-Load markdown corpus into searchable chunks.
-
----
-### `ticket_hints.py`
-**Module Docstring:**
-Lightweight ticket shape helpers (multi-topic detection + optional justification note).
-
-**Function `ticket_may_span_multiple_topics`:**
-Heuristic: message might bundle several distinct asks (no NLP; best-effort).
-
-**Function `maybe_append_multi_topic_justification`:**
-Append a transparency note to justification only (does not change response body).
-
----
 ### `retrieve.py`
 **Module Docstring:**
 Hybrid offline retrieval: BM25 candidate generation + TF-IDF cosine reranking.
@@ -554,14 +475,26 @@ Lexical overlap rerank on top of BM25 scores.
 Atomically replace index file to avoid torn reads from concurrent runners.
 
 ---
-### `risk.py`
+### `eval_metrics.py`
 **Module Docstring:**
-High-risk and policy-based escalation heuristics.
+Cheap text metrics for regression checks against labeled sample CSVs.
+
+**Function `token_set_f1`:**
+Token-overlap F1 (bag of words; labels normalized).
+
+**Function `compact_overlap_ratio`:**
+Dice-like overlap on character bags (cheap fuzzy signal vs exact match).
 
 ---
-### `conftest.py`
+### `taxonomy.py`
 **Module Docstring:**
-Shared pytest fixtures (session-scoped retrieval index).
+Canonical labels + mapping from retrieved corpus evidence to evaluator-friendly areas.
+
+**Function `looks_like_off_topic_general_knowledge`:**
+Entertainment / trivia / general-knowledge questions unlikely to be product support.
+
+**Function `map_product_area`:**
+Map evidence to one of CANONICAL_PRODUCT_AREAS when possible.
 
 ---
 ### `main.py`
@@ -572,9 +505,111 @@ Offline-grounded support triage agent — entry point.
 Copy row with Issue/Subject truncated if over max_chars (stderr warning).
 
 ---
+### `answer_synthesis.py`
+**Module Docstring:**
+Offline answer shaping: convert retrieved markdown-ish text into short actionable guidance.
+
+**Function `extract_steps`:**
+Pull readable steps from support article bodies.
+
+**Function `synthesize_reply_from_hits`:**
+Return (user_response, source_paths_used).
+
+---
+### `__main__.py`
+**Module Docstring:**
+CLI entry when invoked as ``python -m code`` from the repository root (Windows-friendly;
+on Linux ``python -m code`` may load the stdlib ``code`` module — use ``python code/main.py``).
+
+
+``main.py`` uses absolute imports (``from config import …``) assuming ``code/`` is on
+``sys.path``. Running ``python -m code`` sets the cwd on ``sys.path``, not ``code/``,
+so we prepend this package directory before importing ``main``.
+
+---
+### `ticket_hints.py`
+**Module Docstring:**
+Lightweight ticket shape helpers (multi-topic detection + optional justification note).
+
+**Function `ticket_may_span_multiple_topics`:**
+Heuristic: message might bundle several distinct asks (no NLP; best-effort).
+
+**Function `maybe_append_multi_topic_justification`:**
+Append a transparency note to justification only (does not change response body).
+
+---
+### `response_quality_report.py`
+**Module Docstring:**
+Offline quality diagnostics for generated CSV outputs.
+
+Computes cheap, interpretable metrics without needing hidden labels:
+- response length (chars / words)
+- escalation rate
+- numeric-string leakage heuristic (digits sequences not present in retrieved evidence)
+- lexical overlap between response tokens and retrieved chunk tokens (requires rebuilding retrieval hits)
+
+This is meant for hackathon iteration: catch verbose outputs and grounding drift early.
+
+---
+### `corpus.py`
+**Module Docstring:**
+Load markdown corpus into searchable chunks.
+
+---
+### `conftest.py`
+**Module Docstring:**
+Shared pytest fixtures (session-scoped retrieval index).
+
+---
+### `risk.py`
+**Module Docstring:**
+High-risk and policy-based escalation heuristics.
+
+---
+### `grounding.py`
+**Module Docstring:**
+Cheap grounding checks: ensure responses don't drift far from retrieved evidence.
+
+**Function `lexical_overlap`:**
+Return fraction of non-trivial response tokens present in retrieved chunk text.
+
+**Function `has_unsupported_numbers`:**
+Flag digit-heavy claims not present in evidence (rough guardrail).
+
+---
+### `config.py`
+**Module Docstring:**
+Paths and deterministic defaults.
+
+---
+### `cross_ecosystem.py`
+**Module Docstring:**
+Detect tickets that span multiple distinct product ecosystems — safer to escalate than guess one answer.
+
+**Function `cross_ecosystem_escalation_reason`:**
+Return human-readable escalate reason, or None.
+
+Conservative pairwise checks avoid false positives such as "HackerRank visa sponsorship"
+(mentions Visa immigration language without Visa-the-network product context).
+Disable entirely with ``ORCHESTRATE_DISABLE_CROSS_ECOSYSTEM_ESCALATE=1``.
+
+---
 ### `openai_agent.py`
 **Module Docstring:**
 Grounded LLM decisioning with strict JSON outputs.
+
+---
+### `compare_outputs.py`
+**Module Docstring:**
+Compare two prediction CSVs to a labeled gold CSV (optional justification column).
+
+Usage (from repo root or code/):
+
+  python compare_outputs.py --gold support_tickets/sample_support_tickets.csv \
+      --pred support_tickets/sample_pred.csv
+
+Uses the same merge keys as eval_sample (Issue, Subject, Company) and reports
+token F1 / compact overlap for Response and Justification when gold columns exist.
 
 ---
 ### `csv_io.py`
@@ -594,49 +629,14 @@ Case-insensitive rename of agent output columns to Pred_* names for gold merges.
 Ensure Issue / Subject / Company column names (case-insensitive).
 
 ---
-### `cross_ecosystem.py`
+### `run_eval.py`
 **Module Docstring:**
-Detect tickets that span multiple distinct product ecosystems — safer to escalate than guess one answer.
-
-**Function `cross_ecosystem_escalation_reason`:**
-Return human-readable escalate reason, or None.
-
-Conservative pairwise checks avoid false positives such as "HackerRank visa sponsorship"
-(mentions Visa immigration language without Visa-the-network product context).
-Disable entirely with ``ORCHESTRATE_DISABLE_CROSS_ECOSYSTEM_ESCALATE=1``.
+Convenience wrapper: regenerate preds for sample_support_tickets.csv and print eval_sample metrics.
 
 ---
-### `taxonomy.py`
+### `postprocess.py`
 **Module Docstring:**
-Canonical labels + mapping from retrieved corpus evidence to evaluator-friendly areas.
-
-**Function `looks_like_off_topic_general_knowledge`:**
-Entertainment / trivia / general-knowledge questions unlikely to be product support.
-
-**Function `map_product_area`:**
-Map evidence to one of CANONICAL_PRODUCT_AREAS when possible.
-
----
-### `__main__.py`
-**Module Docstring:**
-CLI entry when invoked as ``python -m code`` from the repository root (Windows-friendly;
-on Linux ``python -m code`` may load the stdlib ``code`` module — use ``python code/main.py``).
-
-
-``main.py`` uses absolute imports (``from config import …``) assuming ``code/`` is on
-``sys.path``. Running ``python -m code`` sets the cwd on ``sys.path``, not ``code/``,
-so we prepend this package directory before importing ``main``.
-
----
-### `answer_synthesis.py`
-**Module Docstring:**
-Offline answer shaping: convert retrieved markdown-ish text into short actionable guidance.
-
-**Function `extract_steps`:**
-Pull readable steps from support article bodies.
-
-**Function `synthesize_reply_from_hits`:**
-Return (user_response, source_paths_used).
+Post-processing decisions for taxonomy alignment + grounding checks.
 
 ---
 ### `tests/test_merge_cli.py`
@@ -652,6 +652,11 @@ Golden routing assertions vs bundled sample_support_tickets.csv (offline LLM).
 Every sample row: status, request_type, product_area must match labels when LLM is disabled.
 
 ---
+### `tests/test_module_invocation.py`
+**Module Docstring:**
+CLI ``--help`` works when launched from ``code/`` (same as CI).
+
+---
 ### `tests/test_cross_ecosystem.py`
 **Module Docstring:**
 Cross-ecosystem escalation: multi-brand tickets should route to humans.
@@ -660,17 +665,11 @@ Cross-ecosystem escalation: multi-brand tickets should route to humans.
 Immigration 'visa' language without Visa-network product signals.
 
 ---
-### `tests/test_module_invocation.py`
-**Module Docstring:**
-CLI ``--help`` works when launched from ``code/`` (same as CI).
-
----
 
 ## Automation Onboarding & Contribution
-To contribute, navigate to the `code/` directory, install `requirements.txt`, and run `pytest tests -q`.
+AI generation skipped.
 
 <!-- AUTONOMOUS_SECTION_END -->
-
 
 
 
