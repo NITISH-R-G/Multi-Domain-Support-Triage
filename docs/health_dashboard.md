@@ -1,19 +1,19 @@
 # Repository Health Dashboard
 
-*Last updated: 2026-06-16 18:56:09*
+*Last updated: 2026-06-16 19:34:04*
 
-## Overall Health Score: 100/100
+## Overall Health Score: 0/100
 
 | Metric | Status / Count |
 |--------|----------------|
-| **Test Suite** | ✅ Pass |
-| **Security Issues (Bandit)** | 0 total (0 HIGH) |
+| **Test Suite** | ❌ Fail |
+| **Security Issues (Bandit)** | 56 total (0 HIGH) |
 | **Vulnerable Dependencies (Safety)** | 0 |
 
 ## Details
 
 ### Security
-✅ No security issues found.
+⚠️ Found 56 potential security issues. Please review Bandit reports.
 
 ### Dependencies
 ✅ No known vulnerabilities in dependencies.
