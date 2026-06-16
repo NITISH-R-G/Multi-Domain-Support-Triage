@@ -255,6 +255,7 @@ See [`evaluation_criteria.md`](./evaluation_criteria.md) for the full rubric. De
 
 
 
+
 <!-- AUTONOMOUS_SECTION_START -->
 
 ---
@@ -457,6 +458,213 @@ graph TD
     node_30 --> node_14
 ```
 
+
+## API Documentation
+
+### `retrieve.py`
+**Module Docstring:**
+Hybrid offline retrieval: BM25 candidate generation + TF-IDF cosine reranking.
+
+**Function `_tfidf_vectors`:**
+Tiny TF-IDF implementation (no sklearn), cosine-normalized per doc.
+
+**Function `rerank_hits`:**
+Lexical overlap rerank on top of BM25 scores.
+
+**Function `save`:**
+Atomically replace index file to avoid torn reads from concurrent runners.
+
+---
+### `eval_metrics.py`
+**Module Docstring:**
+Cheap text metrics for regression checks against labeled sample CSVs.
+
+**Function `token_set_f1`:**
+Token-overlap F1 (bag of words; labels normalized).
+
+**Function `compact_overlap_ratio`:**
+Dice-like overlap on character bags (cheap fuzzy signal vs exact match).
+
+---
+### `taxonomy.py`
+**Module Docstring:**
+Canonical labels + mapping from retrieved corpus evidence to evaluator-friendly areas.
+
+**Function `looks_like_off_topic_general_knowledge`:**
+Entertainment / trivia / general-knowledge questions unlikely to be product support.
+
+**Function `map_product_area`:**
+Map evidence to one of CANONICAL_PRODUCT_AREAS when possible.
+
+---
+### `main.py`
+**Module Docstring:**
+Offline-grounded support triage agent — entry point.
+
+**Function `_truncate_row_fields`:**
+Copy row with Issue/Subject truncated if over max_chars (stderr warning).
+
+---
+### `answer_synthesis.py`
+**Module Docstring:**
+Offline answer shaping: convert retrieved markdown-ish text into short actionable guidance.
+
+**Function `extract_steps`:**
+Pull readable steps from support article bodies.
+
+**Function `synthesize_reply_from_hits`:**
+Return (user_response, source_paths_used).
+
+---
+### `__main__.py`
+**Module Docstring:**
+CLI entry when invoked as ``python -m code`` from the repository root (Windows-friendly;
+on Linux ``python -m code`` may load the stdlib ``code`` module — use ``python code/main.py``).
+
+
+``main.py`` uses absolute imports (``from config import …``) assuming ``code/`` is on
+``sys.path``. Running ``python -m code`` sets the cwd on ``sys.path``, not ``code/``,
+so we prepend this package directory before importing ``main``.
+
+---
+### `ticket_hints.py`
+**Module Docstring:**
+Lightweight ticket shape helpers (multi-topic detection + optional justification note).
+
+**Function `ticket_may_span_multiple_topics`:**
+Heuristic: message might bundle several distinct asks (no NLP; best-effort).
+
+**Function `maybe_append_multi_topic_justification`:**
+Append a transparency note to justification only (does not change response body).
+
+---
+### `response_quality_report.py`
+**Module Docstring:**
+Offline quality diagnostics for generated CSV outputs.
+
+Computes cheap, interpretable metrics without needing hidden labels:
+- response length (chars / words)
+- escalation rate
+- numeric-string leakage heuristic (digits sequences not present in retrieved evidence)
+- lexical overlap between response tokens and retrieved chunk tokens (requires rebuilding retrieval hits)
+
+This is meant for hackathon iteration: catch verbose outputs and grounding drift early.
+
+---
+### `corpus.py`
+**Module Docstring:**
+Load markdown corpus into searchable chunks.
+
+---
+### `conftest.py`
+**Module Docstring:**
+Shared pytest fixtures (session-scoped retrieval index).
+
+---
+### `risk.py`
+**Module Docstring:**
+High-risk and policy-based escalation heuristics.
+
+---
+### `grounding.py`
+**Module Docstring:**
+Cheap grounding checks: ensure responses don't drift far from retrieved evidence.
+
+**Function `lexical_overlap`:**
+Return fraction of non-trivial response tokens present in retrieved chunk text.
+
+**Function `has_unsupported_numbers`:**
+Flag digit-heavy claims not present in evidence (rough guardrail).
+
+---
+### `config.py`
+**Module Docstring:**
+Paths and deterministic defaults.
+
+---
+### `cross_ecosystem.py`
+**Module Docstring:**
+Detect tickets that span multiple distinct product ecosystems — safer to escalate than guess one answer.
+
+**Function `cross_ecosystem_escalation_reason`:**
+Return human-readable escalate reason, or None.
+
+Conservative pairwise checks avoid false positives such as "HackerRank visa sponsorship"
+(mentions Visa immigration language without Visa-the-network product context).
+Disable entirely with ``ORCHESTRATE_DISABLE_CROSS_ECOSYSTEM_ESCALATE=1``.
+
+---
+### `openai_agent.py`
+**Module Docstring:**
+Grounded LLM decisioning with strict JSON outputs.
+
+---
+### `compare_outputs.py`
+**Module Docstring:**
+Compare two prediction CSVs to a labeled gold CSV (optional justification column).
+
+Usage (from repo root or code/):
+
+  python compare_outputs.py --gold support_tickets/sample_support_tickets.csv \
+      --pred support_tickets/sample_pred.csv
+
+Uses the same merge keys as eval_sample (Issue, Subject, Company) and reports
+token F1 / compact overlap for Response and Justification when gold columns exist.
+
+---
+### `csv_io.py`
+**Module Docstring:**
+Shared CSV loading and schema validation for ticket pipelines.
+
+**Class `TicketCsvError`:**
+User-fixable CSV / path issues (exit code 2).
+
+**Function `read_tickets_csv`:**
+Read UTF-8 / UTF-8-BOM; raise clear errors for missing path or encoding.
+
+**Function `rename_prediction_columns`:**
+Case-insensitive rename of agent output columns to Pred_* names for gold merges.
+
+**Function `canonicalize_ticket_columns`:**
+Ensure Issue / Subject / Company column names (case-insensitive).
+
+---
+### `run_eval.py`
+**Module Docstring:**
+Convenience wrapper: regenerate preds for sample_support_tickets.csv and print eval_sample metrics.
+
+---
+### `postprocess.py`
+**Module Docstring:**
+Post-processing decisions for taxonomy alignment + grounding checks.
+
+---
+### `tests/test_merge_cli.py`
+**Module Docstring:**
+CLI exits when gold vs pred produce zero merge rows.
+
+---
+### `tests/test_sample_routing_golden.py`
+**Module Docstring:**
+Golden routing assertions vs bundled sample_support_tickets.csv (offline LLM).
+
+**Function `test_sample_support_routing_matches_golden`:**
+Every sample row: status, request_type, product_area must match labels when LLM is disabled.
+
+---
+### `tests/test_module_invocation.py`
+**Module Docstring:**
+CLI ``--help`` works when launched from ``code/`` (same as CI).
+
+---
+### `tests/test_cross_ecosystem.py`
+**Module Docstring:**
+Cross-ecosystem escalation: multi-brand tickets should route to humans.
+
+**Function `test_no_false_positive_visa_sponsorship_only_hackerrank`:**
+Immigration 'visa' language without Visa-network product signals.
+
+---
 
 ## Automation Onboarding & Contribution
 AI generation skipped.

@@ -1,5 +1,43 @@
 import os
 import json
+import ast
+
+
+def extract_docstrings(directory):
+    api_docs = []
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if file.endswith(".py"):
+                filepath = os.path.join(root, file)
+                rel_path = os.path.relpath(filepath, directory)
+                try:
+                    with open(filepath, "r", encoding="utf-8") as f:
+                        source = f.read()
+
+                    tree = ast.parse(source)
+                    module_doc = ast.get_docstring(tree)
+
+                    file_docs = [f"### `{rel_path}`"]
+                    if module_doc:
+                        file_docs.append(f"**Module Docstring:**\n{module_doc}\n")
+
+                    for node in ast.walk(tree):
+                        if isinstance(node, ast.FunctionDef):
+                            func_doc = ast.get_docstring(node)
+                            if func_doc:
+                                file_docs.append(f"**Function `{node.name}`:**\n{func_doc}\n")
+                        elif isinstance(node, ast.ClassDef):
+                            class_doc = ast.get_docstring(node)
+                            if class_doc:
+                                file_docs.append(f"**Class `{node.name}`:**\n{class_doc}\n")
+
+                    if len(file_docs) > 1:
+                        api_docs.extend(file_docs)
+                        api_docs.append("---")
+                except Exception as e:
+                    print(f"Error parsing {filepath}: {e}")
+
+    return "\n".join(api_docs)
 
 
 def generate_readme():
@@ -32,12 +70,22 @@ def generate_readme():
         else "Not detected"
     )
 
+    # Extract API docstrings
+    code_dir = os.path.join(root_dir, "code")
+    api_docs_str = ""
+    if os.path.exists(code_dir):
+        api_docs_str = extract_docstrings(code_dir)
+
     # Load existing README to preserve it
     readme_path = os.path.join(root_dir, "README.md")
     original_readme = ""
     if os.path.exists(readme_path):
         with open(readme_path, "r", encoding="utf-8") as f:
             original_readme = f.read()
+
+    api_section = ""
+    if api_docs_str:
+        api_section = f"## API Documentation\n\n{api_docs_str}\n"
 
     # Define the automation section
     automation_section = f"""
@@ -59,6 +107,7 @@ def generate_readme():
 
 {diagrams}
 
+{api_section}
 ## Automation Onboarding & Contribution
 {ai_docs.get("onboarding_guide", "Contributions are welcome! Please run the automation scripts or let GitHub Actions update docs on PRs.")}
 """
