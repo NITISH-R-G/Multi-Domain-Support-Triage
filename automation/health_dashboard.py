@@ -7,6 +7,7 @@ from datetime import datetime
 def run_command(command):
     try:
         import shlex
+
         if isinstance(command, str):
             command = shlex.split(command)
         result = subprocess.run(command, shell=False, capture_output=True, text=True)
@@ -57,9 +58,11 @@ def generate_health_dashboard():
     # Run tests to get count
     test_cmd = ["python", "-m", "pytest", "tests", "-q"]
     try:
-        result = subprocess.run(test_cmd, shell=False, cwd=code_dir, capture_output=True, text=True)
+        result = subprocess.run(
+            test_cmd, shell=False, cwd=code_dir, capture_output=True, text=True
+        )
         test_rc = result.returncode
-    except Exception as e:
+    except Exception:
         test_rc = 1
 
     test_status = "Pass" if test_rc == 0 else "Fail"
