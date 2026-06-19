@@ -6,7 +6,9 @@ from datetime import datetime
 
 def run_command(command, cwd=None):
     try:
-        result = subprocess.run(command, shell=False, capture_output=True, text=True, cwd=cwd)
+        result = subprocess.run(
+            command, shell=False, capture_output=True, text=True, cwd=cwd
+        )
         return result.stdout, result.returncode
     except Exception as e:
         return str(e), 1
@@ -18,10 +20,15 @@ def get_bandit_stats(code_dir):
     try:
         bandit_data = json.loads(bandit_out)
         issues = len(bandit_data.get("results", []))
-        high = sum(1 for r in bandit_data.get("results", []) if r.get("issue_severity") == "HIGH")
+        high = sum(
+            1
+            for r in bandit_data.get("results", [])
+            if r.get("issue_severity") == "HIGH"
+        )
         return issues, high
     except Exception:
         return 0, 0
+
 
 def get_safety_stats(req_file):
     if not os.path.exists(req_file):
