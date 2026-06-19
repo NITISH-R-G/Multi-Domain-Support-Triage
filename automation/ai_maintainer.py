@@ -50,32 +50,13 @@ def post_comment(repo, issue_number, token, body):
 
 def parse_event(event_data, action):
     if "pull_request" in event_data and action in ["opened", "edited"]:
-        return (
-            event_data["pull_request"]["number"],
-            event_data["pull_request"]["title"],
-            event_data["pull_request"]["body"] or "",
-            "Pull Request",
-        )
-    elif (
-        "issue" in event_data
-        and action in ["opened", "edited"]
-        and "pull_request" not in event_data["issue"]
-    ):
-        return (
-            event_data["issue"]["number"],
-            event_data["issue"]["title"],
-            event_data["issue"]["body"] or "",
-            "Issue",
-        )
+        return event_data["pull_request"]["number"], event_data["pull_request"]["title"], event_data["pull_request"]["body"] or "", "Pull Request"
+    elif "issue" in event_data and action in ["opened", "edited"] and "pull_request" not in event_data["issue"]:
+        return event_data["issue"]["number"], event_data["issue"]["title"], event_data["issue"]["body"] or "", "Issue"
     elif "comment" in event_data and action == "created":
         if event_data["comment"]["user"]["login"] == "github-actions[bot]":
             return None, "", "", ""
-        return (
-            event_data["issue"]["number"],
-            event_data["issue"]["title"],
-            event_data["comment"]["body"],
-            "Comment",
-        )
+        return event_data["issue"]["number"], event_data["issue"]["title"], event_data["comment"]["body"], "Comment"
     return None, "", "", ""
 
 
