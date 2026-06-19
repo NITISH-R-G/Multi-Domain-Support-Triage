@@ -4,20 +4,28 @@ import json
 import subprocess  # nosec B404
 from datetime import datetime
 
+
 def get_bandit_stats(code_dir):
     try:
         # nosemgrep
         result = subprocess.run(
             [sys.executable, "-m", "bandit", "-r", str(code_dir), "-f", "json"],
-            shell=False, capture_output=True, text=True
+            shell=False,
+            capture_output=True,
+            text=True,
         )  # nosec B603
         bandit_out = result.stdout
         bandit_data = json.loads(bandit_out)
         issues = len(bandit_data.get("results", []))
-        high = sum(1 for r in bandit_data.get("results", []) if r.get("issue_severity") == "HIGH")
+        high = sum(
+            1
+            for r in bandit_data.get("results", [])
+            if r.get("issue_severity") == "HIGH"
+        )
         return issues, high
     except Exception:
         return 0, 0
+
 
 def get_safety_stats(req_file):
     if not os.path.exists(req_file):
@@ -26,7 +34,9 @@ def get_safety_stats(req_file):
         # nosemgrep
         result = subprocess.run(
             [sys.executable, "-m", "safety", "check", "-r", str(req_file), "--json"],
-            shell=False, capture_output=True, text=True
+            shell=False,
+            capture_output=True,
+            text=True,
         )  # nosec B603
         safety_out = result.stdout
         safety_data = json.loads(safety_out)
@@ -37,6 +47,7 @@ def get_safety_stats(req_file):
         return 0
     except Exception:
         return 0
+
 
 def generate_health_dashboard():
     root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -52,7 +63,10 @@ def generate_health_dashboard():
         # nosemgrep
         test_result = subprocess.run(
             [sys.executable, "-m", "pytest", "tests", "-q"],
-            shell=False, capture_output=True, text=True, cwd=str(code_dir)
+            shell=False,
+            capture_output=True,
+            text=True,
+            cwd=str(code_dir),
         )  # nosec B603
         test_rc = test_result.returncode
     except Exception:
@@ -102,6 +116,7 @@ def generate_health_dashboard():
         f.write(dashboard_content)
 
     print(f"Health dashboard saved to {out_path}")
+
 
 if __name__ == "__main__":
     generate_health_dashboard()
