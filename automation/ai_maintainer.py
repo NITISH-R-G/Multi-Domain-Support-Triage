@@ -39,7 +39,7 @@ def post_comment(repo, issue_number, token, body):
         "Accept": "application/vnd.github.v3+json",
     }
     data = {"body": body}
-    response = requests.post(url, headers=headers, json=data)
+    response = requests.post(url, headers=headers, json=data, timeout=10)
     if response.status_code == 201:
         print("Successfully posted comment.")
     else:
