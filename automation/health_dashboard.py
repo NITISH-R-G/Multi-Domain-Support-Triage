@@ -7,8 +7,11 @@ from datetime import datetime
 def run_command(command, cwd=None):
     try:
         import shlex
+
         args = shlex.split(command)
-        result = subprocess.run(args, shell=False, capture_output=True, text=True, cwd=cwd)
+        result = subprocess.run(
+            args, shell=False, capture_output=True, text=True, cwd=cwd
+        )
         return result.stdout, result.returncode
     except Exception as e:
         return str(e), 1
