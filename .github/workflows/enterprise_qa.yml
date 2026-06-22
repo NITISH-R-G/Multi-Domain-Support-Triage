@@ -173,10 +173,12 @@ jobs:
           fi
 
           # Check for Safety issues
-          if [ -s reports/safety_report.json ] && (grep -q '"vulnerabilities"' reports/safety_report.json 2>/dev/null || grep -q '"vulnerabilities_found": [1-9]' reports/safety_report.json 2>/dev/null); then
-             # Since safety json format can vary, a simple check might just see if we got an error output, but here we just check if string is present.
-             echo "Safety found dependency vulnerabilities."
-             EXIT_CODE=1
+          if [ -s reports/safety_report.json ]; then
+            VULN_COUNT=$(jq 'if .report_meta != null then .report_meta.vulnerabilities_found else (.vulnerabilities | length) end' reports/safety_report.json 2>/dev/null || echo 0)
+            if [ "$VULN_COUNT" -gt 0 ]; then
+                echo "Safety found $VULN_COUNT dependency vulnerabilities."
+                EXIT_CODE=1
+            fi
           fi
 
           # Check for secrets

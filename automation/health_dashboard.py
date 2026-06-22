@@ -48,10 +48,7 @@ def generate_health_dashboard():
             if isinstance(safety_data, dict):
                 if "vulnerabilities" in safety_data:
                     safety_issues = len(safety_data["vulnerabilities"])
-                elif (
-                    "report_meta" in safety_data
-                    and "vulnerabilities_found" in safety_data["report_meta"]
-                ):
+                elif "report_meta" in safety_data and "vulnerabilities_found" in safety_data["report_meta"]:
                     safety_issues = safety_data["report_meta"]["vulnerabilities_found"]
             elif isinstance(safety_data, list):
                 safety_issues = len(safety_data)
@@ -61,13 +58,8 @@ def generate_health_dashboard():
     # Run tests to get count
     test_cmd = "python -m pytest tests -q"
     try:
-        test_res = subprocess.run(
-            shlex.split(test_cmd), capture_output=True, text=True, cwd=code_dir
-        )
-        _test_out, test_rc = (
-            test_res.stdout,
-            test_res.returncode,
-        )  # prefixed unused variable with _
+        test_res = subprocess.run(shlex.split(test_cmd), capture_output=True, text=True, cwd=code_dir)
+        _test_out, test_rc = test_res.stdout, test_res.returncode # prefixed unused variable with _
     except Exception as e:
         _test_out, test_rc = str(e), 1
 
