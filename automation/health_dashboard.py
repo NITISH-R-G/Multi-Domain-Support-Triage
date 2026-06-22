@@ -1,12 +1,13 @@
 import os
 import json
 import subprocess
+import shlex
 from datetime import datetime
 
 
 def run_command(command):
     try:
-        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        result = subprocess.run(shlex.split(command), capture_output=True, text=True)
         return result.stdout, result.returncode
     except Exception as e:
         return str(e), 1
@@ -44,16 +45,23 @@ def generate_health_dashboard():
         try:
             safety_data = json.loads(safety_out)
             # safety output structure can vary, typically vulnerabilities is a list
-            if isinstance(safety_data, dict) and "vulnerabilities" in safety_data:
-                safety_issues = len(safety_data["vulnerabilities"])
+            if isinstance(safety_data, dict):
+                if "vulnerabilities" in safety_data:
+                    safety_issues = len(safety_data["vulnerabilities"])
+                elif "report_meta" in safety_data and "vulnerabilities_found" in safety_data["report_meta"]:
+                    safety_issues = safety_data["report_meta"]["vulnerabilities_found"]
             elif isinstance(safety_data, list):
                 safety_issues = len(safety_data)
         except Exception:
             pass
 
     # Run tests to get count
-    test_cmd = f"cd {code_dir} && python -m pytest tests -q"
-    test_out, test_rc = run_command(test_cmd)
+    test_cmd = "python -m pytest tests -q"
+    try:
+        test_res = subprocess.run(shlex.split(test_cmd), capture_output=True, text=True, cwd=code_dir)
+        _test_out, test_rc = test_res.stdout, test_res.returncode # prefixed unused variable with _
+    except Exception as e:
+        _test_out, test_rc = str(e), 1
 
     test_status = "Pass" if test_rc == 0 else "Fail"
 

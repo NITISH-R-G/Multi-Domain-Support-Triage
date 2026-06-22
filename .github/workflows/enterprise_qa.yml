@@ -121,7 +121,7 @@ jobs:
       - name: Run CycloneDX (SBOM Generation)
         id: cyclonedx
         if: always()
-        run: cyclonedx-py environment --outfile reports/sbom.json || true
+        run: if [ -f "$CODE_DIR/requirements.txt" ]; then cyclonedx-py requirements $CODE_DIR/requirements.txt -o reports/sbom.json || true; else cyclonedx-py requirements requirements.txt -o reports/sbom.json || true; fi
 
       - name: Run AI QA Agent
         if: always()
@@ -173,7 +173,7 @@ jobs:
           fi
 
           # Check for Safety issues
-          if [ -s reports/safety_report.json ] && grep -q '"vulnerabilities"' reports/safety_report.json 2>/dev/null; then
+          if [ -s reports/safety_report.json ] && (grep -q '"vulnerabilities"' reports/safety_report.json 2>/dev/null || grep -q '"vulnerabilities_found": [1-9]' reports/safety_report.json 2>/dev/null); then
              # Since safety json format can vary, a simple check might just see if we got an error output, but here we just check if string is present.
              echo "Safety found dependency vulnerabilities."
              EXIT_CODE=1
