@@ -39,13 +39,41 @@ def post_comment(repo, issue_number, token, body):
         "Accept": "application/vnd.github.v3+json",
     }
     data = {"body": body}
-    response = requests.post(url, headers=headers, json=data)
+    response = requests.post(url, headers=headers, json=data, timeout=10)
     if response.status_code == 201:
         print("Successfully posted comment.")
     else:
         print(
             f"Failed to post comment. Status: {response.status_code}, Response: {response.text}"
         )
+
+
+def extract_event_details(event_data):
+    action = event_data.get("action")
+    if "pull_request" in event_data and action in ["opened", "edited"]:
+        return (
+            event_data["pull_request"]["number"],
+            event_data["pull_request"]["title"],
+            event_data["pull_request"]["body"] or "",
+            "Pull Request",
+        )
+    if "issue" in event_data and action in ["opened", "edited"] and "pull_request" not in event_data["issue"]:
+        return (
+            event_data["issue"]["number"],
+            event_data["issue"]["title"],
+            event_data["issue"]["body"] or "",
+            "Issue",
+        )
+    if "comment" in event_data and action == "created":
+        if event_data["comment"]["user"]["login"] == "github-actions[bot]":
+            return None, "", "", ""
+        return (
+            event_data["issue"]["number"],
+            event_data["issue"]["title"],
+            event_data["comment"]["body"],
+            "Comment",
+        )
+    return None, "", "", ""
 
 
 def main():
@@ -59,42 +87,10 @@ def main():
 
     event_data = get_event_data(event_path)
 
-    action = event_data.get("action")
-
-    issue_number = None
-    title = ""
-    body = ""
-    event_type = ""
-
-    if "pull_request" in event_data and action in ["opened", "edited"]:
-        issue_number = event_data["pull_request"]["number"]
-        title = event_data["pull_request"]["title"]
-        body = event_data["pull_request"]["body"] or ""
-        event_type = "Pull Request"
-    elif (
-        "issue" in event_data
-        and action in ["opened", "edited"]
-        and "pull_request" not in event_data["issue"]
-    ):
-        issue_number = event_data["issue"]["number"]
-        title = event_data["issue"]["title"]
-        body = event_data["issue"]["body"] or ""
-        event_type = "Issue"
-    elif "comment" in event_data and action == "created":
-        issue_number = event_data["issue"]["number"]
-        comment_body = event_data["comment"]["body"]
-        # Skip responding to ourselves
-        if event_data["comment"]["user"]["login"] == "github-actions[bot]":
-            return
-        title = event_data["issue"]["title"]
-        body = comment_body
-        event_type = "Comment"
-    else:
-        print("Unsupported event or action.")
-        return
+    issue_number, title, body, event_type = extract_event_details(event_data)
 
     if not issue_number:
-        print("Could not determine issue number.")
+        print("Unsupported event, action, or could not determine issue number.")
         return
 
     prompt = f"Review the following {event_type}:\n\nTitle: {title}\n\nBody: {body}\n\nPlease provide a helpful response as the AI Maintainer."
