@@ -57,7 +57,11 @@ def extract_event_details(event_data):
             event_data["pull_request"]["body"] or "",
             "Pull Request",
         )
-    if "issue" in event_data and action in ["opened", "edited"] and "pull_request" not in event_data["issue"]:
+    if (
+        "issue" in event_data
+        and action in ["opened", "edited"]
+        and "pull_request" not in event_data["issue"]
+    ):
         return (
             event_data["issue"]["number"],
             event_data["issue"]["title"],

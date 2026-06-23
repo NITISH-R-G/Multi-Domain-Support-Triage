@@ -66,7 +66,9 @@ def calculate_health_score(bandit_issues, bandit_high, safety_issues, test_statu
     return max(0, min(100, health_score))
 
 
-def generate_dashboard_content(health_score, test_status, bandit_issues, bandit_high, safety_issues):
+def generate_dashboard_content(
+    health_score, test_status, bandit_issues, bandit_high, safety_issues
+):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     return f"""# Repository Health Dashboard
 
@@ -106,7 +108,9 @@ def generate_health_dashboard():
 
     test_status = run_tests(code_dir)
 
-    health_score = calculate_health_score(bandit_issues, bandit_high, safety_issues, test_status)
+    health_score = calculate_health_score(
+        bandit_issues, bandit_high, safety_issues, test_status
+    )
 
     dashboard_content = generate_dashboard_content(
         health_score, test_status, bandit_issues, bandit_high, safety_issues
