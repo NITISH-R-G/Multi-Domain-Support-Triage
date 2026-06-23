@@ -1,0 +1,88 @@
+name: Bug report
+description: Create a report to help us improve
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    id: to-reproduce
+    attributes:
+      label: To Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain your problem.
+  - type: input
+    id: desktop-os
+    attributes:
+      label: Desktop OS
+      description: e.g. iOS
+  - type: input
+    id: desktop-browser
+    attributes:
+      label: Desktop Browser
+      description: e.g. chrome, safari
+  - type: input
+    id: desktop-version
+    attributes:
+      label: Desktop Version
+      description: e.g. 22
+  - type: input
+    id: smartphone-device
+    attributes:
+      label: Smartphone Device
+      description: e.g. iPhone6
+  - type: input
+    id: smartphone-os
+    attributes:
+      label: Smartphone OS
+      description: e.g. iOS8.1
+  - type: input
+    id: smartphone-browser
+    attributes:
+      label: Smartphone Browser
+      description: e.g. stock browser, safari
+  - type: input
+    id: smartphone-version
+    attributes:
+      label: Smartphone Version
+      description: e.g. 22
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here.
+  - type: textarea
+    id: expected-priority
+    attributes:
+      label: Expected priority
+      description: A clear and concise description of the priority and impact of the bug.
+    validations:
+      required: true
+  - type: textarea
+    id: logs-traces
+    attributes:
+      label: Logs/Traces
+      description: If applicable, paste any related logs or stack traces.
