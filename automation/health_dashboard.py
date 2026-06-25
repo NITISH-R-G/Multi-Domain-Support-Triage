@@ -15,13 +15,7 @@ def run_command(command, cwd=None):
         return str(e), 1
 
 
-def generate_health_dashboard():
-    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    code_dir = os.path.join(root_dir, "code")
-
-    print("Running security and dependency checks...")
-
-    # Run bandit
+def run_bandit(code_dir):
     bandit_cmd = ["bandit", "-r", code_dir, "-f", "json"]
     bandit_out, _ = run_command(bandit_cmd)
 
@@ -37,8 +31,10 @@ def generate_health_dashboard():
         )
     except Exception:
         pass
+    return bandit_issues, bandit_high
 
-    # Run safety
+
+def run_safety(code_dir):
     req_file = os.path.join(code_dir, "requirements.txt")
     safety_issues = 0
     if os.path.exists(req_file):
@@ -53,6 +49,20 @@ def generate_health_dashboard():
                 safety_issues = len(safety_data)
         except Exception:
             pass
+    return safety_issues
+
+
+def generate_health_dashboard():
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    code_dir = os.path.join(root_dir, "code")
+
+    print("Running security and dependency checks...")
+
+    # Run bandit
+    bandit_issues, bandit_high = run_bandit(code_dir)
+
+    # Run safety
+    safety_issues = run_safety(code_dir)
 
     # Run tests to get count
     test_cmd = ["python", "-m", "pytest", "tests", "-q"]
