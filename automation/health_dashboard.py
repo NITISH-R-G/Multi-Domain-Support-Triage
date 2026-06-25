@@ -57,6 +57,7 @@ def run_pytest(code_dir):
     test_out, test_rc = run_command(test_cmd, cwd=code_dir)
     return "Pass" if test_rc == 0 else "Fail"
 
+
 def calculate_score(bandit_issues, bandit_high, safety_issues, test_status):
     health_score = 100
     if bandit_high > 0:
@@ -66,6 +67,7 @@ def calculate_score(bandit_issues, bandit_high, safety_issues, test_status):
     if test_status == "Fail":
         health_score -= 40
     return max(0, min(100, health_score))
+
 
 def generate_health_dashboard():
     root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -77,7 +79,9 @@ def generate_health_dashboard():
     safety_issues = run_safety(code_dir)
     test_status = run_pytest(code_dir)
 
-    health_score = calculate_score(bandit_issues, bandit_high, safety_issues, test_status)
+    health_score = calculate_score(
+        bandit_issues, bandit_high, safety_issues, test_status
+    )
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 

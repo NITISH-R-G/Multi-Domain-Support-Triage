@@ -61,6 +61,7 @@ def extract_pr_details(event_data, action):
         )
     return None
 
+
 def extract_issue_only_details(event_data, action):
     if (
         "issue" in event_data
@@ -75,6 +76,7 @@ def extract_issue_only_details(event_data, action):
         )
     return None
 
+
 def extract_comment_details(event_data, action):
     if "comment" in event_data and action == "created":
         if event_data["comment"]["user"]["login"] == "github-actions[bot]":
@@ -86,6 +88,7 @@ def extract_comment_details(event_data, action):
             "Comment",
         )
     return None
+
 
 def extract_issue_details(event_data, action):
     pr_details = extract_pr_details(event_data, action)
