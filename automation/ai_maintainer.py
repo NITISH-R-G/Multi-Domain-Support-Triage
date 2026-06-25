@@ -51,7 +51,7 @@ def post_comment(repo, issue_number, token, body):
         print(f"Request failed when posting comment: {e}")
 
 
-def extract_issue_details(event_data, action):
+def extract_pr_details(event_data, action):
     if "pull_request" in event_data and action in ["opened", "edited"]:
         return (
             event_data["pull_request"]["number"],
@@ -59,6 +59,9 @@ def extract_issue_details(event_data, action):
             event_data["pull_request"]["body"] or "",
             "Pull Request",
         )
+    return None
+
+def extract_issue_only_details(event_data, action):
     if (
         "issue" in event_data
         and action in ["opened", "edited"]
@@ -70,16 +73,33 @@ def extract_issue_details(event_data, action):
             event_data["issue"]["body"] or "",
             "Issue",
         )
+    return None
+
+def extract_comment_details(event_data, action):
     if "comment" in event_data and action == "created":
-        # Skip responding to ourselves
         if event_data["comment"]["user"]["login"] == "github-actions[bot]":
-            return None, "", "", ""
+            return None
         return (
             event_data["issue"]["number"],
             event_data["issue"]["title"],
             event_data["comment"]["body"],
             "Comment",
         )
+    return None
+
+def extract_issue_details(event_data, action):
+    pr_details = extract_pr_details(event_data, action)
+    if pr_details:
+        return pr_details
+
+    issue_details = extract_issue_only_details(event_data, action)
+    if issue_details:
+        return issue_details
+
+    comment_details = extract_comment_details(event_data, action)
+    if comment_details:
+        return comment_details
+
     return None, "", "", ""
 
 

@@ -52,25 +52,12 @@ def run_safety(code_dir):
     return safety_issues
 
 
-def generate_health_dashboard():
-    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    code_dir = os.path.join(root_dir, "code")
-
-    print("Running security and dependency checks...")
-
-    # Run bandit
-    bandit_issues, bandit_high = run_bandit(code_dir)
-
-    # Run safety
-    safety_issues = run_safety(code_dir)
-
-    # Run tests to get count
+def run_pytest(code_dir):
     test_cmd = ["python", "-m", "pytest", "tests", "-q"]
     test_out, test_rc = run_command(test_cmd, cwd=code_dir)
+    return "Pass" if test_rc == 0 else "Fail"
 
-    test_status = "Pass" if test_rc == 0 else "Fail"
-
-    # Calculate simple health score
+def calculate_score(bandit_issues, bandit_high, safety_issues, test_status):
     health_score = 100
     if bandit_high > 0:
         health_score -= 30
@@ -78,8 +65,19 @@ def generate_health_dashboard():
     health_score -= safety_issues * 10
     if test_status == "Fail":
         health_score -= 40
+    return max(0, min(100, health_score))
 
-    health_score = max(0, min(100, health_score))
+def generate_health_dashboard():
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    code_dir = os.path.join(root_dir, "code")
+
+    print("Running security and dependency checks...")
+
+    bandit_issues, bandit_high = run_bandit(code_dir)
+    safety_issues = run_safety(code_dir)
+    test_status = run_pytest(code_dir)
+
+    health_score = calculate_score(bandit_issues, bandit_high, safety_issues, test_status)
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
