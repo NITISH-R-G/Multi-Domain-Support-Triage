@@ -12,8 +12,8 @@ def generate_mermaid_graph(graph_data):
         node_id = f"node_{i}"
         filename = os.path.basename(filepath)
         lines.append(f'    {node_id}["{filename}"]')
-        # Make node clickable to source file
-        lines.append(f'    click {node_id} href "../{filepath}"')
+        # Make node clickable to source file (relative to repo root for README)
+        lines.append(f'    click {node_id} href "./{filepath}"')
 
     # Create edges
     file_list = list(files.keys())

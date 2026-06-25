@@ -22,7 +22,7 @@ def generate_health_dashboard():
     print("Running security and dependency checks...")
 
     # Run bandit
-    bandit_cmd = f"bandit -r {code_dir} -f json"
+    bandit_cmd = ["bandit", "-r", code_dir, "-f", "json"]
     bandit_out, _ = run_command(bandit_cmd)
 
     bandit_issues = 0
@@ -42,7 +42,7 @@ def generate_health_dashboard():
     req_file = os.path.join(code_dir, "requirements.txt")
     safety_issues = 0
     if os.path.exists(req_file):
-        safety_cmd = f"safety check -r {req_file} --json"
+        safety_cmd = ["safety", "check", "-r", req_file, "--json"]
         safety_out, _ = run_command(safety_cmd)
         try:
             safety_data = json.loads(safety_out)

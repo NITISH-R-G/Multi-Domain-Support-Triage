@@ -39,13 +39,16 @@ def post_comment(repo, issue_number, token, body):
         "Accept": "application/vnd.github.v3+json",
     }
     data = {"body": body}
-    response = requests.post(url, headers=headers, json=data, timeout=10)
-    if response.status_code == 201:
-        print("Successfully posted comment.")
-    else:
-        print(
-            f"Failed to post comment. Status: {response.status_code}, Response: {response.text}"
-        )
+    try:
+        response = requests.post(url, headers=headers, json=data, timeout=10)
+        if response.status_code == 201:
+            print("Successfully posted comment.")
+        else:
+            print(
+                f"Failed to post comment. Status: {response.status_code}, Response: {response.text}"
+            )
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed when posting comment: {e}")
 
 
 def main():

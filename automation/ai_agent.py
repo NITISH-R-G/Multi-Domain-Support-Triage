@@ -22,7 +22,7 @@ def generate_docs(repo_graph, root_dir):
         )
         return {
             "architecture_summary": "This repository powers the HackerRank Orchestrate terminal-based AI triage agent. It parses support tickets and uses a hybrid retrieval mechanism with TF-IDF and BM25.",
-            "onboarding_guide": "To contribute, navigate to the `code/` directory, install `requirements.txt`, and run `pytest tests -q`.",
+            "onboarding_guide": "To contribute, navigate to the `code/` directory, run `pip install -r requirements.txt`, and run `pytest tests -q`.",
         }
 
     client = OpenAI()
