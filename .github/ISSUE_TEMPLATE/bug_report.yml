@@ -1,0 +1,64 @@
+name: Bug Report
+description: Create a report to help us improve
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: "Thanks for taking the time to fill out this bug report!"
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: To Reproduce
+      description: Steps to reproduce the behavior
+      value: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain your problem.
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      description: Desktop or Smartphone OS (e.g. iOS, Windows)
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      description: Browser and version (e.g. chrome 22)
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here.
+  - type: input
+    id: priority
+    attributes:
+      label: Expected priority
+      description: A clear and concise description of the priority and impact of the bug.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs/Traces
+      description: If applicable, paste any related logs or stack traces.
