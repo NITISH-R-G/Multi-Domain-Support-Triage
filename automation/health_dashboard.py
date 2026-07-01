@@ -36,7 +36,7 @@ def run_bandit(code_dir):
 def run_safety(req_file):
     safety_issues = 0
     if os.path.exists(req_file):
-        safety_cmd = f"safety check -r {req_file} --json"
+        safety_cmd = f"safety check -r {req_file} --output json"
         safety_out, _ = run_command(safety_cmd)
         try:
             safety_data = json.loads(safety_out)
