@@ -47,25 +47,49 @@ def post_comment(repo, issue_number, token, body):
             f"Failed to post comment. Status: {response.status_code}, Response: {response.text}"
         )
 
+
 def _parse_pull_request(event_data):
-    return event_data["pull_request"]["number"], event_data["pull_request"]["title"], event_data["pull_request"]["body"] or "", "Pull Request"
+    return (
+        event_data["pull_request"]["number"],
+        event_data["pull_request"]["title"],
+        event_data["pull_request"]["body"] or "",
+        "Pull Request",
+    )
+
 
 def _parse_issue(event_data):
-    return event_data["issue"]["number"], event_data["issue"]["title"], event_data["issue"]["body"] or "", "Issue"
+    return (
+        event_data["issue"]["number"],
+        event_data["issue"]["title"],
+        event_data["issue"]["body"] or "",
+        "Issue",
+    )
+
 
 def _parse_comment(event_data):
     if event_data["comment"]["user"]["login"] == "github-actions[bot]":
         return None, "", "", ""
-    return event_data["issue"]["number"], event_data["issue"]["title"], event_data["comment"]["body"], "Comment"
+    return (
+        event_data["issue"]["number"],
+        event_data["issue"]["title"],
+        event_data["comment"]["body"],
+        "Comment",
+    )
+
 
 def parse_event_data(event_data, action):
     if "pull_request" in event_data and action in ["opened", "edited"]:
         return _parse_pull_request(event_data)
-    if "issue" in event_data and action in ["opened", "edited"] and "pull_request" not in event_data["issue"]:
+    if (
+        "issue" in event_data
+        and action in ["opened", "edited"]
+        and "pull_request" not in event_data["issue"]
+    ):
         return _parse_issue(event_data)
     if "comment" in event_data and action == "created":
         return _parse_comment(event_data)
     return None, "", "", ""
+
 
 def process_event(issue_number, title, body, event_type, repo, token):
     if not issue_number:

@@ -7,7 +7,9 @@ from datetime import datetime
 
 def run_command(command, cwd=None):
     try:
-        result = subprocess.run(shlex.split(command), capture_output=True, text=True, cwd=cwd)
+        result = subprocess.run(
+            shlex.split(command), capture_output=True, text=True, cwd=cwd
+        )
         return result.stdout, result.returncode
     except Exception as e:
         return str(e), 1
@@ -69,11 +71,13 @@ def generate_health_dashboard():
     req_file = os.path.join(code_dir, "requirements.txt")
     safety_issues = run_safety(req_file)
 
-    test_cmd = f"python -m pytest tests -q"
+    test_cmd = "python -m pytest tests -q"
     _, test_rc = run_command(test_cmd, cwd=code_dir)
     test_status = "Pass" if test_rc == 0 else "Fail"
 
-    health_score = calculate_health_score(bandit_high, bandit_issues, safety_issues, test_status)
+    health_score = calculate_health_score(
+        bandit_high, bandit_issues, safety_issues, test_status
+    )
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
