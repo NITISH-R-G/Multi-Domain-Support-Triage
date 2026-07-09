@@ -53,7 +53,7 @@ def process_pull_request_event(event_data):
         event_data["pull_request"]["number"],
         event_data["pull_request"]["title"],
         event_data["pull_request"]["body"] or "",
-        "Pull Request"
+        "Pull Request",
     )
 
 
@@ -62,7 +62,7 @@ def process_issue_event(event_data):
         event_data["issue"]["number"],
         event_data["issue"]["title"],
         event_data["issue"]["body"] or "",
-        "Issue"
+        "Issue",
     )
 
 
@@ -73,7 +73,7 @@ def process_comment_event(event_data):
         event_data["issue"]["number"],
         event_data["issue"]["title"],
         event_data["comment"]["body"],
-        "Comment"
+        "Comment",
     )
 
 

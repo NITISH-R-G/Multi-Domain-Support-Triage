@@ -70,7 +70,9 @@ def calculate_health_score(bandit_issues, bandit_high, safety_issues, test_statu
     return max(0, min(100, health_score))
 
 
-def create_dashboard_content(health_score, test_status, bandit_issues, bandit_high, safety_issues):
+def create_dashboard_content(
+    health_score, test_status, bandit_issues, bandit_high, safety_issues
+):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     return f"""# Repository Health Dashboard
@@ -107,8 +109,12 @@ def generate_health_dashboard():
     bandit_issues, bandit_high = get_bandit_stats(code_dir)
     safety_issues = get_safety_stats(code_dir)
     test_status = get_test_status(code_dir)
-    health_score = calculate_health_score(bandit_issues, bandit_high, safety_issues, test_status)
-    dashboard_content = create_dashboard_content(health_score, test_status, bandit_issues, bandit_high, safety_issues)
+    health_score = calculate_health_score(
+        bandit_issues, bandit_high, safety_issues, test_status
+    )
+    dashboard_content = create_dashboard_content(
+        health_score, test_status, bandit_issues, bandit_high, safety_issues
+    )
 
     docs_dir = os.path.join(root_dir, "docs")
     os.makedirs(docs_dir, exist_ok=True)
