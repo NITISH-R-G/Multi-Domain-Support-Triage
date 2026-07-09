@@ -1,24 +1,20 @@
 import os
 import json
 import subprocess
+import shlex
 from datetime import datetime
 
 
 def run_command(command):
     try:
-        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        args = shlex.split(command)
+        result = subprocess.run(args, capture_output=True, text=True)
         return result.stdout, result.returncode
     except Exception as e:
         return str(e), 1
 
 
-def generate_health_dashboard():
-    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    code_dir = os.path.join(root_dir, "code")
-
-    print("Running security and dependency checks...")
-
-    # Run bandit
+def get_bandit_stats(code_dir):
     bandit_cmd = f"bandit -r {code_dir} -f json"
     bandit_out, _ = run_command(bandit_cmd)
 
@@ -35,7 +31,10 @@ def generate_health_dashboard():
     except Exception:
         pass
 
-    # Run safety
+    return bandit_issues, bandit_high
+
+
+def get_safety_stats(code_dir):
     req_file = os.path.join(code_dir, "requirements.txt")
     safety_issues = 0
     if os.path.exists(req_file):
@@ -43,7 +42,6 @@ def generate_health_dashboard():
         safety_out, _ = run_command(safety_cmd)
         try:
             safety_data = json.loads(safety_out)
-            # safety output structure can vary, typically vulnerabilities is a list
             if isinstance(safety_data, dict) and "vulnerabilities" in safety_data:
                 safety_issues = len(safety_data["vulnerabilities"])
             elif isinstance(safety_data, list):
@@ -51,13 +49,16 @@ def generate_health_dashboard():
         except Exception:
             pass
 
-    # Run tests to get count
-    test_cmd = f"cd {code_dir} && python -m pytest tests -q"
-    test_out, test_rc = run_command(test_cmd)
+    return safety_issues
 
-    test_status = "Pass" if test_rc == 0 else "Fail"
 
-    # Calculate simple health score
+def get_test_status(code_dir):
+    test_cmd = f"pytest {code_dir}/tests -q"
+    _, test_rc = run_command(test_cmd)
+    return "Pass" if test_rc == 0 else "Fail"
+
+
+def calculate_health_score(bandit_issues, bandit_high, safety_issues, test_status):
     health_score = 100
     if bandit_high > 0:
         health_score -= 30
@@ -66,11 +67,13 @@ def generate_health_dashboard():
     if test_status == "Fail":
         health_score -= 40
 
-    health_score = max(0, min(100, health_score))
+    return max(0, min(100, health_score))
 
+
+def create_dashboard_content(health_score, test_status, bandit_issues, bandit_high, safety_issues):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    dashboard_content = f"""# Repository Health Dashboard
+    return f"""# Repository Health Dashboard
 
 *Last updated: {timestamp}*
 
@@ -93,6 +96,19 @@ def generate_health_dashboard():
 ---
 *This dashboard is generated automatically by the AI Maintainer system.*
 """
+
+
+def generate_health_dashboard():
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    code_dir = os.path.join(root_dir, "code")
+
+    print("Running security and dependency checks...")
+
+    bandit_issues, bandit_high = get_bandit_stats(code_dir)
+    safety_issues = get_safety_stats(code_dir)
+    test_status = get_test_status(code_dir)
+    health_score = calculate_health_score(bandit_issues, bandit_high, safety_issues, test_status)
+    dashboard_content = create_dashboard_content(health_score, test_status, bandit_issues, bandit_high, safety_issues)
 
     docs_dir = os.path.join(root_dir, "docs")
     os.makedirs(docs_dir, exist_ok=True)
