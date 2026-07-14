@@ -6,7 +6,9 @@ from datetime import datetime
 
 def run_command(args, cwd=None):
     try:
-        result = subprocess.run(args, capture_output=True, text=True, cwd=cwd)
+        result = subprocess.run(
+            args, capture_output=True, text=True, cwd=cwd
+        )
         return result.stdout, result.returncode
     except Exception as e:
         return str(e), 1
