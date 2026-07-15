@@ -121,7 +121,7 @@ jobs:
       - name: Run CycloneDX (SBOM Generation)
         id: cyclonedx
         if: always()
-        run: cyclonedx-py environment --outfile reports/sbom.json || true
+        run: cyclonedx-py environment > reports/sbom.json || true
 
       - name: Run AI QA Agent
         if: always()
