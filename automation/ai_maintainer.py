@@ -39,44 +39,13 @@ def post_comment(repo, issue_number, token, body):
         "Accept": "application/vnd.github.v3+json",
     }
     data = {"body": body}
-    response = requests.post(url, headers=headers, json=data, timeout=10)
+    response = requests.post(url, headers=headers, json=data)
     if response.status_code == 201:
         print("Successfully posted comment.")
     else:
         print(
             f"Failed to post comment. Status: {response.status_code}, Response: {response.text}"
         )
-
-
-def parse_event(event_data, action):
-    if "pull_request" in event_data and action in ["opened", "edited"]:
-        issue_number = event_data["pull_request"]["number"]
-        title = event_data["pull_request"]["title"]
-        body = event_data["pull_request"]["body"] or ""
-        event_type = "Pull Request"
-    elif (
-        "issue" in event_data
-        and action in ["opened", "edited"]
-        and "comment" not in event_data
-    ):
-        issue_number = event_data["issue"]["number"]
-        title = event_data["issue"]["title"]
-        body = event_data["issue"]["body"] or ""
-        event_type = "Issue"
-    elif "comment" in event_data and action == "created":
-        issue_number = event_data["issue"]["number"]
-        comment_body = event_data["comment"]["body"]
-        # Skip responding to ourselves
-        if event_data["comment"]["user"]["login"] == "github-actions[bot]":
-            return None, "", "", ""
-        title = event_data["issue"]["title"]
-        body = comment_body
-        event_type = "Comment"
-    else:
-        print("Unsupported event or action.")
-        return None, "", "", ""
-
-    return issue_number, title, body, event_type
 
 
 def main():
@@ -92,7 +61,38 @@ def main():
 
     action = event_data.get("action")
 
-    issue_number, title, body, event_type = parse_event(event_data, action)
+    issue_number = None
+    title = ""
+    body = ""
+    event_type = ""
+
+    if "pull_request" in event_data and action in ["opened", "edited"]:
+        issue_number = event_data["pull_request"]["number"]
+        title = event_data["pull_request"]["title"]
+        body = event_data["pull_request"]["body"] or ""
+        event_type = "Pull Request"
+    elif (
+        "issue" in event_data
+        and action in ["opened", "edited"]
+        and "pull_request" not in event_data["issue"]
+    ):
+        issue_number = event_data["issue"]["number"]
+        title = event_data["issue"]["title"]
+        body = event_data["issue"]["body"] or ""
+        event_type = "Issue"
+    elif "comment" in event_data and action == "created":
+        issue_number = event_data["issue"]["number"]
+        comment_body = event_data["comment"]["body"]
+        # Skip responding to ourselves
+        if event_data["comment"]["user"]["login"] == "github-actions[bot]":
+            return
+        title = event_data["issue"]["title"]
+        body = comment_body
+        event_type = "Comment"
+    else:
+        print("Unsupported event or action.")
+        return
+
     if not issue_number:
         print("Could not determine issue number.")
         return

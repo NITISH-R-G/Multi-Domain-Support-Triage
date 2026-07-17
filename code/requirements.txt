@@ -1,8 +1,8 @@
 # Pinned for reproducible Hackathon Orchestrate runs (Python 3.11+)
-pandas==3.0.3
-numpy==2.5.1
+pandas
+numpy
 rank-bm25==0.2.2
-openai==2.46.0
+openai
 python-dotenv==1.2.2
 tqdm==4.68.4
-pytest==9.1.1
+pytest
