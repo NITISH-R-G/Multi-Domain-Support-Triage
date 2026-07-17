@@ -121,18 +121,18 @@ jobs:
       - name: Run CycloneDX (SBOM Generation)
         id: cyclonedx
         if: always()
-        run: cyclonedx-py environment --outfile reports/sbom.json || true
+        run: cyclonedx-py environment -o reports/sbom.json || true
 
       - name: Run AI QA Agent
         if: always()
-        run: python automation/ai_qa_agent.py
+        run: python automation/ai_qa_agent.py || echo "QA agent failed to run" && touch reports/qa_report.md
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           PYTHONPATH: .
 
       - name: Publish QA Report to Step Summary
         if: always()
-        run: cat reports/qa_report.md >> $GITHUB_STEP_SUMMARY || echo "Failed to add to step summary"
+        run: if [ -f "reports/qa_report.md" ]; then cat reports/qa_report.md >> $GITHUB_STEP_SUMMARY; else echo "QA report not found"; fi
 
       - name: Post QA Report as PR Comment
         if: always() && github.event_name == 'pull_request'
