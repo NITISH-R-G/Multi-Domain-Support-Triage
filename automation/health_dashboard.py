@@ -8,7 +8,9 @@ from datetime import datetime
 def run_command(command, cwd=None):
     try:
         args = shlex.split(command)
-        result = subprocess.run(args, shell=False, capture_output=True, text=True, cwd=cwd)
+        result = subprocess.run(
+            args, shell=False, capture_output=True, text=True, cwd=cwd
+        )
         return result.stdout, result.returncode
     except Exception as e:
         return str(e), 1
@@ -23,7 +25,9 @@ def run_bandit(code_dir):
         bandit_data = json.loads(bandit_out)
         bandit_issues = len(bandit_data.get("results", []))
         bandit_high = sum(
-            1 for r in bandit_data.get("results", []) if r.get("issue_severity") == "HIGH"
+            1
+            for r in bandit_data.get("results", [])
+            if r.get("issue_severity") == "HIGH"
         )
     except Exception:
         pass
@@ -47,7 +51,7 @@ def run_safety(req_file):
 
 
 def run_pytest(code_dir):
-    test_cmd = f"python -m pytest tests -q"
+    test_cmd = "python -m pytest tests -q"
     _, test_rc = run_command(test_cmd, cwd=code_dir)
     return "Pass" if test_rc == 0 else "Fail"
 
