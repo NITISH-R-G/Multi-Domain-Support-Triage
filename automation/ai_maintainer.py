@@ -39,7 +39,7 @@ def post_comment(repo, issue_number, token, body):
         "Accept": "application/vnd.github.v3+json",
     }
     data = {"body": body}
-    response = requests.post(url, headers=headers, json=data, timeout=10)
+    response = requests.post(url, headers=headers, json=data)
     if response.status_code == 201:
         print("Successfully posted comment.")
     else:
@@ -48,8 +48,19 @@ def post_comment(repo, issue_number, token, body):
         )
 
 
-def parse_event(event_data):
+def main():
+    event_path = os.environ.get("GITHUB_EVENT_PATH")
+    repo = os.environ.get("GITHUB_REPOSITORY")
+    token = os.environ.get("GITHUB_TOKEN")
+
+    if not event_path or not repo or not token:
+        print("Missing required environment variables.")
+        return
+
+    event_data = get_event_data(event_path)
+
     action = event_data.get("action")
+
     issue_number = None
     title = ""
     body = ""
@@ -64,7 +75,6 @@ def parse_event(event_data):
         "issue" in event_data
         and action in ["opened", "edited"]
         and "pull_request" not in event_data["issue"]
-        and "comment" not in event_data
     ):
         issue_number = event_data["issue"]["number"]
         title = event_data["issue"]["title"]
@@ -75,28 +85,13 @@ def parse_event(event_data):
         comment_body = event_data["comment"]["body"]
         # Skip responding to ourselves
         if event_data["comment"]["user"]["login"] == "github-actions[bot]":
-            return None, "", "", ""
+            return
         title = event_data["issue"]["title"]
         body = comment_body
         event_type = "Comment"
     else:
         print("Unsupported event or action.")
-
-    return issue_number, title, body, event_type
-
-
-def main():
-    event_path = os.environ.get("GITHUB_EVENT_PATH")
-    repo = os.environ.get("GITHUB_REPOSITORY")
-    token = os.environ.get("GITHUB_TOKEN")
-
-    if not event_path or not repo or not token:
-        print("Missing required environment variables.")
         return
-
-    event_data = get_event_data(event_path)
-
-    issue_number, title, body, event_type = parse_event(event_data)
 
     if not issue_number:
         print("Could not determine issue number.")
