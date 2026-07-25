@@ -255,7 +255,6 @@ See [`evaluation_criteria.md`](./evaluation_criteria.md) for the full rubric. De
 
 
 
-
 <!-- AUTONOMOUS_SECTION_START -->
 
 ---
@@ -457,73 +456,6 @@ graph TD
     node_29 --> node_3
     node_30 --> node_14
 ```
-
-
-## API Documentation
-
-### `code/answer_synthesis.py`
-
-- **Function `extract_steps`**: Pull readable steps from support article bodies.
-
-- **Function `synthesize_reply_from_hits`**: Return (user_response, source_paths_used).
-
-### `code/cross_ecosystem.py`
-
-- **Function `cross_ecosystem_escalation_reason`**: Return human-readable escalate reason, or None.
-
-### `code/csv_io.py`
-
-- **Class `TicketCsvError`**: User-fixable CSV / path issues (exit code 2).
-
-- **Function `canonicalize_ticket_columns`**: Ensure Issue / Subject / Company column names (case-insensitive).
-
-- **Function `read_tickets_csv`**: Read UTF-8 / UTF-8-BOM; raise clear errors for missing path or encoding.
-
-- **Function `rename_prediction_columns`**: Case-insensitive rename of agent output columns to Pred_* names for gold merges.
-
-### `code/eval_metrics.py`
-
-- **Function `compact_overlap_ratio`**: Dice-like overlap on character bags (cheap fuzzy signal vs exact match).
-
-- **Function `token_set_f1`**: Token-overlap F1 (bag of words; labels normalized).
-
-### `code/grounding.py`
-
-- **Function `has_unsupported_numbers`**: Flag digit-heavy claims not present in evidence (rough guardrail).
-
-- **Function `lexical_overlap`**: Return fraction of non-trivial response tokens present in retrieved chunk text.
-
-### `code/main.py`
-
-- **Function `_truncate_row_fields`**: Copy row with Issue/Subject truncated if over max_chars (stderr warning).
-
-### `code/retrieve.py`
-
-- **Function `_tfidf_vectors`**: Tiny TF-IDF implementation (no sklearn), cosine-normalized per doc.
-
-- **Function `rerank_hits`**: Lexical overlap rerank on top of BM25 scores.
-
-- **Function `save`**: Atomically replace index file to avoid torn reads from concurrent runners.
-
-### `code/taxonomy.py`
-
-- **Function `looks_like_off_topic_general_knowledge`**: Entertainment / trivia / general-knowledge questions unlikely to be product support.
-
-- **Function `map_product_area`**: Map evidence to one of CANONICAL_PRODUCT_AREAS when possible.
-
-### `code/tests/test_cross_ecosystem.py`
-
-- **Function `test_no_false_positive_visa_sponsorship_only_hackerrank`**: Immigration 'visa' language without Visa-network product signals.
-
-### `code/tests/test_sample_routing_golden.py`
-
-- **Function `test_sample_support_routing_matches_golden`**: Every sample row: status, request_type, product_area must match labels when LLM is disabled.
-
-### `code/ticket_hints.py`
-
-- **Function `maybe_append_multi_topic_justification`**: Append a transparency note to justification only (does not change response body).
-
-- **Function `ticket_may_span_multiple_topics`**: Heuristic: message might bundle several distinct asks (no NLP; best-effort).
 
 
 ## Automation Onboarding & Contribution
