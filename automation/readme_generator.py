@@ -1,5 +1,54 @@
 import os
 import json
+import ast
+
+
+def parse_docstrings(code_dir):
+    docs = []
+    for root, _, files in os.walk(code_dir):
+        for file in files:
+            if file.endswith(".py"):
+                filepath = os.path.join(root, file)
+                rel_path = os.path.relpath(filepath, os.path.dirname(code_dir))
+
+                with open(filepath, "r", encoding="utf-8") as f:
+                    try:
+                        tree = ast.parse(f.read(), filename=filepath)
+                        for node in ast.walk(tree):
+                            if isinstance(node, (ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef)):
+                                docstring = ast.get_docstring(node)
+                                if docstring:
+                                    docs.append({
+                                        "file": rel_path,
+                                        "name": node.name,
+                                        "type": "Class" if isinstance(node, ast.ClassDef) else "Function",
+                                        "docstring": docstring
+                                    })
+                    except Exception as e:
+                        print(f"Error parsing {filepath}: {e}")
+                        pass
+    return docs
+
+def build_api_docs(docs):
+    if not docs:
+        return ""
+
+    sections = ["## API Documentation\n"]
+
+    # Group by file
+    by_file = {}
+    for doc in docs:
+        file = doc["file"]
+        if file not in by_file:
+            by_file[file] = []
+        by_file[file].append(doc)
+
+    for file, items in sorted(by_file.items()):
+        sections.append(f"### `{file}`\n")
+        for item in sorted(items, key=lambda x: (x["type"], x["name"])):
+            sections.append(f"- **{item['type']} `{item['name']}`**: {item['docstring'].split(chr(10))[0]}\n")
+
+    return "\n".join(sections)
 
 
 def generate_readme():
@@ -32,6 +81,12 @@ def generate_readme():
         else "Not detected"
     )
 
+    # Extract API docs
+    code_dir = os.path.join(root_dir, "code")
+    api_docs_data = parse_docstrings(code_dir)
+    api_docs_section = build_api_docs(api_docs_data)
+
+
     # Load existing README to preserve it
     readme_path = os.path.join(root_dir, "README.md")
     original_readme = ""
@@ -58,6 +113,8 @@ def generate_readme():
 - Generates interactive Mermaid architectures and documentation.
 
 {diagrams}
+
+{api_docs_section}
 
 ## Automation Onboarding & Contribution
 {ai_docs.get("onboarding_guide", "Contributions are welcome! Please run the automation scripts or let GitHub Actions update docs on PRs.")}
