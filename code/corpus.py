@@ -6,7 +6,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-IMG_RE = re.compile(r"<img\b[^>]*>", re.I)
+IMG_RE = re.compile(r"<img\b[^>]*>", re.IGNORECASE)
 MULTISPACE = re.compile(r"[ \t]+")
 
 
@@ -35,10 +35,10 @@ def _parse_frontmatter(raw: str) -> tuple[str, tuple[str, ...], str]:
     if len(parts) < 3:
         return "", (), raw
     fm_raw, body = parts[1], parts[2]
-    title_m = re.search(r'^title:\s*"(.*)"\s*$', fm_raw, re.M)
+    title_m = re.search(r'^title:\s*"(.*)"\s*$', fm_raw, re.MULTILINE)
     title = title_m.group(1) if title_m else ""
     crumbs: list[str] = []
-    for m in re.finditer(r'^\s*-\s*"(.*)"\s*$', fm_raw, re.M):
+    for m in re.finditer(r'^\s*-\s*"(.*)"\s*$', fm_raw, re.MULTILINE):
         crumbs.append(m.group(1))
     return title, tuple(crumbs), body
 

@@ -5,14 +5,12 @@ from __future__ import annotations
 import json
 import os
 import re
-from typing import Any, Literal
-
 from pathlib import Path
-
-from dotenv import load_dotenv
+from typing import Any, Literal
 
 from answer_synthesis import synthesize_reply_from_hits
 from config import OPENAI_MODEL
+from dotenv import load_dotenv
 from retrieve import Retrieved, format_context
 
 load_dotenv(Path(__file__).resolve().parent.parent / ".env")
