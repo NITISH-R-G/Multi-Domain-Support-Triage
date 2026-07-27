@@ -42,6 +42,7 @@ def post_comment(repo, issue_number, token, body):
     data = {"body": body}
     try:
         response = requests.post(url, headers=headers, json=data, timeout=10)
+        response.raise_for_status()
     except requests.exceptions.Timeout:
         print("Failed to post comment. Timeout.")
         return
