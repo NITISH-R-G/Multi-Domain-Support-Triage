@@ -12,8 +12,6 @@ from pathlib import Path
 from typing import Literal
 
 import numpy as np
-from rank_bm25 import BM25Okapi
-
 from config import (
     BM25_WEIGHT,
     HYBRID_CANDIDATES,
@@ -26,7 +24,7 @@ from config import (
     TOP_K,
 )
 from corpus import Chunk, load_chunks, tokenize
-
+from rank_bm25 import BM25Okapi
 
 Brand = Literal["hackerrank", "claude", "visa", "any"]
 
