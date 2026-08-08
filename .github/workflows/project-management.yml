@@ -1,0 +1,45 @@
+name: Project Management
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  issues:
+    types: [opened, edited, labeled]
+  pull_request:
+    types: [opened, labeled]
+
+permissions:
+  issues: write
+  pull-requests: write
+  projects: write
+
+jobs:
+  auto-assign:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues' || github.event_name == 'pull_request'
+    steps:
+      - name: Auto-assign unassigned issues to opener
+        uses: actions/github-script@v7
+        with:
+          script: |
+            if (!context.payload.issue.assignees.length) {
+              github.rest.issues.addAssignees({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                assignees: [context.payload.issue.user.login]
+              })
+            }
+
+  stale-management:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    steps:
+      - uses: actions/stale@v9
+        with:
+          stale-issue-message: 'This issue is stale because it has been open 30 days with no activity.'
+          stale-pr-message: 'This PR is stale because it has been open 30 days with no activity.'
+          close-issue-message: 'This issue was closed because it has been stalled for 7 days with no activity.'
+          days-before-stale: 30
+          days-before-close: 7
+          operations-per-run: 50
