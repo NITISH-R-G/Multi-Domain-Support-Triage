@@ -1,58 +1,33 @@
 {
   "files": {
-    "code/conftest.py": {
-      "imports": [
-        "__future__.annotations",
-        "pytest",
-        "config.CACHE_PATH",
-        "config.DATA_DIR",
-        "retrieve.BM25Index"
-      ]
+    "fix_type.py": {
+      "imports": []
     },
-    "code/csv_io.py": {
+    "code/retrieve.py": {
       "imports": [
         "__future__.annotations",
-        "pathlib.Path",
-        "pandas"
-      ]
-    },
-    "code/compare_outputs.py": {
-      "imports": [
-        "__future__.annotations",
-        "argparse",
-        "sys",
-        "pandas",
-        "csv_io.TicketCsvError",
-        "csv_io.canonicalize_ticket_columns",
-        "csv_io.read_tickets_csv",
-        "csv_io.rename_prediction_columns",
-        "eval_metrics.compact_overlap_ratio",
-        "eval_metrics.normalize_text",
-        "eval_metrics.token_set_f1"
-      ]
-    },
-    "code/risk.py": {
-      "imports": [
-        "__future__.annotations",
-        "re",
-        "dataclasses.dataclass"
-      ]
-    },
-    "code/openai_agent.py": {
-      "imports": [
-        "__future__.annotations",
-        "json",
+        "math",
         "os",
-        "re",
-        "typing.Any",
-        "typing.Literal",
+        "pickle",
+        "time",
+        "collections.Counter",
+        "dataclasses.dataclass",
         "pathlib.Path",
-        "dotenv.load_dotenv",
-        "answer_synthesis.synthesize_reply_from_hits",
-        "config.OPENAI_MODEL",
-        "retrieve.Retrieved",
-        "retrieve.format_context",
-        "openai.OpenAI"
+        "typing.Literal",
+        "numpy",
+        "rank_bm25.BM25Okapi",
+        "config.BM25_WEIGHT",
+        "config.HYBRID_CANDIDATES",
+        "config.INDEX_VERSION",
+        "config.LOW_BM25_THRESHOLD",
+        "config.RERANK_BONUS_BRAND",
+        "config.RERANK_BONUS_TEAM",
+        "config.RERANK_BONUS_WORKSPACE",
+        "config.TFIDF_WEIGHT",
+        "config.TOP_K",
+        "corpus.Chunk",
+        "corpus.load_chunks",
+        "corpus.tokenize"
       ]
     },
     "code/main.py": {
@@ -79,13 +54,53 @@
         "openai_agent.fallback_from_hits",
         "postprocess.finalize_decision",
         "retrieve.BM25Index",
-        "retrieve.CACHE_PATH",
         "retrieve.rerank_hits",
         "retrieve.should_escalate_low_retrieval",
+        "config.CACHE_PATH",
         "risk.assess_risk",
         "taxonomy.looks_like_invalid_small_talk",
         "ticket_hints.maybe_append_multi_topic_justification",
         "tqdm.tqdm"
+      ]
+    },
+    "code/cross_ecosystem.py": {
+      "imports": [
+        "__future__.annotations",
+        "os",
+        "re"
+      ]
+    },
+    "code/config.py": {
+      "imports": [
+        "__future__.annotations",
+        "os",
+        "pathlib.Path"
+      ]
+    },
+    "code/corpus.py": {
+      "imports": [
+        "__future__.annotations",
+        "re",
+        "dataclasses.dataclass",
+        "pathlib.Path"
+      ]
+    },
+    "code/grounding.py": {
+      "imports": [
+        "__future__.annotations",
+        "re",
+        "corpus.tokenize",
+        "retrieve.Retrieved"
+      ]
+    },
+    "code/run_eval.py": {
+      "imports": [
+        "__future__.annotations",
+        "argparse",
+        "os",
+        "subprocess",
+        "sys",
+        "pathlib.Path"
       ]
     },
     "code/eval_sample.py": {
@@ -104,76 +119,37 @@
         "eval_metrics.token_set_f1"
       ]
     },
-    "code/grounding.py": {
+    "code/answer_synthesis.py": {
       "imports": [
         "__future__.annotations",
+        "hashlib",
         "re",
-        "corpus.tokenize",
         "retrieve.Retrieved"
       ]
     },
-    "code/eval_metrics.py": {
+    "code/openai_agent.py": {
       "imports": [
         "__future__.annotations",
+        "json",
+        "os",
         "re",
-        "collections.Counter"
-      ]
-    },
-    "code/__main__.py": {
-      "imports": [
-        "__future__.annotations",
-        "sys",
+        "typing.Any",
+        "typing.Literal",
         "pathlib.Path",
-        "main.main"
+        "dotenv.load_dotenv",
+        "answer_synthesis.synthesize_reply_from_hits",
+        "config.OPENAI_MODEL",
+        "retrieve.Retrieved",
+        "retrieve.format_context",
+        "openai.OpenAI"
       ]
     },
-    "code/run_eval.py": {
+    "code/taxonomy.py": {
       "imports": [
         "__future__.annotations",
-        "argparse",
-        "os",
-        "subprocess",
-        "sys",
-        "pathlib.Path"
-      ]
-    },
-    "code/response_quality_report.py": {
-      "imports": [
-        "__future__.annotations",
-        "argparse",
-        "os",
         "re",
-        "sys",
         "dataclasses.dataclass",
-        "pathlib.Path",
-        "pandas",
-        "config.CACHE_PATH",
-        "config.DATA_DIR",
-        "config.TOP_K",
-        "csv_io.TicketCsvError",
-        "csv_io.read_tickets_csv",
-        "corpus.tokenize",
-        "grounding.has_unsupported_numbers",
-        "grounding.lexical_overlap",
-        "retrieve.BM25Index",
-        "retrieve.rerank_hits"
-      ]
-    },
-    "code/__init__.py": {
-      "imports": []
-    },
-    "code/ticket_hints.py": {
-      "imports": [
-        "__future__.annotations",
-        "re",
-        "typing.Any"
-      ]
-    },
-    "code/cross_ecosystem.py": {
-      "imports": [
-        "__future__.annotations",
-        "os",
-        "re"
+        "corpus.Chunk"
       ]
     },
     "code/postprocess.py": {
@@ -191,91 +167,83 @@
         "openai_agent.fallback_from_hits"
       ]
     },
-    "code/corpus.py": {
+    "code/response_quality_report.py": {
       "imports": [
         "__future__.annotations",
-        "re",
-        "dataclasses.dataclass",
-        "pathlib.Path"
-      ]
-    },
-    "code/config.py": {
-      "imports": [
-        "__future__.annotations",
+        "argparse",
         "os",
-        "pathlib.Path"
-      ]
-    },
-    "code/answer_synthesis.py": {
-      "imports": [
-        "__future__.annotations",
-        "hashlib",
-        "re",
-        "retrieve.Retrieved"
-      ]
-    },
-    "code/retrieve.py": {
-      "imports": [
-        "__future__.annotations",
-        "math",
-        "os",
-        "pickle",
-        "time",
-        "collections.Counter",
+        "sys",
         "dataclasses.dataclass",
         "pathlib.Path",
-        "typing.Literal",
-        "numpy",
-        "rank_bm25.BM25Okapi",
-        "config.BM25_WEIGHT",
+        "pandas",
         "config.CACHE_PATH",
         "config.DATA_DIR",
-        "config.HYBRID_CANDIDATES",
-        "config.INDEX_VERSION",
-        "config.LOW_BM25_THRESHOLD",
-        "config.RERANK_BONUS_BRAND",
-        "config.RERANK_BONUS_TEAM",
-        "config.RERANK_BONUS_WORKSPACE",
-        "config.TFIDF_WEIGHT",
         "config.TOP_K",
-        "corpus.Chunk",
-        "corpus.load_chunks",
-        "corpus.tokenize"
+        "csv_io.TicketCsvError",
+        "csv_io.read_tickets_csv",
+        "grounding.has_unsupported_numbers",
+        "grounding.lexical_overlap",
+        "retrieve.BM25Index",
+        "retrieve.rerank_hits"
       ]
     },
-    "code/taxonomy.py": {
+    "code/__main__.py": {
       "imports": [
         "__future__.annotations",
-        "re",
-        "dataclasses.dataclass",
-        "corpus.Chunk"
+        "sys",
+        "pathlib.Path",
+        "main.main"
       ]
     },
-    "code/tests/test_sample_routing_golden.py": {
+    "code/compare_outputs.py": {
       "imports": [
         "__future__.annotations",
-        "os",
-        "pandas",
-        "pytest",
-        "config.REPO_ROOT",
+        "argparse",
+        "sys",
+        "csv_io.TicketCsvError",
         "csv_io.canonicalize_ticket_columns",
         "csv_io.read_tickets_csv",
-        "main.process_row"
-      ]
-    },
-    "code/tests/test_ticket_hints.py": {
-      "imports": [
-        "__future__.annotations",
-        "ticket_hints.maybe_append_multi_topic_justification",
-        "ticket_hints.ticket_may_span_multiple_topics"
-      ]
-    },
-    "code/tests/test_eval_metrics.py": {
-      "imports": [
-        "__future__.annotations",
+        "csv_io.rename_prediction_columns",
         "eval_metrics.compact_overlap_ratio",
         "eval_metrics.normalize_text",
         "eval_metrics.token_set_f1"
+      ]
+    },
+    "code/risk.py": {
+      "imports": [
+        "__future__.annotations",
+        "re",
+        "dataclasses.dataclass"
+      ]
+    },
+    "code/conftest.py": {
+      "imports": [
+        "__future__.annotations",
+        "pytest",
+        "config.CACHE_PATH",
+        "config.DATA_DIR",
+        "retrieve.BM25Index"
+      ]
+    },
+    "code/eval_metrics.py": {
+      "imports": [
+        "__future__.annotations",
+        "re",
+        "collections.Counter"
+      ]
+    },
+    "code/ticket_hints.py": {
+      "imports": [
+        "__future__.annotations",
+        "re",
+        "typing.Any"
+      ]
+    },
+    "code/csv_io.py": {
+      "imports": [
+        "__future__.annotations",
+        "pathlib.Path",
+        "pandas"
       ]
     },
     "code/tests/test_csv_io.py": {
@@ -291,13 +259,41 @@
         "csv_io.rename_prediction_columns"
       ]
     },
-    "code/tests/test_cli_main.py": {
+    "code/tests/test_cross_ecosystem.py": {
       "imports": [
         "__future__.annotations",
-        "subprocess",
-        "sys",
-        "pathlib.Path",
-        "pytest"
+        "pytest",
+        "cross_ecosystem.cross_ecosystem_escalation_reason"
+      ]
+    },
+    "code/tests/test_ticket_hints.py": {
+      "imports": [
+        "__future__.annotations",
+        "ticket_hints.maybe_append_multi_topic_justification",
+        "ticket_hints.ticket_may_span_multiple_topics"
+      ]
+    },
+    "code/tests/test_taxonomy.py": {
+      "imports": [
+        "__future__.annotations",
+        "taxonomy.looks_like_off_topic_general_knowledge",
+        "taxonomy.looks_like_invalid_small_talk",
+        "taxonomy.map_product_area",
+        "corpus.Chunk"
+      ]
+    },
+    "code/tests/test_eval_metrics.py": {
+      "imports": [
+        "__future__.annotations",
+        "eval_metrics.compact_overlap_ratio",
+        "eval_metrics.normalize_text",
+        "eval_metrics.token_set_f1"
+      ]
+    },
+    "code/tests/test_risk.py": {
+      "imports": [
+        "__future__.annotations",
+        "risk.assess_risk"
       ]
     },
     "code/tests/test_module_invocation.py": {
@@ -316,27 +312,23 @@
         "pathlib.Path"
       ]
     },
-    "code/tests/test_taxonomy.py": {
+    "code/tests/test_cli_main.py": {
       "imports": [
         "__future__.annotations",
-        "taxonomy.looks_like_off_topic_general_knowledge",
-        "taxonomy.looks_like_invalid_small_talk",
-        "taxonomy.map_product_area",
-        "corpus.Chunk"
+        "subprocess",
+        "sys",
+        "pathlib.Path"
       ]
     },
-    "code/tests/test_risk.py": {
+    "code/tests/test_sample_routing_golden.py": {
       "imports": [
         "__future__.annotations",
-        "risk.assess_risk"
-      ]
-    },
-    "code/tests/test_cross_ecosystem.py": {
-      "imports": [
-        "__future__.annotations",
-        "os",
+        "pandas",
         "pytest",
-        "cross_ecosystem.cross_ecosystem_escalation_reason"
+        "config.REPO_ROOT",
+        "csv_io.canonicalize_ticket_columns",
+        "csv_io.read_tickets_csv",
+        "main.process_row"
       ]
     },
     "scripts/capture_baseline.py": {
@@ -351,6 +343,31 @@
         "pathlib.Path"
       ]
     },
+    "automation/ai_agent.py": {
+      "imports": [
+        "os",
+        "json",
+        "openai.OpenAI"
+      ]
+    },
+    "automation/ai_maintainer.py": {
+      "imports": [
+        "os",
+        "json",
+        "requests",
+        "openai.OpenAI"
+      ]
+    },
+    "automation/analyzer.py": {
+      "imports": [
+        "os",
+        "ast",
+        "json"
+      ]
+    },
+    "automation/__init__.py": {
+      "imports": []
+    },
     "automation/ai_qa_agent.py": {
       "imports": [
         "os",
@@ -364,28 +381,19 @@
         "os"
       ]
     },
+    "automation/health_dashboard.py": {
+      "imports": [
+        "shlex",
+        "os",
+        "json",
+        "subprocess",
+        "datetime.datetime"
+      ]
+    },
     "automation/readme_generator.py": {
       "imports": [
         "os",
         "json"
-      ]
-    },
-    "automation/analyzer.py": {
-      "imports": [
-        "os",
-        "ast",
-        "json",
-        "re"
-      ]
-    },
-    "automation/__init__.py": {
-      "imports": []
-    },
-    "automation/ai_agent.py": {
-      "imports": [
-        "os",
-        "json",
-        "openai.OpenAI"
       ]
     }
   },
