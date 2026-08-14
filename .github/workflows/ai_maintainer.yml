@@ -18,7 +18,7 @@ jobs:
     # Do not trigger on comments by the bot itself to prevent loops
     if: github.event.sender.login != 'github-actions[bot]' && github.event.sender.login != 'dependabot[bot]'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup Python
         uses: actions/setup-python@v5
