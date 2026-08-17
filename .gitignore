@@ -39,3 +39,9 @@ worktrees/
 
 # python caches created during agent runs
 code/.cache/
+
+# generated artifacts
+docs/health_dashboard.md
+support_tickets/*.csv
+!support_tickets/support_tickets.csv
+!support_tickets/sample_support_tickets.csv

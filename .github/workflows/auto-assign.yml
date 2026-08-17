@@ -13,12 +13,14 @@ jobs:
   assign:
     runs-on: ubuntu-latest
     steps:
-      - name: Assign PR/Issue to Author
+      - name: Assign PR/Issue to Author and Add Labels
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [ "${{ github.event_name }}" = "issues" ]; then
             gh issue edit "${{ github.event.issue.number }}" --add-assignee "${{ github.actor }}" --repo "${{ github.repository }}"
+            gh issue edit "${{ github.event.issue.number }}" --add-label "issue:triage" --repo "${{ github.repository }}"
           elif [ "${{ github.event_name }}" = "pull_request" ]; then
             gh pr edit "${{ github.event.pull_request.number }}" --add-assignee "${{ github.actor }}" --repo "${{ github.repository }}"
+            gh pr edit "${{ github.event.pull_request.number }}" --add-label "pr:needs-review" --repo "${{ github.repository }}"
           fi
