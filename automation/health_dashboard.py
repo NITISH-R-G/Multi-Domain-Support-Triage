@@ -4,9 +4,9 @@ import subprocess
 from datetime import datetime
 
 
-def run_command(command):
+def run_command(command, cwd=None):
     try:
-        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        result = subprocess.run(command, shell=False, capture_output=True, text=True, cwd=cwd)
         return result.stdout, result.returncode
     except Exception as e:
         return str(e), 1
@@ -19,7 +19,7 @@ def generate_health_dashboard():
     print("Running security and dependency checks...")
 
     # Run bandit
-    bandit_cmd = f"bandit -r {code_dir} -f json"
+    bandit_cmd = ["bandit", "-r", code_dir, "-f", "json"]
     bandit_out, _ = run_command(bandit_cmd)
 
     bandit_issues = 0
@@ -39,7 +39,7 @@ def generate_health_dashboard():
     req_file = os.path.join(code_dir, "requirements.txt")
     safety_issues = 0
     if os.path.exists(req_file):
-        safety_cmd = f"safety check -r {req_file} --json"
+        safety_cmd = ["safety", "check", "-r", req_file, "--json"]
         safety_out, _ = run_command(safety_cmd)
         try:
             safety_data = json.loads(safety_out)
@@ -52,8 +52,8 @@ def generate_health_dashboard():
             pass
 
     # Run tests to get count
-    test_cmd = f"cd {code_dir} && python -m pytest tests -q"
-    test_out, test_rc = run_command(test_cmd)
+    test_cmd = ["python", "-m", "pytest", "tests", "-q"]
+    test_out, test_rc = run_command(test_cmd, cwd=code_dir)
 
     test_status = "Pass" if test_rc == 0 else "Fail"
 
