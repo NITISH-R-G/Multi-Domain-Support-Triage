@@ -255,6 +255,7 @@ See [`evaluation_criteria.md`](./evaluation_criteria.md) for the full rubric. De
 
 
 
+
 <!-- AUTONOMOUS_SECTION_START -->
 
 ---
@@ -456,6 +457,197 @@ graph TD
     node_29 --> node_3
     node_30 --> node_14
 ```
+
+
+## API Documentation
+*Auto-generated from docstrings by AST parser.*
+### `code/retrieve.py`
+
+Hybrid offline retrieval: BM25 candidate generation + TF-IDF cosine reranking.
+
+#### Function `_tfidf_vectors`
+
+Tiny TF-IDF implementation (no sklearn), cosine-normalized per doc.
+
+#### Function `rerank_hits`
+
+Lexical overlap rerank on top of BM25 scores.
+
+### `code/eval_metrics.py`
+
+Cheap text metrics for regression checks against labeled sample CSVs.
+
+#### Function `token_set_f1`
+
+Token-overlap F1 (bag of words; labels normalized).
+
+#### Function `compact_overlap_ratio`
+
+Dice-like overlap on character bags (cheap fuzzy signal vs exact match).
+
+### `code/taxonomy.py`
+
+Canonical labels + mapping from retrieved corpus evidence to evaluator-friendly areas.
+
+#### Function `looks_like_off_topic_general_knowledge`
+
+Entertainment / trivia / general-knowledge questions unlikely to be product support.
+
+#### Function `map_product_area`
+
+Map evidence to one of CANONICAL_PRODUCT_AREAS when possible.
+
+### `code/main.py`
+
+Offline-grounded support triage agent — entry point.
+
+#### Function `_truncate_row_fields`
+
+Copy row with Issue/Subject truncated if over max_chars (stderr warning).
+
+### `code/answer_synthesis.py`
+
+Offline answer shaping: convert retrieved markdown-ish text into short actionable guidance.
+
+#### Function `extract_steps`
+
+Pull readable steps from support article bodies.
+
+#### Function `synthesize_reply_from_hits`
+
+Return (user_response, source_paths_used).
+
+### `code/ticket_hints.py`
+
+Lightweight ticket shape helpers (multi-topic detection + optional justification note).
+
+#### Function `ticket_may_span_multiple_topics`
+
+Heuristic: message might bundle several distinct asks (no NLP; best-effort).
+
+#### Function `maybe_append_multi_topic_justification`
+
+Append a transparency note to justification only (does not change response body).
+
+### `code/response_quality_report.py`
+
+Offline quality diagnostics for generated CSV outputs.
+
+Computes cheap, interpretable metrics without needing hidden labels:
+- response length (chars / words)
+- escalation rate
+- numeric-string leakage heuristic (digits sequences not present in retrieved evidence)
+- lexical overlap between response tokens and retrieved chunk tokens (requires rebuilding retrieval hits)
+
+This is meant for hackathon iteration: catch verbose outputs and grounding drift early.
+
+### `code/corpus.py`
+
+Load markdown corpus into searchable chunks.
+
+### `code/conftest.py`
+
+Shared pytest fixtures (session-scoped retrieval index).
+
+### `code/risk.py`
+
+High-risk and policy-based escalation heuristics.
+
+### `code/grounding.py`
+
+Cheap grounding checks: ensure responses don't drift far from retrieved evidence.
+
+#### Function `lexical_overlap`
+
+Return fraction of non-trivial response tokens present in retrieved chunk text.
+
+#### Function `has_unsupported_numbers`
+
+Flag digit-heavy claims not present in evidence (rough guardrail).
+
+### `code/config.py`
+
+Paths and deterministic defaults.
+
+### `code/cross_ecosystem.py`
+
+Detect tickets that span multiple distinct product ecosystems — safer to escalate than guess one answer.
+
+#### Function `cross_ecosystem_escalation_reason`
+
+Return human-readable escalate reason, or None.
+
+Conservative pairwise checks avoid false positives such as "HackerRank visa sponsorship"
+(mentions Visa immigration language without Visa-the-network product context).
+Disable entirely with ``ORCHESTRATE_DISABLE_CROSS_ECOSYSTEM_ESCALATE=1``.
+
+### `code/openai_agent.py`
+
+Grounded LLM decisioning with strict JSON outputs.
+
+### `code/compare_outputs.py`
+
+Compare two prediction CSVs to a labeled gold CSV (optional justification column).
+
+Usage (from repo root or code/):
+
+  python compare_outputs.py --gold support_tickets/sample_support_tickets.csv \
+      --pred support_tickets/sample_pred.csv
+
+Uses the same merge keys as eval_sample (Issue, Subject, Company) and reports
+token F1 / compact overlap for Response and Justification when gold columns exist.
+
+### `code/csv_io.py`
+
+Shared CSV loading and schema validation for ticket pipelines.
+
+#### Class `TicketCsvError`
+
+User-fixable CSV / path issues (exit code 2).
+
+#### Function `read_tickets_csv`
+
+Read UTF-8 / UTF-8-BOM; raise clear errors for missing path or encoding.
+
+#### Function `rename_prediction_columns`
+
+Case-insensitive rename of agent output columns to Pred_* names for gold merges.
+
+#### Function `canonicalize_ticket_columns`
+
+Ensure Issue / Subject / Company column names (case-insensitive).
+
+### `code/run_eval.py`
+
+Convenience wrapper: regenerate preds for sample_support_tickets.csv and print eval_sample metrics.
+
+### `code/postprocess.py`
+
+Post-processing decisions for taxonomy alignment + grounding checks.
+
+### `code/tests/test_merge_cli.py`
+
+CLI exits when gold vs pred produce zero merge rows.
+
+### `code/tests/test_sample_routing_golden.py`
+
+Golden routing assertions vs bundled sample_support_tickets.csv (offline LLM).
+
+#### Function `test_sample_support_routing_matches_golden`
+
+Every sample row: status, request_type, product_area must match labels when LLM is disabled.
+
+### `code/tests/test_module_invocation.py`
+
+CLI ``--help`` works when launched from ``code/`` (same as CI).
+
+### `code/tests/test_cross_ecosystem.py`
+
+Cross-ecosystem escalation: multi-brand tickets should route to humans.
+
+#### Function `test_no_false_positive_visa_sponsorship_only_hackerrank`
+
+Immigration 'visa' language without Visa-network product signals.
 
 
 ## Automation Onboarding & Contribution
