@@ -17,10 +17,10 @@ jobs:
   validate-and-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5.3.0
         with:
           python-version: "3.11"
           cache: "pip"
@@ -56,12 +56,12 @@ jobs:
     # but the instructions say "Scans the entire repository on every push, pull request, merge, release, and scheduled interval."
     # So we'll run the automation scripts.
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
         with:
           fetch-depth: 0 # Full history for git diffs and graph building
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5.3.0
         with:
           python-version: "3.11"
           cache: "pip"

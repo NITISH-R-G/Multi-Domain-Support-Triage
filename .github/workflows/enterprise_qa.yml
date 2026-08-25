@@ -21,12 +21,12 @@ jobs:
   enterprise-qa:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
         with:
           fetch-depth: 0
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5.3.0
         with:
           python-version: "3.11"
           cache: "pip"
@@ -136,7 +136,7 @@ jobs:
 
       - name: Post QA Report as PR Comment
         if: always() && github.event_name == 'pull_request'
-        uses: thollander/actions-comment-pull-request@v2
+        uses: thollander/actions-comment-pull-request@v3
         with:
           filePath: reports/qa_report.md
           comment_tag: qa_report
