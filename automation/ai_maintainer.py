@@ -39,7 +39,7 @@ def post_comment(repo, issue_number, token, body):
         "Accept": "application/vnd.github.v3+json",
     }
     data = {"body": body}
-    response = requests.post(url, headers=headers, json=data)
+    response = requests.post(url, headers=headers, json=data, timeout=10)
     if response.status_code == 201:
         print("Successfully posted comment.")
     else:
@@ -89,6 +89,11 @@ def main():
         title = event_data["issue"]["title"]
         body = comment_body
         event_type = "Comment"
+    elif "issue" in event_data and "comment" not in event_data and action in ["opened", "edited"]:
+        issue_number = event_data["issue"]["number"]
+        title = event_data["issue"]["title"]
+        body = event_data["issue"]["body"] or ""
+        event_type = "Issue"
     else:
         print("Unsupported event or action.")
         return
