@@ -2,7 +2,7 @@
 pandas==3.0.5
 numpy==2.5.2
 rank-bm25==0.2.2
-openai==3.2.0
+openai==3.3.1
 python-dotenv==1.2.3
 tqdm==4.70.0
 pytest==9.1.1
