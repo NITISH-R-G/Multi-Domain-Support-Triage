@@ -10,6 +10,7 @@ from retrieve import BM25Index
 
 @pytest.fixture(scope="session")
 def bm25_index_session() -> BM25Index:
+    CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
     if not DATA_DIR.is_dir():
         pytest.skip(f"Corpus missing: {DATA_DIR}")
     return BM25Index.load(CACHE_PATH, DATA_DIR)
