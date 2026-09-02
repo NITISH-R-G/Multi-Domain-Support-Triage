@@ -41,7 +41,10 @@ jobs:
           python -m pytest tests -q
 
       - name: Linting
-        run: flake8 code/ || echo "Linting issues found"
+        run: |
+          ruff format . || true
+          ruff check --fix . || true
+          vulture . || true
 
       - name: Security Scans
         run: bandit -r code/ || echo "Bandit issues found"
@@ -107,5 +110,5 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add README.md docs/ repo_graph.json || true
-          git diff --quiet && git diff --staged --quiet || (git commit -m "docs: auto-update repository documentation, health dashboard, and architecture graphs" && git push)
+          git add README.md docs/ repo_graph.json code/ || true
+          git diff --quiet && git diff --staged --quiet || (git commit -m "docs: auto-update repository documentation, health dashboard, and architecture graphs" && git pull --rebase origin ${GITHUB_REF#refs/heads/} && git push)
