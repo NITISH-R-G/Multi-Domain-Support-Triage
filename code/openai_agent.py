@@ -5,9 +5,8 @@ from __future__ import annotations
 import json
 import os
 import re
-from typing import Any, Literal
-
 from pathlib import Path
+from typing import Any, Literal
 
 from dotenv import load_dotenv
 

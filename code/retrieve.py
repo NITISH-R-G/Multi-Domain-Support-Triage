@@ -27,7 +27,6 @@ from config import (
 )
 from corpus import Chunk, load_chunks, tokenize
 
-
 Brand = Literal["hackerrank", "claude", "visa", "any"]
 
 
