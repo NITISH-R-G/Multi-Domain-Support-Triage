@@ -178,6 +178,9 @@ class HybridIndex:
                 pass
 
         lock_path = path.with_name(path.name + ".lock")
+        lock_path.parent.mkdir(parents=True, exist_ok=True)
+        lock_path.parent.mkdir(parents=True, exist_ok=True)
+        lock_path.parent.mkdir(parents=True, exist_ok=True)
         deadline = time.time() + 180.0
         while time.time() < deadline:
             if path.is_file():
