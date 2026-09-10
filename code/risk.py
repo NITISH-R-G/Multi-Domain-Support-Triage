@@ -17,62 +17,62 @@ _PATTERNS: list[tuple[re.Pattern[str], str]] = [
     (
         re.compile(
             r"(display|show|reveal|dump)\s+(.{0,40})?(internal|rules|documents|logic|prompt)",
-            re.IGNORECASE | re.DOTALL,
+            re.I | re.S,
         ),
         "requests disclosure of internal rules or logic",
     ),
     (
-        re.compile(r"\bexact\s+(logic|rules|prompt)\b", re.IGNORECASE),
+        re.compile(r"\bexact\s+(logic|rules|prompt)\b", re.I),
         "requests exact internal decision logic",
     ),
     # Payments / disputes demanding outcomes (policy-sensitive)
     (
         re.compile(
-            r"\b(ban\s+the\s+seller|refund\s+me\s+today|make\s+visa\s+refund)", re.IGNORECASE
+            r"\b(ban\s+the\s+seller|refund\s+me\s+today|make\s+visa\s+refund)", re.I
         ),
         "demands irreversible payment or merchant enforcement action",
     ),
     (
         re.compile(
             r"\b(unfair|graded\s+me\s+unfair|increase\s+my\s+score|review\s+my\s+answers)\b",
-            re.IGNORECASE,
+            re.I,
         ),
         "grading dispute / outcome manipulation request",
     ),
     # Malicious intent
     (
-        re.compile(r"\b(delete\s+all\s+files|format\s+the\s+disk|ransomware)\b", re.IGNORECASE),
+        re.compile(r"\b(delete\s+all\s+files|format\s+the\s+disk|ransomware)\b", re.I),
         "malicious or destructive intent",
     ),
     (
-        re.compile(r"\b(exploit|zero[- ]day|sql\s+injection)\b", re.IGNORECASE),
+        re.compile(r"\b(exploit|zero[- ]day|sql\s+injection)\b", re.I),
         "security exploit discussion",
     ),
     # Broad outages — usually needs human incident handling.
     (
         re.compile(
             r"\b(site|website)\s+is\s+down\b|\bnone\s+of\s+the\s+pages\b|\b(all\s+requests|requests)\s+are\s+failing\b|\bstopped\s+working\s+completely\b",
-            re.IGNORECASE,
+            re.I,
         ),
         "possible widespread outage",
     ),
     # Fraud/identity theft and vulnerability reports.
     (
         re.compile(
-            r"\bidentity\s+(?:has\s+been\s+)?stolen\b|\bidentity\s+theft\b", re.IGNORECASE
+            r"\bidentity\s+(?:has\s+been\s+)?stolen\b|\bidentity\s+theft\b", re.I
         ),
         "identity theft / fraud-sensitive",
     ),
     (
-        re.compile(r"\b(security\s+vulnerability|bug\s+bounty)\b", re.IGNORECASE),
+        re.compile(r"\b(security\s+vulnerability|bug\s+bounty)\b", re.I),
         "security vulnerability disclosure — needs specialist routing",
     ),
     (
-        re.compile(r"\b(i will sue|lawsuit|legal action|my lawyer)\b", re.IGNORECASE),
+        re.compile(r"\b(i will sue|lawsuit|legal action|my lawyer)\b", re.I),
         "legal threat — route to specialist handling",
     ),
     (
-        re.compile(r"\b(harm myself|kill myself|suicide)\b", re.IGNORECASE),
+        re.compile(r"\b(harm myself|kill myself|suicide)\b", re.I),
         "self-harm mention — escalated for human crisis routing",
     ),
     # Account compromise / takeover — rarely answered safely from public docs alone.
@@ -81,7 +81,7 @@ _PATTERNS: list[tuple[re.Pattern[str], str]] = [
             r"\b(account\s+(takeover|hacked|compromised)|"
             r"unauthorized\s+(access|transactions|charges)|"
             r"someone\s+else\s+(logged\s+in|accessed))\b",
-            re.IGNORECASE,
+            re.I,
         ),
         "possible account compromise — specialist verification required",
     ),
@@ -89,7 +89,7 @@ _PATTERNS: list[tuple[re.Pattern[str], str]] = [
     (
         re.compile(
             r"\b(stolen\s+credentials|credential\s+stuffing|phishing\s+link\s+clicked)\b",
-            re.IGNORECASE,
+            re.I,
         ),
         "credential-theft sensitive — escalate",
     ),

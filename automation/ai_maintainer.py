@@ -1,6 +1,5 @@
-import json
 import os
-
+import json
 import requests
 from openai import OpenAI
 
@@ -30,7 +29,7 @@ def generate_ai_response(prompt):
         )
         return response.choices[0].message.content
     except Exception as e:
-        return f"AI Maintainer: Error generating response: {e!s}"
+        return f"AI Maintainer: Error generating response: {str(e)}"
 
 
 def post_comment(repo, issue_number, token, body):
@@ -40,7 +39,7 @@ def post_comment(repo, issue_number, token, body):
         "Accept": "application/vnd.github.v3+json",
     }
     data = {"body": body}
-    response = requests.post(url, headers=headers, json=data, timeout=10)
+    response = requests.post(url, headers=headers, json=data)
     if response.status_code == 201:
         print("Successfully posted comment.")
     else:
@@ -76,7 +75,6 @@ def main():
         "issue" in event_data
         and action in ["opened", "edited"]
         and "pull_request" not in event_data["issue"]
-        and "comment" not in event_data
     ):
         issue_number = event_data["issue"]["number"]
         title = event_data["issue"]["title"]
