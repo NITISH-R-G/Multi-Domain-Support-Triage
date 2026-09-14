@@ -57,7 +57,7 @@ def generate_health_dashboard():
 
     # Run tests to get count
     test_cmd = "python -m pytest tests -q"
-    _test_out, test_rc = run_command(test_cmd, cwd=code_dir)
+    test_out, test_rc = run_command(test_cmd, cwd=code_dir)
 
     test_status = "Pass" if test_rc == 0 else "Fail"
 

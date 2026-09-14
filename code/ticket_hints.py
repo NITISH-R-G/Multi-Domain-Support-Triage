@@ -23,7 +23,9 @@ def ticket_may_span_multiple_topics(text: str) -> bool:
         return True
     if t.count("?") >= 2 and len(t) > 100:
         return True
-    return bool(re.search(r"(?m)^\s*\d+[\).]\s+.+", t))
+    if re.search(r"(?m)^\s*\d+[\).]\s+.+", t):
+        return True
+    return False
 
 
 def maybe_append_multi_topic_justification(

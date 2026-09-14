@@ -50,48 +50,44 @@ def post_comment(repo, issue_number, token, body):
 
 
 def parse_event(event_data, action):
-    issue_number = None
-    title = ""
-    body = ""
-    event_type = ""
-
     if "pull_request" in event_data and action in ["opened", "edited"]:
-        issue_number = event_data["pull_request"]["number"]
-        title = event_data["pull_request"]["title"]
-        body = event_data["pull_request"]["body"] or ""
-        event_type = "Pull Request"
-    elif (
+        return (
+            event_data["pull_request"]["number"],
+            event_data["pull_request"]["title"],
+            event_data["pull_request"]["body"] or "",
+            "Pull Request",
+        )
+    if (
         "issue" in event_data
         and action in ["opened", "edited"]
         and "pull_request" not in event_data["issue"]
         and "comment" not in event_data
     ):
-        issue_number = event_data["issue"]["number"]
-        title = event_data["issue"]["title"]
-        body = event_data["issue"]["body"] or ""
-        event_type = "Issue"
-    elif "comment" in event_data and action == "created":
-        issue_number = event_data["issue"]["number"]
-        comment_body = event_data["comment"]["body"]
-        # Skip responding to ourselves
+        return (
+            event_data["issue"]["number"],
+            event_data["issue"]["title"],
+            event_data["issue"]["body"] or "",
+            "Issue",
+        )
+    if "comment" in event_data and action == "created":
         if event_data["comment"]["user"]["login"] == "github-actions[bot]":
             return None, "", "", ""
-        title = event_data["issue"]["title"]
-        body = comment_body
-        event_type = "Comment"
+        return (
+            event_data["issue"]["number"],
+            event_data["issue"]["title"],
+            event_data["comment"]["body"],
+            "Comment",
+        )
+    return None, "", "", ""
 
-    return issue_number, title, body, event_type
 
-
-def main():
+def get_env_vars():
     event_path = os.environ.get("GITHUB_EVENT_PATH")
     repo = os.environ.get("GITHUB_REPOSITORY")
     token = os.environ.get("GITHUB_TOKEN")
+    return event_path, repo, token
 
-    if not event_path or not repo or not token:
-        print("Missing required environment variables.")
-        return
-
+def process_event(event_path, repo, token):
     event_data = get_event_data(event_path)
     action = event_data.get("action")
 
@@ -112,6 +108,13 @@ def main():
     formatted_response = f"🤖 **AI Maintainer**\n\n{ai_response}"
     post_comment(repo, issue_number, token, formatted_response)
 
+
+def main():
+    event_path, repo, token = get_env_vars()
+    if not event_path or not repo or not token:
+        print("Missing required environment variables.")
+        return
+    process_event(event_path, repo, token)
 
 if __name__ == "__main__":
     main()
