@@ -1,6 +1,5 @@
-import json
 import os
-
+import json
 import requests
 from openai import OpenAI
 
@@ -30,7 +29,7 @@ def generate_ai_response(prompt):
         )
         return response.choices[0].message.content
     except Exception as e:
-        return f"AI Maintainer: Error generating response: {e!s}"
+        return f"AI Maintainer: Error generating response: {str(e)}"
 
 
 def post_comment(repo, issue_number, token, body):
@@ -41,19 +40,16 @@ def post_comment(repo, issue_number, token, body):
     }
     data = {"body": body}
     try:
-        response = requests.post(url, headers=headers, json=data, timeout=10)
+        response = requests.post(url, headers=headers, json=data, timeout=10, verify=True)
+        response.raise_for_status()
         if response.status_code == 201:
             print("Successfully posted comment.")
         else:
             print(
                 f"Failed to post comment. Status: {response.status_code}, Response: {response.text}"
             )
-    except Exception as e:
+    except requests.exceptions.RequestException as e:
         print(f"Failed to post comment due to network error: {e}")
-    else:
-        print(
-            f"Failed to post comment. Status: {response.status_code}, Response: {response.text}"
-        )
 
 
 def main():
