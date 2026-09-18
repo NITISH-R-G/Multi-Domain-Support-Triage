@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pytest
+
 from config import CACHE_PATH, DATA_DIR
 from retrieve import BM25Index
 
