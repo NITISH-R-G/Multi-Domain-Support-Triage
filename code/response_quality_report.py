@@ -18,7 +18,6 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import pandas as pd
-
 from config import CACHE_PATH, DATA_DIR, TOP_K
 from csv_io import TicketCsvError, read_tickets_csv
 from grounding import has_unsupported_numbers, lexical_overlap
