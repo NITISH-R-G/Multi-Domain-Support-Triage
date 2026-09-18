@@ -1,6 +1,5 @@
-import json
 import os
-
+import json
 import requests
 from openai import OpenAI
 
@@ -30,7 +29,7 @@ def generate_ai_response(prompt):
         )
         return response.choices[0].message.content
     except Exception as e:
-        return f"AI Maintainer: Error generating response: {e!s}"
+        return f"AI Maintainer: Error generating response: {str(e)}"
 
 
 def post_comment(repo, issue_number, token, body):

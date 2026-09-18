@@ -261,9 +261,7 @@ def read_tickets(path: Path) -> list[TicketIn]:
                 TicketIn(
                     issue=(row.get("Issue") or row.get("issue") or "").strip(),
                     subject=(row.get("Subject") or row.get("subject") or "").strip(),
-                    company=(
-                        row.get("Company") or row.get("company") or "None"
-                    ).strip(),  # type: ignore[arg-type]
+                    company=(row.get("Company") or row.get("company") or "None").strip(),  # type: ignore[arg-type]
                 )
             )
         return out
@@ -274,13 +272,7 @@ def write_outputs(path: Path, rows: list[TriageOut]) -> None:
     with path.open("w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(
             f,
-            fieldnames=[
-                "status",
-                "product_area",
-                "response",
-                "justification",
-                "request_type",
-            ],
+            fieldnames=["status", "product_area", "response", "justification", "request_type"],
         )
         writer.writeheader()
         for r in rows:
@@ -427,9 +419,7 @@ class Chunk:
     text: str
 
 
-def chunk_text(
-    text: str, max_chars: int = 2500, overlap_chars: int = 400
-) -> list[Chunk]:
+def chunk_text(text: str, max_chars: int = 2500, overlap_chars: int = 400) -> list[Chunk]:
     text = (text or "").strip()
     if not text:
         return []
@@ -477,9 +467,7 @@ def infer_company_from_path(path: Path) -> str:
         if idx + 1 < len(parts):
             top = parts[idx + 1]
             if top in {"hackerrank", "claude", "visa"}:
-                return {"hackerrank": "HackerRank", "claude": "Claude", "visa": "Visa"}[
-                    top
-                ]
+                return {"hackerrank": "HackerRank", "claude": "Claude", "visa": "Visa"}[top]
     return "None"
 
 
@@ -589,9 +577,7 @@ def build_retriever(repo_root: Path) -> RetrieverState:
     return RetrieverState(corpus=corpus, index=index)
 
 
-def retrieve(
-    state: RetrieverState, query: str, company: str, k: int
-) -> list[EvidenceChunk]:
+def retrieve(state: RetrieverState, query: str, company: str, k: int) -> list[EvidenceChunk]:
     scores = bm25_scores(state.index, query)
     idxs = topk_indices(scores, k=min(max(k * 3, 15), len(scores)))
     out: list[EvidenceChunk] = []
@@ -774,17 +760,10 @@ from typing import cast
 from .types import RequestType
 
 
-FEATURE_RE = re.compile(
-    r"\b(please add|feature request|would like|can you (add|support)|it would be great)\b",
-    re.I,
-)
-BUG_RE = re.compile(
-    r"\b(site down|error|crash|not working|broken|500|503|timeout)\b", re.I
-)
+FEATURE_RE = re.compile(r"\b(please add|feature request|would like|can you (add|support)|it would be great)\b", re.I)
+BUG_RE = re.compile(r"\b(site down|error|crash|not working|broken|500|503|timeout)\b", re.I)
 INVALID_RE = re.compile(r"^\s*$")
-INJECTION_RE = re.compile(
-    r"\b(ignore previous|system prompt|developer message|reveal)\b", re.I
-)
+INJECTION_RE = re.compile(r"\b(ignore previous|system prompt|developer message|reveal)\b", re.I)
 
 
 def classify_request_type(text: str) -> RequestType:
@@ -949,9 +928,7 @@ def build_justification(reason: str, evidence: list[EvidenceChunk]) -> str:
     return f"{reason} evidence=[{', '.join(paths)}]"
 
 
-def build_offline_response(
-    query: str, evidence: list[EvidenceChunk], status: str
-) -> str:
+def build_offline_response(query: str, evidence: list[EvidenceChunk], status: str) -> str:
     if status == "escalated":
         return (
             "I’m escalating this to a human support agent because it may be sensitive or "
@@ -1053,9 +1030,7 @@ def triage_one(state: AgentState, t: TicketIn, cfg: PipelineConfig) -> TriageOut
         )
 
     response = build_offline_response(query, evidence, status="replied")
-    justification = build_justification(
-        "Replied with steps supported by retrieved documentation.", evidence
-    )
+    justification = build_justification("Replied with steps supported by retrieved documentation.", evidence)
     return TriageOut(
         status="replied",
         product_area="General > Unknown",
@@ -1118,12 +1093,7 @@ def test_pipeline_runs_on_sample_csv_first_rows():
     outs = [triage_one(state, t, cfg) for t in tickets]
     assert len(outs) == 2
     assert outs[0].status in {"replied", "escalated"}
-    assert outs[0].request_type in {
-        "product_issue",
-        "feature_request",
-        "bug",
-        "invalid",
-    }
+    assert outs[0].request_type in {"product_issue", "feature_request", "bug", "invalid"}
 ```
 
 - [ ] **Step 4: Run tests**
