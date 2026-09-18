@@ -1,4 +1,4 @@
 {
-  "architecture_summary": "This repository powers the HackerRank Orchestrate terminal-based AI triage agent. It parses support tickets and uses a hybrid retrieval mechanism with TF-IDF and BM25.",
-  "onboarding_guide": "To contribute, navigate to the `code/` directory, install `requirements.txt`, and run `pytest tests -q`."
+  "summary": "AI generation skipped.",
+  "onboarding_guide": "AI generation skipped."
 }

@@ -1,16 +1,14 @@
-import json
 import os
-import shlex
+import json
 import subprocess
+import shlex
 from datetime import datetime
 
 
 def run_command(command, cwd=None):
     try:
         args = shlex.split(command)
-        result = subprocess.run(
-            args, shell=False, capture_output=True, text=True, cwd=cwd
-        )
+        result = subprocess.run(args, shell=False, capture_output=True, text=True, cwd=cwd)
         return result.stdout, result.returncode
     except Exception as e:
         return str(e), 1
@@ -57,7 +55,7 @@ def generate_health_dashboard():
 
     # Run tests to get count
     test_cmd = "python -m pytest tests -q"
-    test_out, test_rc = run_command(test_cmd, cwd=code_dir)
+    _test_out, test_rc = run_command(test_cmd, cwd=code_dir)
 
     test_status = "Pass" if test_rc == 0 else "Fail"
 
