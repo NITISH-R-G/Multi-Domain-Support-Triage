@@ -39,13 +39,17 @@ def post_comment(repo, issue_number, token, body):
         "Accept": "application/vnd.github.v3+json",
     }
     data = {"body": body}
-    response = requests.post(url, headers=headers, json=data)
-    if response.status_code == 201:
-        print("Successfully posted comment.")
-    else:
-        print(
-            f"Failed to post comment. Status: {response.status_code}, Response: {response.text}"
-        )
+    try:
+        response = requests.post(url, headers=headers, json=data, timeout=10, verify=True)
+        response.raise_for_status()
+        if response.status_code == 201:
+            print("Successfully posted comment.")
+        else:
+            print(
+                f"Failed to post comment. Status: {response.status_code}, Response: {response.text}"
+            )
+    except requests.exceptions.RequestException as e:
+        print(f"Failed to post comment due to network error: {e}")
 
 
 def main():
@@ -75,6 +79,7 @@ def main():
         "issue" in event_data
         and action in ["opened", "edited"]
         and "pull_request" not in event_data["issue"]
+        and "comment" not in event_data
     ):
         issue_number = event_data["issue"]["number"]
         title = event_data["issue"]["title"]
