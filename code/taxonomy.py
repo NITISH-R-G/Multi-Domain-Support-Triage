@@ -26,7 +26,7 @@ class LabelRule:
     text_rx: re.Pattern[str] | None = None
 
 
-def _rx(pat: str, flags: int = re.I) -> re.Pattern[str]:
+def _rx(pat: str, flags: int = re.IGNORECASE) -> re.Pattern[str]:
     return re.compile(pat, flags)
 
 
