@@ -142,7 +142,7 @@ def process_row(row: pd.Series, index: BM25Index) -> dict[str, Any]:
             fallback_from_hits([], escalated=True, esc_reason=eco, low_retrieval=False)
         )
 
-    hits, raw_top_score = index.search(f"{subject}\n{issue}", brand, TOP_K)
+    hits, raw_top_score = index.search(f"{subject}\n{issue}", brand, TOP_K)  # type: ignore
     hits = rerank_hits(f"{subject}\n{issue}", hits)
     low = should_escalate_low_retrieval(raw_top_score)
 
