@@ -50,7 +50,7 @@ def test_sample_support_routing_matches_golden(
     assert len(df) >= 1
 
     for idx, row in df.iterrows():
-        pred = process_row(row, bm25_index_session)
+        pred = process_row(row, bm25_index_session)  # type: ignore
         gold_st = _norm_status(row.get("Status"))
         gold_rt = _norm_rt(row.get("Request Type"))
         gold_pa = _norm_pa(row.get("Product Area"))

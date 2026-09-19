@@ -59,7 +59,7 @@ def metrics_for_row(
 ) -> RowMetrics:
     company = _norm_company(company_raw)
     brand = _brand_for_search(company, issue, subject, index)
-    hits, _raw_top = index.search(f"{subject}\n{issue}", brand, TOP_K)
+    hits, _raw_top = index.search(f"{subject}\n{issue}", brand, TOP_K)  # type: ignore
     hits = rerank_hits(f"{subject}\n{issue}", hits)
     ov = lexical_overlap(response, hits) if hits else 0.0
     leak = has_unsupported_numbers(response, hits) if hits else False
