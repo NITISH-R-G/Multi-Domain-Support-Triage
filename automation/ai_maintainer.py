@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+import shlex
 from openai import OpenAI
 
 
