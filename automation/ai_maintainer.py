@@ -1,7 +1,6 @@
 import os
 import json
 import requests
-import shlex
 from openai import OpenAI
 
 
@@ -71,7 +70,11 @@ def parse_event(event_data, action):
     body = ""
     event_type = ""
 
-    if "pull_request" in event_data and action in ["opened", "edited"] and "comment" not in event_data:
+    if (
+        "pull_request" in event_data
+        and action in ["opened", "edited"]
+        and "comment" not in event_data
+    ):
         issue_number = event_data["pull_request"]["number"]
         title = event_data["pull_request"]["title"]
         body = event_data["pull_request"]["body"] or ""
