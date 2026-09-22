@@ -2,7 +2,7 @@ Issue,Subject,Company,Status,Pred_Status,Request Type,Pred_Request Type,Product 
 I notice that people I assigned the test in October of 2025 have not received new tests. How long do the tests stay active in the system.,Test Active in the system,HackerRank,replied,replied,product_issue,product_issue,screen,screen,"Hi,
 
 
-Tests in HackerRank remain active indefinitely unless a start and end time are set. 
+Tests in HackerRank remain active indefinitely unless a start and end time are set.
 Without these, tests do not expire automatically.
 
 
@@ -42,7 +42,7 @@ From What is Code Quality:
 
 If you still need help, use your product’s official support channel."
 site is down & none of the pages are accessible,,,escalated,escalated,bug,bug,,,Escalate to a human,This request needs to be reviewed by a human specialist. Please contact official support through the appropriate channel for your product.
-"I'm noticing that you all have many default versions of roles. (e.g. front end developer for react, angular, vue.js, etc.) What do you consider best practice 
+"I'm noticing that you all have many default versions of roles. (e.g. front end developer for react, angular, vue.js, etc.) What do you consider best practice
 for when to create a new test versus create a variant of the test? What are the advantages and disadvantages of using variants?","When should I create a variant versus
  have a different test?",HackerRank,replied,replied,product_issue,product_issue,screen,screen,"Hi,
 
@@ -53,7 +53,7 @@ Consider these guidelines when choosing between creating a new test or a variant
 
 When to Use Test Variants:
 
-Create variants to adapt a single test to different candidate profiles, 
+Create variants to adapt a single test to different candidate profiles,
 such as roles with different tech stacks (React, Angular, Vue.js).
 Variants streamline assessments by showing candidates only relevant sections and generating role-specific reports.
 
@@ -94,13 +94,13 @@ Please can you provide step-by-step instruction on how we are to reinvite them.
 
 Do we find their profile in 'Candidates' , put in Add time 53 minutes and then click 'reinvite' and send the email? The email to the candidate says 105 minutes as the duration though still so not sure how we can check?
 
-Thanks","How to reinvite candidate to Hackerrank 
+Thanks","How to reinvite candidate to Hackerrank
 assessment and add extra time",HackerRank,replied,replied,product_issue,product_issue,screen,screen,"Log in to your HackerRank for Work account using your credentials.
-Go to the Tests tab. 
+Go to the Tests tab.
 Select the test you want to modify.
 Go to the Candidates tab.
 Select the checkbox next to the candidate(s) you want to accommodate time.
-Click More > Add Time Accommodation. 
+Click More > Add Time Accommodation.
 Enter the accommodation percentage in multiples of five.
 Click Save. A success message appears.
 
@@ -191,12 +191,12 @@ From Using incognito chats:
 
 For anything still unclear, reach out through the official support path for your product."
 What is the name of the actor in Iron Man?,"Urgent, please help",None ,replied,replied,invalid,invalid,conversation_management,conversation_management,"I am sorry, this is out of scope from my capabilities","I’m sorry, this is out of scope from my capabilities."
-I bought Visa Traveller's Cheques from Citicorp and they were stolen in Lisbon last night. What do I do?,,Visa,replied,replied,product_issue,product_issue,travel_support,travel_support,"Call the issuer (Citicorp) immediately. 
-Freephone 1-800-645-6556 or collect 1-813-623-1709, Mon–Fri 6:30 am–2:30 pm EST. 
+I bought Visa Traveller's Cheques from Citicorp and they were stolen in Lisbon last night. What do I do?,,Visa,replied,replied,product_issue,product_issue,travel_support,travel_support,"Call the issuer (Citicorp) immediately.
+Freephone 1-800-645-6556 or collect 1-813-623-1709, Mon–Fri 6:30 am–2:30 pm EST.
 
 Automated cheque verification is available 24/7 in English/Spanish; outside Citicorp's hours your call is recorded and returned the next business day.
 
-Have this info ready before you call, it's what the issuer will ask: cheque serial numbers, where and when you bought the cheques, how/when they were lost or stolen, and the issuer name (Citicorp). 
+Have this info ready before you call, it's what the issuer will ask: cheque serial numbers, where and when you bought the cheques, how/when they were lost or stolen, and the issuer name (Citicorp).
 
 Refunds can typically be arranged within 24 hours, subject to T&Cs.
 Notify the local police in Lisbon (Visa's safety guidance for lost/stolen cheques).
@@ -220,7 +220,7 @@ From How to accept Visa Traveller's Cheques:
 7. Info for small businesses
 
 For anything still unclear, reach out through the official support path for your product."
-Where can I report a lost or stolen Visa card from India?,Card stolen,Visa,replied,replied,product_issue,product_issue,general_support,general_support,"Call Visa India at 000-800-100-1219 to report a lost card. 
+Where can I report a lost or stolen Visa card from India?,Card stolen,Visa,replied,replied,product_issue,product_issue,general_support,general_support,"Call Visa India at 000-800-100-1219 to report a lost card.
 
 From anywhere else in the world, Visa's Global Customer Assistance Service is reachable 24/7 at +1 303 967 1090 and can block your card within ~30 minutes of being reported, plus arrange emergency cash and a replacement card","From Visa Traveller's Cheques for Consumers:
 1. Report a lost cheque
