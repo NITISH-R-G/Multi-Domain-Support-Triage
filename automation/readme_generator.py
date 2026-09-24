@@ -1,5 +1,45 @@
 import os
 import json
+import ast
+
+
+def extract_api_docs(code_dir):
+    """Recursively extract Python docstrings from the codebase and build API documentation."""
+    docs = ["## API Documentation\n"]
+    for root, _, files in os.walk(code_dir):
+        for file in files:
+            if file.endswith(".py"):
+                filepath = os.path.join(root, file)
+                rel_path = os.path.relpath(filepath, code_dir)
+                try:
+                    with open(filepath, "r", encoding="utf-8") as f:
+                        tree = ast.parse(f.read(), filename=rel_path)
+                except Exception:
+                    continue
+
+                module_doc = ast.get_docstring(tree)
+                file_docs = []
+                if module_doc:
+                    file_docs.append(f"**Module:** `{rel_path}`\n\n{module_doc}\n")
+                else:
+                    file_docs.append(f"**Module:** `{rel_path}`\n")
+
+                has_items = False
+                for node in tree.body:
+                    if isinstance(node, ast.ClassDef):
+                        doc = ast.get_docstring(node)
+                        if doc:
+                            has_items = True
+                            file_docs.append(f"- **Class** `{node.name}`: {doc.splitlines()[0]}")
+                    elif isinstance(node, ast.FunctionDef):
+                        doc = ast.get_docstring(node)
+                        if doc:
+                            has_items = True
+                            file_docs.append(f"- **Function** `{node.name}`: {doc.splitlines()[0]}")
+
+                if module_doc or has_items:
+                    docs.append("\n".join(file_docs) + "\n")
+    return "\n".join(docs)
 
 
 def generate_readme():
@@ -39,6 +79,9 @@ def generate_readme():
         with open(readme_path, "r", encoding="utf-8") as f:
             original_readme = f.read()
 
+    # Extract API docs
+    api_docs_str = extract_api_docs(os.path.join(root_dir, "code"))
+
     # Define the automation section
     automation_section = f"""
 ---
@@ -58,6 +101,8 @@ def generate_readme():
 - Generates interactive Mermaid architectures and documentation.
 
 {diagrams}
+
+{api_docs_str}
 
 ## Automation Onboarding & Contribution
 {ai_docs.get("onboarding_guide", "Contributions are welcome! Please run the automation scripts or let GitHub Actions update docs on PRs.")}
