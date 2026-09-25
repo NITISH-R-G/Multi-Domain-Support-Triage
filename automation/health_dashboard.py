@@ -1,12 +1,14 @@
-import os
 import json
+import os
+import shlex
 import subprocess
 from datetime import datetime
 
 
-def run_command(command):
+def run_command(command, cwd=None):
     try:
-        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        args = shlex.split(command)
+        result = subprocess.run(args, capture_output=True, text=True, cwd=cwd)
         return result.stdout, result.returncode
     except Exception as e:
         return str(e), 1
