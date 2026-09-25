@@ -28,7 +28,8 @@ _PATTERNS: list[tuple[re.Pattern[str], str]] = [
     # Payments / disputes demanding outcomes (policy-sensitive)
     (
         re.compile(
-            r"\b(ban\s+the\s+seller|refund\s+me\s+today|make\s+visa\s+refund)", re.IGNORECASE
+            r"\b(ban\s+the\s+seller|refund\s+me\s+today|make\s+visa\s+refund)",
+            re.IGNORECASE,
         ),
         "demands irreversible payment or merchant enforcement action",
     ),
@@ -41,7 +42,9 @@ _PATTERNS: list[tuple[re.Pattern[str], str]] = [
     ),
     # Malicious intent
     (
-        re.compile(r"\b(delete\s+all\s+files|format\s+the\s+disk|ransomware)\b", re.IGNORECASE),
+        re.compile(
+            r"\b(delete\s+all\s+files|format\s+the\s+disk|ransomware)\b", re.IGNORECASE
+        ),
         "malicious or destructive intent",
     ),
     (
@@ -59,7 +62,8 @@ _PATTERNS: list[tuple[re.Pattern[str], str]] = [
     # Fraud/identity theft and vulnerability reports.
     (
         re.compile(
-            r"\bidentity\s+(?:has\s+been\s+)?stolen\b|\bidentity\s+theft\b", re.IGNORECASE
+            r"\bidentity\s+(?:has\s+been\s+)?stolen\b|\bidentity\s+theft\b",
+            re.IGNORECASE,
         ),
         "identity theft / fraud-sensitive",
     ),
