@@ -6,10 +6,10 @@
 
 | Field | Value |
 |-------|-------|
-| **UTC timestamp** | 2026-05-01T22:35:25Z |
-| **Git branch** | `cursor/offline-support-triage-agent` |
-| **Git commit** | `92e9677` |
-| **Python** | `3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]` |
+| **UTC timestamp** | 2026-09-26T17:54:23Z |
+| **Git branch** | `jules-9706106594181841058-c5df4103` |
+| **Git commit** | `2b056bf` |
+| **Python** | `3.12.13 (main, Mar  6 2026, 16:37:31) [GCC 13.3.0]` |
 
 ## Automated checks (offline LLM)
 
@@ -29,13 +29,13 @@
 
 ### Full batch
 
-Wrote 29 rows to C:\Users\nitis\OneDrive\Documents\Hackerrank Orchestrate\hackerrank-orchestrate-may26\support_tickets\output.csv
+Wrote 29 rows to /app/support_tickets/output.csv
 
 ## pytest output (tail)
 
 ```
 ..............................                                           [100%]
-30 passed in 8.49s
+30 passed in 4.08s
 
 ```
 
@@ -57,9 +57,9 @@ Answer columns (same rows; normalized exact + fuzzy):
 - response (compact char overlap mean): 0.555
 
 Status mismatches: 0
-Wrote report: C:\Users\nitis\OneDrive\Documents\Hackerrank Orchestrate\hackerrank-orchestrate-may26\support_tickets\sample_eval_report.csv
-[run_eval] Generate predictions (main.py \u2192 sample_pred.csv)
-Wrote 10 rows to C:\Users\nitis\OneDrive\Documents\Hackerrank Orchestrate\hackerrank-orchestrate-may26\support_tickets\sample_pred.csv
+Wrote report: /app/support_tickets/sample_eval_report.csv
+[run_eval] Generate predictions (main.py → sample_pred.csv)
+Wrote 10 rows to /app/support_tickets/sample_pred.csv
 [run_eval] Compare to labeled sample (eval_sample.py)
 
 ```
