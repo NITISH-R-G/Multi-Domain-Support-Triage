@@ -8,11 +8,11 @@ from datetime import datetime, timezone
 def run_command(command, cwd=None):
     try:
         result = subprocess.run(
-            shlex.split(command, check=False),
+            shlex.split(command),
             shell=False,
             capture_output=True,
             text=True,
-            cwd=cwd,
+            cwd=cwd, check=False
         )
         return result.stdout, result.returncode
     except Exception as e:  # noqa: BLE001
