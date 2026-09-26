@@ -2,14 +2,20 @@ import shlex
 import os
 import json
 import subprocess
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 def run_command(command, cwd=None):
     try:
-        result = subprocess.run(shlex.split(command), shell=False, capture_output=True, text=True, cwd=cwd)
+        result = subprocess.run(
+            shlex.split(command, check=False),
+            shell=False,
+            capture_output=True,
+            text=True,
+            cwd=cwd,
+        )
         return result.stdout, result.returncode
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         return str(e), 1
 
 
@@ -33,7 +39,7 @@ def generate_health_dashboard():
             for r in bandit_data.get("results", [])
             if r.get("issue_severity") == "HIGH"
         )
-    except Exception:
+    except Exception:  # noqa: BLE001, S110
         pass
 
     # Run safety
@@ -49,12 +55,12 @@ def generate_health_dashboard():
                 safety_issues = len(safety_data["vulnerabilities"])
             elif isinstance(safety_data, list):
                 safety_issues = len(safety_data)
-        except Exception:
+        except Exception:  # noqa: BLE001
             pass
 
     # Run tests to get count
-    test_cmd = f"python -m pytest tests -q"
-    test_out, test_rc = run_command(test_cmd, cwd=code_dir)
+    test_cmd = "python -m pytest tests -q"
+    _test_out, test_rc = run_command(test_cmd, cwd=code_dir)
 
     test_status = "Pass" if test_rc == 0 else "Fail"
 
@@ -69,7 +75,7 @@ def generate_health_dashboard():
 
     health_score = max(0, min(100, health_score))
 
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
 
     dashboard_content = f"""# Repository Health Dashboard
 

@@ -264,7 +264,7 @@ def main() -> None:
         row_prepared = _truncate_row_fields(row, max_field, row_num)
         try:
             pred = process_row(row_prepared, index)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             if args.fail_fast:
                 print(
                     f"error: row {row_num} raised {type(e).__name__}: {e}",

@@ -151,7 +151,7 @@ class HybridIndex:
         try:
             with path.open("rb") as f:
                 blob = pickle.load(f)
-        except Exception:
+        except Exception:  # noqa: BLE001
             return None
         if not isinstance(blob, dict) or blob.get("v") != INDEX_VERSION:
             return None

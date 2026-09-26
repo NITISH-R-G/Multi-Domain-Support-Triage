@@ -1,6 +1,6 @@
 openai>=3.17.0
 PyYAML>=6.0.1
-networkx>=3.7
+networkx
 bandit>=1.7.0
 safety>=3.0.0
 requests>=2.34.2

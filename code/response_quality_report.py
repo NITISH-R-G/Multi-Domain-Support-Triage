@@ -129,7 +129,7 @@ def main() -> None:
         f"p95_response_words: {sorted(lengths)[int(0.95 * (len(lengths) - 1))] if lengths else 0}"
     )
     print(f"avg_lexical_overlap: {sum(overlaps) / n:.3f}")
-    print(f"p05_lexical_overlap: {sorted(overlaps)[0] if overlaps else 0.0}")
+    print(f"p05_lexical_overlap: {min(overlaps) if overlaps else 0.0}")
     print(f"numeric_leak_rows: {leaks} ({leaks / n:.2%})")
 
 

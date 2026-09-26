@@ -20,7 +20,7 @@ def _run(
 ) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         cmd,
-        cwd=str(cwd),
+        cwd=str(cwd, check=False),
         capture_output=True,
         text=True,
         env={**os.environ, **(env or {})},
@@ -31,7 +31,7 @@ def main() -> int:
     git_sha = (
         subprocess.run(
             ["git", "rev-parse", "--short", "HEAD"],
-            cwd=str(REPO),
+            cwd=str(REPO, check=False),
             capture_output=True,
             text=True,
         ).stdout.strip()
@@ -41,7 +41,7 @@ def main() -> int:
     branch = (
         subprocess.run(
             ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-            cwd=str(REPO),
+            cwd=str(REPO, check=False),
             capture_output=True,
             text=True,
         ).stdout.strip()

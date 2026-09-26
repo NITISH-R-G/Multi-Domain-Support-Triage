@@ -63,7 +63,7 @@ def main() -> None:
 
     for label, cmd in steps:
         print(f"[run_eval] {label}", file=sys.stderr)
-        r = subprocess.run(cmd, cwd=str(root / "code"), env=env)
+        r = subprocess.run(cmd, cwd=str(root / "code"), env=env, check=False)
         if r.returncode != 0:
             print(f"[run_eval] FAILED: {label} (exit {r.returncode})", file=sys.stderr)
             raise SystemExit(r.returncode)
@@ -78,7 +78,7 @@ def main() -> None:
             "--offline",
         ]
         print(f"[run_eval] {label}", file=sys.stderr)
-        r = subprocess.run(cmd, cwd=str(root / "code"), env=env)
+        r = subprocess.run(cmd, cwd=str(root / "code"), env=env, check=False)
         if r.returncode != 0:
             print(f"[run_eval] FAILED: {label} (exit {r.returncode})", file=sys.stderr)
             raise SystemExit(r.returncode)

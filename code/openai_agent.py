@@ -151,7 +151,7 @@ Writing constraints:
             ],
         )
         raw = resp.choices[0].message.content or "{}"
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         # Never fail the whole run due to transient API issues (rate limit/quota/network).
         msg = f"LLM call failed ({type(e).__name__}). Falling back to offline answer."
         return fallback_from_hits(

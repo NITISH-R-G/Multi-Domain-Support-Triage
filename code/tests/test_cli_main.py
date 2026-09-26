@@ -11,7 +11,7 @@ _CODE = Path(__file__).resolve().parents[1]
 def _run(args: list[str], *, cwd: Path = _CODE) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         [sys.executable, "main.py", *args],
-        cwd=str(cwd),
+        cwd=str(cwd), check=False,
         capture_output=True,
         text=True,
     )

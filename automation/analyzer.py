@@ -27,7 +27,7 @@ def parse_imports(filepath):
                 module = node.module if node.module else ""
                 for alias in node.names:
                     imports.append(f"{module}.{alias.name}" if module else alias.name)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         print(f"Error parsing {filepath}: {e}")
     return imports
 
@@ -45,7 +45,7 @@ def detect_frameworks(root_dir):
                     frameworks.append("openai")
                 if "scikit-learn" in content:
                     frameworks.append("scikit-learn")
-        except Exception:
+        except Exception:  # noqa: BLE001
             pass
     return frameworks
 
