@@ -1,14 +1,28 @@
 version: 2
 updates:
-  - package-ecosystem: "pip"
-    directory: "/code"
-    schedule:
-      interval: "weekly"
-  - package-ecosystem: "pip"
-    directory: "/automation"
-    schedule:
-      interval: "weekly"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "pip"
+    directory: "/code"
+    schedule:
+      interval: "weekly"
+    groups:
+      pip-dependencies:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "pip"
+    directory: "/automation"
+    schedule:
+      interval: "weekly"
+    groups:
+      automation-dependencies:
+        patterns:
+          - "*"
