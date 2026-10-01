@@ -77,6 +77,7 @@ def main():
         and action in ["opened", "edited"]
         and "pull_request" not in event_data["issue"]
         and "comment" not in event_data
+        and "comment" not in event_data
     ):
         issue_number = event_data["issue"]["number"]
         title = event_data["issue"]["title"]
