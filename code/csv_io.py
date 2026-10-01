@@ -6,7 +6,6 @@ from pathlib import Path
 
 import pandas as pd
 
-
 REQUIRED_KEYS = frozenset({"issue", "subject", "company"})
 
 
