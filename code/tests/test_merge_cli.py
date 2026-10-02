@@ -22,8 +22,7 @@ def test_eval_sample_exits_2_on_zero_merge(tmp_path: Path) -> None:
         "different,s,c,,replied,,,",
         encoding="utf-8",
     )
-    r = subprocess.run(
-        [
+    r = subprocess.run([
             sys.executable,
             str(_CODE / "eval_sample.py"),
             "--sample",
@@ -32,7 +31,7 @@ def test_eval_sample_exits_2_on_zero_merge(tmp_path: Path) -> None:
             str(pred),
             "--report",
             str(tmp_path / "r.csv"),
-        ],
+        ], check=False,
         cwd=str(_CODE),
         capture_output=True,
         text=True,
@@ -46,15 +45,14 @@ def test_compare_outputs_exits_2_on_zero_merge(tmp_path: Path) -> None:
     pred = tmp_path / "p.csv"
     gold.write_text("Issue,Subject,Company,Response\na,b,c,x\n", encoding="utf-8")
     pred.write_text("Issue,Subject,Company,response\nz,b,c,y\n", encoding="utf-8")
-    r = subprocess.run(
-        [
+    r = subprocess.run([
             sys.executable,
             str(_CODE / "compare_outputs.py"),
             "--gold",
             str(gold),
             "--pred",
             str(pred),
-        ],
+        ], check=False,
         cwd=str(_CODE),
         capture_output=True,
         text=True,
