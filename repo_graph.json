@@ -1,397 +1,1314 @@
 {
-  "files": {
-    "code/conftest.py": {
-      "imports": [
-        "__future__.annotations",
-        "pytest",
-        "config.CACHE_PATH",
-        "config.DATA_DIR",
-        "retrieve.BM25Index"
-      ]
+  "nodes": [
+    {
+      "id": "code/retrieve.py",
+      "type": "file"
     },
-    "code/csv_io.py": {
-      "imports": [
-        "__future__.annotations",
-        "pathlib.Path",
-        "pandas"
-      ]
+    {
+      "id": "code/retrieve.py:Retrieved",
+      "type": "class"
     },
-    "code/compare_outputs.py": {
-      "imports": [
-        "__future__.annotations",
-        "argparse",
-        "sys",
-        "pandas",
-        "csv_io.TicketCsvError",
-        "csv_io.canonicalize_ticket_columns",
-        "csv_io.read_tickets_csv",
-        "csv_io.rename_prediction_columns",
-        "eval_metrics.compact_overlap_ratio",
-        "eval_metrics.normalize_text",
-        "eval_metrics.token_set_f1"
-      ]
+    {
+      "id": "code/retrieve.py:_tfidf_vectors",
+      "type": "function"
     },
-    "code/risk.py": {
-      "imports": [
-        "__future__.annotations",
-        "re",
-        "dataclasses.dataclass"
-      ]
+    {
+      "id": "code/retrieve.py:_cosine_tfidf",
+      "type": "function"
     },
-    "code/openai_agent.py": {
-      "imports": [
-        "__future__.annotations",
-        "json",
-        "os",
-        "re",
-        "typing.Any",
-        "typing.Literal",
-        "pathlib.Path",
-        "dotenv.load_dotenv",
-        "answer_synthesis.synthesize_reply_from_hits",
-        "config.OPENAI_MODEL",
-        "retrieve.Retrieved",
-        "retrieve.format_context",
-        "openai.OpenAI"
-      ]
+    {
+      "id": "code/retrieve.py:HybridIndex",
+      "type": "class"
     },
-    "code/main.py": {
-      "imports": [
-        "__future__.annotations",
-        "argparse",
-        "random",
-        "sys",
-        "pathlib.Path",
-        "typing.Any",
-        "numpy",
-        "pandas",
-        "config.DATA_DIR",
-        "config.INPUT_CSV",
-        "config.MAX_FIELD_CHARS",
-        "config.OUTPUT_CSV",
-        "config.SEED",
-        "config.TOP_K",
-        "cross_ecosystem.cross_ecosystem_escalation_reason",
-        "csv_io.TicketCsvError",
-        "csv_io.canonicalize_ticket_columns",
-        "csv_io.read_tickets_csv",
-        "openai_agent.decide_with_openai",
-        "openai_agent.fallback_from_hits",
-        "postprocess.finalize_decision",
-        "retrieve.BM25Index",
-        "retrieve.CACHE_PATH",
-        "retrieve.rerank_hits",
-        "retrieve.should_escalate_low_retrieval",
-        "risk.assess_risk",
-        "taxonomy.looks_like_invalid_small_talk",
-        "ticket_hints.maybe_append_multi_topic_justification",
-        "tqdm.tqdm"
-      ]
+    {
+      "id": "code/retrieve.py:rerank_hits",
+      "type": "function"
     },
-    "code/eval_sample.py": {
-      "imports": [
-        "__future__.annotations",
-        "argparse",
-        "sys",
-        "pathlib.Path",
-        "pandas",
-        "csv_io.TicketCsvError",
-        "csv_io.canonicalize_ticket_columns",
-        "csv_io.read_tickets_csv",
-        "csv_io.rename_prediction_columns",
-        "eval_metrics.compact_overlap_ratio",
-        "eval_metrics.normalize_text",
-        "eval_metrics.token_set_f1"
-      ]
+    {
+      "id": "code/retrieve.py:format_context",
+      "type": "function"
     },
-    "code/grounding.py": {
-      "imports": [
-        "__future__.annotations",
-        "re",
-        "corpus.tokenize",
-        "retrieve.Retrieved"
-      ]
+    {
+      "id": "code/retrieve.py:should_escalate_low_retrieval",
+      "type": "function"
     },
-    "code/eval_metrics.py": {
-      "imports": [
-        "__future__.annotations",
-        "re",
-        "collections.Counter"
-      ]
+    {
+      "id": "code/retrieve.py:__init__",
+      "type": "function"
     },
-    "code/__main__.py": {
-      "imports": [
-        "__future__.annotations",
-        "sys",
-        "pathlib.Path",
-        "main.main"
-      ]
+    {
+      "id": "code/retrieve.py:build",
+      "type": "function"
     },
-    "code/run_eval.py": {
-      "imports": [
-        "__future__.annotations",
-        "argparse",
-        "os",
-        "subprocess",
-        "sys",
-        "pathlib.Path"
-      ]
+    {
+      "id": "code/retrieve.py:save",
+      "type": "function"
     },
-    "code/response_quality_report.py": {
-      "imports": [
-        "__future__.annotations",
-        "argparse",
-        "os",
-        "re",
-        "sys",
-        "dataclasses.dataclass",
-        "pathlib.Path",
-        "pandas",
-        "config.CACHE_PATH",
-        "config.DATA_DIR",
-        "config.TOP_K",
-        "csv_io.TicketCsvError",
-        "csv_io.read_tickets_csv",
-        "corpus.tokenize",
-        "grounding.has_unsupported_numbers",
-        "grounding.lexical_overlap",
-        "retrieve.BM25Index",
-        "retrieve.rerank_hits"
-      ]
+    {
+      "id": "code/retrieve.py:_deserialize",
+      "type": "function"
     },
-    "code/__init__.py": {
-      "imports": []
+    {
+      "id": "code/retrieve.py:load",
+      "type": "function"
     },
-    "code/ticket_hints.py": {
-      "imports": [
-        "__future__.annotations",
-        "re",
-        "typing.Any"
-      ]
+    {
+      "id": "code/retrieve.py:infer_brand",
+      "type": "function"
     },
-    "code/cross_ecosystem.py": {
-      "imports": [
-        "__future__.annotations",
-        "os",
-        "re"
-      ]
+    {
+      "id": "code/retrieve.py:search",
+      "type": "function"
     },
-    "code/postprocess.py": {
-      "imports": [
-        "__future__.annotations",
-        "re",
-        "typing.Any",
-        "config.GROUNDING_FAIL_MODE",
-        "config.GROUNDING_MIN_OVERLAP",
-        "grounding.has_unsupported_numbers",
-        "grounding.lexical_overlap",
-        "retrieve.Retrieved",
-        "taxonomy.infer_request_type",
-        "taxonomy.normalize_product_area",
-        "openai_agent.fallback_from_hits"
-      ]
+    {
+      "id": "code/eval_metrics.py",
+      "type": "file"
     },
-    "code/corpus.py": {
-      "imports": [
-        "__future__.annotations",
-        "re",
-        "dataclasses.dataclass",
-        "pathlib.Path"
-      ]
+    {
+      "id": "code/eval_metrics.py:normalize_text",
+      "type": "function"
     },
-    "code/config.py": {
-      "imports": [
-        "__future__.annotations",
-        "os",
-        "pathlib.Path"
-      ]
+    {
+      "id": "code/eval_metrics.py:token_set_f1",
+      "type": "function"
     },
-    "code/answer_synthesis.py": {
-      "imports": [
-        "__future__.annotations",
-        "hashlib",
-        "re",
-        "retrieve.Retrieved"
-      ]
+    {
+      "id": "code/eval_metrics.py:compact_overlap_ratio",
+      "type": "function"
     },
-    "code/retrieve.py": {
-      "imports": [
-        "__future__.annotations",
-        "math",
-        "os",
-        "pickle",
-        "time",
-        "collections.Counter",
-        "dataclasses.dataclass",
-        "pathlib.Path",
-        "typing.Literal",
-        "numpy",
-        "rank_bm25.BM25Okapi",
-        "config.BM25_WEIGHT",
-        "config.CACHE_PATH",
-        "config.DATA_DIR",
-        "config.HYBRID_CANDIDATES",
-        "config.INDEX_VERSION",
-        "config.LOW_BM25_THRESHOLD",
-        "config.RERANK_BONUS_BRAND",
-        "config.RERANK_BONUS_TEAM",
-        "config.RERANK_BONUS_WORKSPACE",
-        "config.TFIDF_WEIGHT",
-        "config.TOP_K",
-        "corpus.Chunk",
-        "corpus.load_chunks",
-        "corpus.tokenize"
-      ]
+    {
+      "id": "code/eval_metrics.py:_tok",
+      "type": "function"
     },
-    "code/taxonomy.py": {
-      "imports": [
-        "__future__.annotations",
-        "re",
-        "dataclasses.dataclass",
-        "corpus.Chunk"
-      ]
+    {
+      "id": "code/taxonomy.py",
+      "type": "file"
     },
-    "code/tests/test_sample_routing_golden.py": {
-      "imports": [
-        "__future__.annotations",
-        "os",
-        "pandas",
-        "pytest",
-        "config.REPO_ROOT",
-        "csv_io.canonicalize_ticket_columns",
-        "csv_io.read_tickets_csv",
-        "main.process_row"
-      ]
+    {
+      "id": "code/taxonomy.py:LabelRule",
+      "type": "class"
     },
-    "code/tests/test_ticket_hints.py": {
-      "imports": [
-        "__future__.annotations",
-        "ticket_hints.maybe_append_multi_topic_justification",
-        "ticket_hints.ticket_may_span_multiple_topics"
-      ]
+    {
+      "id": "code/taxonomy.py:_rx",
+      "type": "function"
     },
-    "code/tests/test_eval_metrics.py": {
-      "imports": [
-        "__future__.annotations",
-        "eval_metrics.compact_overlap_ratio",
-        "eval_metrics.normalize_text",
-        "eval_metrics.token_set_f1"
-      ]
+    {
+      "id": "code/taxonomy.py:infer_request_type",
+      "type": "function"
     },
-    "code/tests/test_csv_io.py": {
-      "imports": [
-        "__future__.annotations",
-        "textwrap",
-        "pathlib.Path",
-        "pandas",
-        "pytest",
-        "csv_io.TicketCsvError",
-        "csv_io.canonicalize_ticket_columns",
-        "csv_io.read_tickets_csv",
-        "csv_io.rename_prediction_columns"
-      ]
+    {
+      "id": "code/taxonomy.py:looks_like_off_topic_general_knowledge",
+      "type": "function"
     },
-    "code/tests/test_cli_main.py": {
-      "imports": [
-        "__future__.annotations",
-        "subprocess",
-        "sys",
-        "pathlib.Path",
-        "pytest"
-      ]
+    {
+      "id": "code/taxonomy.py:looks_like_invalid_small_talk",
+      "type": "function"
     },
-    "code/tests/test_module_invocation.py": {
-      "imports": [
-        "__future__.annotations",
-        "subprocess",
-        "sys",
-        "pathlib.Path"
-      ]
+    {
+      "id": "code/taxonomy.py:map_product_area",
+      "type": "function"
     },
-    "code/tests/test_merge_cli.py": {
-      "imports": [
-        "__future__.annotations",
-        "subprocess",
-        "sys",
-        "pathlib.Path"
-      ]
+    {
+      "id": "code/taxonomy.py:normalize_product_area",
+      "type": "function"
     },
-    "code/tests/test_taxonomy.py": {
-      "imports": [
-        "__future__.annotations",
-        "taxonomy.looks_like_off_topic_general_knowledge",
-        "taxonomy.looks_like_invalid_small_talk",
-        "taxonomy.map_product_area",
-        "corpus.Chunk"
-      ]
+    {
+      "id": "code/main.py",
+      "type": "file"
     },
-    "code/tests/test_risk.py": {
-      "imports": [
-        "__future__.annotations",
-        "risk.assess_risk"
-      ]
+    {
+      "id": "code/main.py:_normalize_company",
+      "type": "function"
     },
-    "code/tests/test_cross_ecosystem.py": {
-      "imports": [
-        "__future__.annotations",
-        "os",
-        "pytest",
-        "cross_ecosystem.cross_ecosystem_escalation_reason"
-      ]
+    {
+      "id": "code/main.py:_brand_for_search",
+      "type": "function"
     },
-    "scripts/capture_baseline.py": {
-      "imports": [
-        "__future__.annotations",
-        "os",
-        "re",
-        "subprocess",
-        "sys",
-        "datetime.datetime",
-        "datetime.timezone",
-        "pathlib.Path"
-      ]
+    {
+      "id": "code/main.py:_row_processing_failure_payload",
+      "type": "function"
     },
-    "automation/ai_qa_agent.py": {
-      "imports": [
-        "os",
-        "json",
-        "openai.OpenAI"
-      ]
+    {
+      "id": "code/main.py:_truncate_row_fields",
+      "type": "function"
     },
-    "automation/diagrams.py": {
-      "imports": [
-        "json",
-        "os"
-      ]
+    {
+      "id": "code/main.py:_validate_row",
+      "type": "function"
     },
-    "automation/readme_generator.py": {
-      "imports": [
-        "os",
-        "json"
-      ]
+    {
+      "id": "code/main.py:process_row",
+      "type": "function"
     },
-    "automation/analyzer.py": {
-      "imports": [
-        "os",
-        "ast",
-        "json",
-        "re"
-      ]
+    {
+      "id": "code/main.py:main",
+      "type": "function"
     },
-    "automation/__init__.py": {
-      "imports": []
+    {
+      "id": "code/answer_synthesis.py",
+      "type": "file"
     },
-    "automation/ai_agent.py": {
-      "imports": [
-        "os",
-        "json",
-        "openai.OpenAI"
-      ]
+    {
+      "id": "code/answer_synthesis.py:_clean_line",
+      "type": "function"
+    },
+    {
+      "id": "code/answer_synthesis.py:_strip_heading_noise",
+      "type": "function"
+    },
+    {
+      "id": "code/answer_synthesis.py:extract_steps",
+      "type": "function"
+    },
+    {
+      "id": "code/answer_synthesis.py:synthesize_reply_from_hits",
+      "type": "function"
+    },
+    {
+      "id": "code/__main__.py",
+      "type": "file"
+    },
+    {
+      "id": "code/ticket_hints.py",
+      "type": "file"
+    },
+    {
+      "id": "code/ticket_hints.py:ticket_may_span_multiple_topics",
+      "type": "function"
+    },
+    {
+      "id": "code/ticket_hints.py:maybe_append_multi_topic_justification",
+      "type": "function"
+    },
+    {
+      "id": "code/response_quality_report.py",
+      "type": "file"
+    },
+    {
+      "id": "code/response_quality_report.py:_norm_company",
+      "type": "function"
+    },
+    {
+      "id": "code/response_quality_report.py:_brand_for_search",
+      "type": "function"
+    },
+    {
+      "id": "code/response_quality_report.py:RowMetrics",
+      "type": "class"
+    },
+    {
+      "id": "code/response_quality_report.py:metrics_for_row",
+      "type": "function"
+    },
+    {
+      "id": "code/response_quality_report.py:main",
+      "type": "function"
+    },
+    {
+      "id": "code/corpus.py",
+      "type": "file"
+    },
+    {
+      "id": "code/corpus.py:Chunk",
+      "type": "class"
+    },
+    {
+      "id": "code/corpus.py:_brand_from_path",
+      "type": "function"
+    },
+    {
+      "id": "code/corpus.py:_parse_frontmatter",
+      "type": "function"
+    },
+    {
+      "id": "code/corpus.py:_strip_md_noise",
+      "type": "function"
+    },
+    {
+      "id": "code/corpus.py:_split_sections",
+      "type": "function"
+    },
+    {
+      "id": "code/corpus.py:load_chunks",
+      "type": "function"
+    },
+    {
+      "id": "code/corpus.py:tokenize",
+      "type": "function"
+    },
+    {
+      "id": "code/conftest.py",
+      "type": "file"
+    },
+    {
+      "id": "code/conftest.py:bm25_index_session",
+      "type": "function"
+    },
+    {
+      "id": "code/eval_sample.py",
+      "type": "file"
+    },
+    {
+      "id": "code/eval_sample.py:_norm_status",
+      "type": "function"
+    },
+    {
+      "id": "code/eval_sample.py:main",
+      "type": "function"
+    },
+    {
+      "id": "code/eval_sample.py:exact_acc",
+      "type": "function"
+    },
+    {
+      "id": "code/risk.py",
+      "type": "file"
+    },
+    {
+      "id": "code/risk.py:RiskHit",
+      "type": "class"
+    },
+    {
+      "id": "code/risk.py:assess_risk",
+      "type": "function"
+    },
+    {
+      "id": "code/grounding.py",
+      "type": "file"
+    },
+    {
+      "id": "code/grounding.py:_norm_words",
+      "type": "function"
+    },
+    {
+      "id": "code/grounding.py:lexical_overlap",
+      "type": "function"
+    },
+    {
+      "id": "code/grounding.py:has_unsupported_numbers",
+      "type": "function"
+    },
+    {
+      "id": "code/config.py",
+      "type": "file"
+    },
+    {
+      "id": "code/cross_ecosystem.py",
+      "type": "file"
+    },
+    {
+      "id": "code/cross_ecosystem.py:cross_ecosystem_escalation_reason",
+      "type": "function"
+    },
+    {
+      "id": "code/openai_agent.py",
+      "type": "file"
+    },
+    {
+      "id": "code/openai_agent.py:_slug_area",
+      "type": "function"
+    },
+    {
+      "id": "code/openai_agent.py:fallback_from_hits",
+      "type": "function"
+    },
+    {
+      "id": "code/openai_agent.py:decide_with_openai",
+      "type": "function"
+    },
+    {
+      "id": "code/compare_outputs.py",
+      "type": "file"
+    },
+    {
+      "id": "code/compare_outputs.py:main",
+      "type": "function"
+    },
+    {
+      "id": "code/compare_outputs.py:block",
+      "type": "function"
+    },
+    {
+      "id": "code/csv_io.py",
+      "type": "file"
+    },
+    {
+      "id": "code/csv_io.py:TicketCsvError",
+      "type": "class"
+    },
+    {
+      "id": "code/csv_io.py:read_tickets_csv",
+      "type": "function"
+    },
+    {
+      "id": "code/csv_io.py:rename_prediction_columns",
+      "type": "function"
+    },
+    {
+      "id": "code/csv_io.py:canonicalize_ticket_columns",
+      "type": "function"
+    },
+    {
+      "id": "code/run_eval.py",
+      "type": "file"
+    },
+    {
+      "id": "code/run_eval.py:main",
+      "type": "function"
+    },
+    {
+      "id": "code/postprocess.py",
+      "type": "file"
+    },
+    {
+      "id": "code/postprocess.py:finalize_decision",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_merge_cli.py",
+      "type": "file"
+    },
+    {
+      "id": "code/tests/test_merge_cli.py:test_eval_sample_exits_2_on_zero_merge",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_merge_cli.py:test_compare_outputs_exits_2_on_zero_merge",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_cli_main.py",
+      "type": "file"
+    },
+    {
+      "id": "code/tests/test_cli_main.py:_run",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_cli_main.py:test_main_missing_input_exits_2",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_cli_main.py:test_main_negative_limit_exits_2",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_cli_main.py:test_main_help_exits_0",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_ticket_hints.py",
+      "type": "file"
+    },
+    {
+      "id": "code/tests/test_ticket_hints.py:test_also_triggers",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_ticket_hints.py:test_single_question_false",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_ticket_hints.py:test_maybe_append_adds_note_when_multi_topic",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_ticket_hints.py:test_maybe_append_skips_escalated",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_taxonomy.py",
+      "type": "file"
+    },
+    {
+      "id": "code/tests/test_taxonomy.py:test_off_topic_movie_trivia_detected",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_taxonomy.py:test_support_question_not_off_topic",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_taxonomy.py:test_thanks_short_invalid",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_taxonomy.py:test_visa_travel_from_blob",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_risk.py",
+      "type": "file"
+    },
+    {
+      "id": "code/tests/test_risk.py:test_grading_dispute_escalation_signal",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_risk.py:test_normal_question_no_hit",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_eval_metrics.py",
+      "type": "file"
+    },
+    {
+      "id": "code/tests/test_eval_metrics.py:test_token_f1_identical",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_eval_metrics.py:test_token_f1_partial",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_eval_metrics.py:test_normalize_collapses_space",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_eval_metrics.py:test_compact_overlap",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_csv_io.py",
+      "type": "file"
+    },
+    {
+      "id": "code/tests/test_csv_io.py:test_canonicalize_case_insensitive",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_csv_io.py:test_canonicalize_missing_column",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_csv_io.py:test_read_roundtrip_utf8_bom",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_csv_io.py:test_rename_prediction_columns",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_sample_routing_golden.py",
+      "type": "file"
+    },
+    {
+      "id": "code/tests/test_sample_routing_golden.py:_norm_status",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_sample_routing_golden.py:_norm_rt",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_sample_routing_golden.py:_norm_pa",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_sample_routing_golden.py:offline_llm",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_sample_routing_golden.py:test_sample_support_routing_matches_golden",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_module_invocation.py",
+      "type": "file"
+    },
+    {
+      "id": "code/tests/test_module_invocation.py:test_main_py_help_from_code_directory",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_cross_ecosystem.py",
+      "type": "file"
+    },
+    {
+      "id": "code/tests/test_cross_ecosystem.py:test_no_escalation_single_brand_hackerrank",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_cross_ecosystem.py:test_escalation_hackerrank_plus_claude",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_cross_ecosystem.py:test_escalation_claude_plus_visa_card",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_cross_ecosystem.py:test_no_false_positive_visa_sponsorship_only_hackerrank",
+      "type": "function"
+    },
+    {
+      "id": "code/tests/test_cross_ecosystem.py:test_disable_via_env",
+      "type": "function"
+    },
+    {
+      "id": "automation/__init__.py",
+      "type": "file"
+    },
+    {
+      "id": "automation/readme_generator.py",
+      "type": "file"
+    },
+    {
+      "id": "automation/readme_generator.py:generate_readme",
+      "type": "function"
+    },
+    {
+      "id": "automation/analyzer.py",
+      "type": "file"
+    },
+    {
+      "id": "automation/analyzer.py:get_python_files",
+      "type": "function"
+    },
+    {
+      "id": "automation/analyzer.py:parse_imports",
+      "type": "function"
+    },
+    {
+      "id": "automation/analyzer.py:detect_frameworks",
+      "type": "function"
+    },
+    {
+      "id": "automation/analyzer.py:build_knowledge_graph",
+      "type": "function"
+    },
+    {
+      "id": "automation/ai_qa_agent.py",
+      "type": "file"
+    },
+    {
+      "id": "automation/ai_qa_agent.py:read_file",
+      "type": "function"
+    },
+    {
+      "id": "automation/ai_qa_agent.py:generate_qa_report",
+      "type": "function"
+    },
+    {
+      "id": "automation/ai_qa_agent.py:main",
+      "type": "function"
+    },
+    {
+      "id": "automation/ai_agent.py",
+      "type": "file"
+    },
+    {
+      "id": "automation/ai_agent.py:load_file_content",
+      "type": "function"
+    },
+    {
+      "id": "automation/ai_agent.py:generate_docs",
+      "type": "function"
+    },
+    {
+      "id": "automation/ai_agent.py:main",
+      "type": "function"
+    },
+    {
+      "id": "automation/ai_maintainer.py",
+      "type": "file"
+    },
+    {
+      "id": "automation/ai_maintainer.py:get_event_data",
+      "type": "function"
+    },
+    {
+      "id": "automation/ai_maintainer.py:generate_ai_response",
+      "type": "function"
+    },
+    {
+      "id": "automation/ai_maintainer.py:post_comment",
+      "type": "function"
+    },
+    {
+      "id": "automation/ai_maintainer.py:parse_event",
+      "type": "function"
+    },
+    {
+      "id": "automation/ai_maintainer.py:main",
+      "type": "function"
+    },
+    {
+      "id": "automation/diagrams.py",
+      "type": "file"
+    },
+    {
+      "id": "automation/diagrams.py:generate_mermaid_graph",
+      "type": "function"
+    },
+    {
+      "id": "automation/diagrams.py:main",
+      "type": "function"
+    },
+    {
+      "id": "automation/health_dashboard.py",
+      "type": "file"
+    },
+    {
+      "id": "automation/health_dashboard.py:run_command",
+      "type": "function"
+    },
+    {
+      "id": "automation/health_dashboard.py:generate_health_dashboard",
+      "type": "function"
+    },
+    {
+      "id": "automation/knowledge_graph.py",
+      "type": "file"
+    },
+    {
+      "id": "automation/knowledge_graph.py:extract_python_entities",
+      "type": "function"
+    },
+    {
+      "id": "automation/knowledge_graph.py:build_knowledge_graph",
+      "type": "function"
     }
-  },
-  "frameworks": [
-    "pytest",
-    "openai"
   ],
-  "structure": {}
+  "edges": [
+    {
+      "source": "code/retrieve.py",
+      "target": "code/retrieve.py:Retrieved",
+      "type": "contains"
+    },
+    {
+      "source": "code/retrieve.py",
+      "target": "code/retrieve.py:_tfidf_vectors",
+      "type": "contains"
+    },
+    {
+      "source": "code/retrieve.py",
+      "target": "code/retrieve.py:_cosine_tfidf",
+      "type": "contains"
+    },
+    {
+      "source": "code/retrieve.py",
+      "target": "code/retrieve.py:HybridIndex",
+      "type": "contains"
+    },
+    {
+      "source": "code/retrieve.py",
+      "target": "code/retrieve.py:rerank_hits",
+      "type": "contains"
+    },
+    {
+      "source": "code/retrieve.py",
+      "target": "code/retrieve.py:format_context",
+      "type": "contains"
+    },
+    {
+      "source": "code/retrieve.py",
+      "target": "code/retrieve.py:should_escalate_low_retrieval",
+      "type": "contains"
+    },
+    {
+      "source": "code/retrieve.py",
+      "target": "code/retrieve.py:__init__",
+      "type": "contains"
+    },
+    {
+      "source": "code/retrieve.py",
+      "target": "code/retrieve.py:build",
+      "type": "contains"
+    },
+    {
+      "source": "code/retrieve.py",
+      "target": "code/retrieve.py:save",
+      "type": "contains"
+    },
+    {
+      "source": "code/retrieve.py",
+      "target": "code/retrieve.py:_deserialize",
+      "type": "contains"
+    },
+    {
+      "source": "code/retrieve.py",
+      "target": "code/retrieve.py:load",
+      "type": "contains"
+    },
+    {
+      "source": "code/retrieve.py",
+      "target": "code/retrieve.py:infer_brand",
+      "type": "contains"
+    },
+    {
+      "source": "code/retrieve.py",
+      "target": "code/retrieve.py:search",
+      "type": "contains"
+    },
+    {
+      "source": "code/eval_metrics.py",
+      "target": "code/eval_metrics.py:normalize_text",
+      "type": "contains"
+    },
+    {
+      "source": "code/eval_metrics.py",
+      "target": "code/eval_metrics.py:token_set_f1",
+      "type": "contains"
+    },
+    {
+      "source": "code/eval_metrics.py",
+      "target": "code/eval_metrics.py:compact_overlap_ratio",
+      "type": "contains"
+    },
+    {
+      "source": "code/eval_metrics.py",
+      "target": "code/eval_metrics.py:_tok",
+      "type": "contains"
+    },
+    {
+      "source": "code/taxonomy.py",
+      "target": "code/taxonomy.py:LabelRule",
+      "type": "contains"
+    },
+    {
+      "source": "code/taxonomy.py",
+      "target": "code/taxonomy.py:_rx",
+      "type": "contains"
+    },
+    {
+      "source": "code/taxonomy.py",
+      "target": "code/taxonomy.py:infer_request_type",
+      "type": "contains"
+    },
+    {
+      "source": "code/taxonomy.py",
+      "target": "code/taxonomy.py:looks_like_off_topic_general_knowledge",
+      "type": "contains"
+    },
+    {
+      "source": "code/taxonomy.py",
+      "target": "code/taxonomy.py:looks_like_invalid_small_talk",
+      "type": "contains"
+    },
+    {
+      "source": "code/taxonomy.py",
+      "target": "code/taxonomy.py:map_product_area",
+      "type": "contains"
+    },
+    {
+      "source": "code/taxonomy.py",
+      "target": "code/taxonomy.py:normalize_product_area",
+      "type": "contains"
+    },
+    {
+      "source": "code/main.py",
+      "target": "code/main.py:_normalize_company",
+      "type": "contains"
+    },
+    {
+      "source": "code/main.py",
+      "target": "code/main.py:_brand_for_search",
+      "type": "contains"
+    },
+    {
+      "source": "code/main.py",
+      "target": "code/main.py:_row_processing_failure_payload",
+      "type": "contains"
+    },
+    {
+      "source": "code/main.py",
+      "target": "code/main.py:_truncate_row_fields",
+      "type": "contains"
+    },
+    {
+      "source": "code/main.py",
+      "target": "code/main.py:_validate_row",
+      "type": "contains"
+    },
+    {
+      "source": "code/main.py",
+      "target": "code/main.py:process_row",
+      "type": "contains"
+    },
+    {
+      "source": "code/main.py",
+      "target": "code/main.py:main",
+      "type": "contains"
+    },
+    {
+      "source": "code/answer_synthesis.py",
+      "target": "code/answer_synthesis.py:_clean_line",
+      "type": "contains"
+    },
+    {
+      "source": "code/answer_synthesis.py",
+      "target": "code/answer_synthesis.py:_strip_heading_noise",
+      "type": "contains"
+    },
+    {
+      "source": "code/answer_synthesis.py",
+      "target": "code/answer_synthesis.py:extract_steps",
+      "type": "contains"
+    },
+    {
+      "source": "code/answer_synthesis.py",
+      "target": "code/answer_synthesis.py:synthesize_reply_from_hits",
+      "type": "contains"
+    },
+    {
+      "source": "code/ticket_hints.py",
+      "target": "code/ticket_hints.py:ticket_may_span_multiple_topics",
+      "type": "contains"
+    },
+    {
+      "source": "code/ticket_hints.py",
+      "target": "code/ticket_hints.py:maybe_append_multi_topic_justification",
+      "type": "contains"
+    },
+    {
+      "source": "code/response_quality_report.py",
+      "target": "code/response_quality_report.py:_norm_company",
+      "type": "contains"
+    },
+    {
+      "source": "code/response_quality_report.py",
+      "target": "code/response_quality_report.py:_brand_for_search",
+      "type": "contains"
+    },
+    {
+      "source": "code/response_quality_report.py",
+      "target": "code/response_quality_report.py:RowMetrics",
+      "type": "contains"
+    },
+    {
+      "source": "code/response_quality_report.py",
+      "target": "code/response_quality_report.py:metrics_for_row",
+      "type": "contains"
+    },
+    {
+      "source": "code/response_quality_report.py",
+      "target": "code/response_quality_report.py:main",
+      "type": "contains"
+    },
+    {
+      "source": "code/corpus.py",
+      "target": "code/corpus.py:Chunk",
+      "type": "contains"
+    },
+    {
+      "source": "code/corpus.py",
+      "target": "code/corpus.py:_brand_from_path",
+      "type": "contains"
+    },
+    {
+      "source": "code/corpus.py",
+      "target": "code/corpus.py:_parse_frontmatter",
+      "type": "contains"
+    },
+    {
+      "source": "code/corpus.py",
+      "target": "code/corpus.py:_strip_md_noise",
+      "type": "contains"
+    },
+    {
+      "source": "code/corpus.py",
+      "target": "code/corpus.py:_split_sections",
+      "type": "contains"
+    },
+    {
+      "source": "code/corpus.py",
+      "target": "code/corpus.py:load_chunks",
+      "type": "contains"
+    },
+    {
+      "source": "code/corpus.py",
+      "target": "code/corpus.py:tokenize",
+      "type": "contains"
+    },
+    {
+      "source": "code/conftest.py",
+      "target": "code/conftest.py:bm25_index_session",
+      "type": "contains"
+    },
+    {
+      "source": "code/eval_sample.py",
+      "target": "code/eval_sample.py:_norm_status",
+      "type": "contains"
+    },
+    {
+      "source": "code/eval_sample.py",
+      "target": "code/eval_sample.py:main",
+      "type": "contains"
+    },
+    {
+      "source": "code/eval_sample.py",
+      "target": "code/eval_sample.py:exact_acc",
+      "type": "contains"
+    },
+    {
+      "source": "code/risk.py",
+      "target": "code/risk.py:RiskHit",
+      "type": "contains"
+    },
+    {
+      "source": "code/risk.py",
+      "target": "code/risk.py:assess_risk",
+      "type": "contains"
+    },
+    {
+      "source": "code/grounding.py",
+      "target": "code/grounding.py:_norm_words",
+      "type": "contains"
+    },
+    {
+      "source": "code/grounding.py",
+      "target": "code/grounding.py:lexical_overlap",
+      "type": "contains"
+    },
+    {
+      "source": "code/grounding.py",
+      "target": "code/grounding.py:has_unsupported_numbers",
+      "type": "contains"
+    },
+    {
+      "source": "code/cross_ecosystem.py",
+      "target": "code/cross_ecosystem.py:cross_ecosystem_escalation_reason",
+      "type": "contains"
+    },
+    {
+      "source": "code/openai_agent.py",
+      "target": "code/openai_agent.py:_slug_area",
+      "type": "contains"
+    },
+    {
+      "source": "code/openai_agent.py",
+      "target": "code/openai_agent.py:fallback_from_hits",
+      "type": "contains"
+    },
+    {
+      "source": "code/openai_agent.py",
+      "target": "code/openai_agent.py:decide_with_openai",
+      "type": "contains"
+    },
+    {
+      "source": "code/compare_outputs.py",
+      "target": "code/compare_outputs.py:main",
+      "type": "contains"
+    },
+    {
+      "source": "code/compare_outputs.py",
+      "target": "code/compare_outputs.py:block",
+      "type": "contains"
+    },
+    {
+      "source": "code/csv_io.py",
+      "target": "code/csv_io.py:TicketCsvError",
+      "type": "contains"
+    },
+    {
+      "source": "code/csv_io.py",
+      "target": "code/csv_io.py:read_tickets_csv",
+      "type": "contains"
+    },
+    {
+      "source": "code/csv_io.py",
+      "target": "code/csv_io.py:rename_prediction_columns",
+      "type": "contains"
+    },
+    {
+      "source": "code/csv_io.py",
+      "target": "code/csv_io.py:canonicalize_ticket_columns",
+      "type": "contains"
+    },
+    {
+      "source": "code/run_eval.py",
+      "target": "code/run_eval.py:main",
+      "type": "contains"
+    },
+    {
+      "source": "code/postprocess.py",
+      "target": "code/postprocess.py:finalize_decision",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_merge_cli.py",
+      "target": "code/tests/test_merge_cli.py:test_eval_sample_exits_2_on_zero_merge",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_merge_cli.py",
+      "target": "code/tests/test_merge_cli.py:test_compare_outputs_exits_2_on_zero_merge",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_cli_main.py",
+      "target": "code/tests/test_cli_main.py:_run",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_cli_main.py",
+      "target": "code/tests/test_cli_main.py:test_main_missing_input_exits_2",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_cli_main.py",
+      "target": "code/tests/test_cli_main.py:test_main_negative_limit_exits_2",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_cli_main.py",
+      "target": "code/tests/test_cli_main.py:test_main_help_exits_0",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_ticket_hints.py",
+      "target": "code/tests/test_ticket_hints.py:test_also_triggers",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_ticket_hints.py",
+      "target": "code/tests/test_ticket_hints.py:test_single_question_false",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_ticket_hints.py",
+      "target": "code/tests/test_ticket_hints.py:test_maybe_append_adds_note_when_multi_topic",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_ticket_hints.py",
+      "target": "code/tests/test_ticket_hints.py:test_maybe_append_skips_escalated",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_taxonomy.py",
+      "target": "code/tests/test_taxonomy.py:test_off_topic_movie_trivia_detected",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_taxonomy.py",
+      "target": "code/tests/test_taxonomy.py:test_support_question_not_off_topic",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_taxonomy.py",
+      "target": "code/tests/test_taxonomy.py:test_thanks_short_invalid",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_taxonomy.py",
+      "target": "code/tests/test_taxonomy.py:test_visa_travel_from_blob",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_risk.py",
+      "target": "code/tests/test_risk.py:test_grading_dispute_escalation_signal",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_risk.py",
+      "target": "code/tests/test_risk.py:test_normal_question_no_hit",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_eval_metrics.py",
+      "target": "code/tests/test_eval_metrics.py:test_token_f1_identical",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_eval_metrics.py",
+      "target": "code/tests/test_eval_metrics.py:test_token_f1_partial",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_eval_metrics.py",
+      "target": "code/tests/test_eval_metrics.py:test_normalize_collapses_space",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_eval_metrics.py",
+      "target": "code/tests/test_eval_metrics.py:test_compact_overlap",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_csv_io.py",
+      "target": "code/tests/test_csv_io.py:test_canonicalize_case_insensitive",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_csv_io.py",
+      "target": "code/tests/test_csv_io.py:test_canonicalize_missing_column",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_csv_io.py",
+      "target": "code/tests/test_csv_io.py:test_read_roundtrip_utf8_bom",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_csv_io.py",
+      "target": "code/tests/test_csv_io.py:test_rename_prediction_columns",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_sample_routing_golden.py",
+      "target": "code/tests/test_sample_routing_golden.py:_norm_status",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_sample_routing_golden.py",
+      "target": "code/tests/test_sample_routing_golden.py:_norm_rt",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_sample_routing_golden.py",
+      "target": "code/tests/test_sample_routing_golden.py:_norm_pa",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_sample_routing_golden.py",
+      "target": "code/tests/test_sample_routing_golden.py:offline_llm",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_sample_routing_golden.py",
+      "target": "code/tests/test_sample_routing_golden.py:test_sample_support_routing_matches_golden",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_module_invocation.py",
+      "target": "code/tests/test_module_invocation.py:test_main_py_help_from_code_directory",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_cross_ecosystem.py",
+      "target": "code/tests/test_cross_ecosystem.py:test_no_escalation_single_brand_hackerrank",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_cross_ecosystem.py",
+      "target": "code/tests/test_cross_ecosystem.py:test_escalation_hackerrank_plus_claude",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_cross_ecosystem.py",
+      "target": "code/tests/test_cross_ecosystem.py:test_escalation_claude_plus_visa_card",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_cross_ecosystem.py",
+      "target": "code/tests/test_cross_ecosystem.py:test_no_false_positive_visa_sponsorship_only_hackerrank",
+      "type": "contains"
+    },
+    {
+      "source": "code/tests/test_cross_ecosystem.py",
+      "target": "code/tests/test_cross_ecosystem.py:test_disable_via_env",
+      "type": "contains"
+    },
+    {
+      "source": "automation/readme_generator.py",
+      "target": "automation/readme_generator.py:generate_readme",
+      "type": "contains"
+    },
+    {
+      "source": "automation/analyzer.py",
+      "target": "automation/analyzer.py:get_python_files",
+      "type": "contains"
+    },
+    {
+      "source": "automation/analyzer.py",
+      "target": "automation/analyzer.py:parse_imports",
+      "type": "contains"
+    },
+    {
+      "source": "automation/analyzer.py",
+      "target": "automation/analyzer.py:detect_frameworks",
+      "type": "contains"
+    },
+    {
+      "source": "automation/analyzer.py",
+      "target": "automation/analyzer.py:build_knowledge_graph",
+      "type": "contains"
+    },
+    {
+      "source": "automation/ai_qa_agent.py",
+      "target": "automation/ai_qa_agent.py:read_file",
+      "type": "contains"
+    },
+    {
+      "source": "automation/ai_qa_agent.py",
+      "target": "automation/ai_qa_agent.py:generate_qa_report",
+      "type": "contains"
+    },
+    {
+      "source": "automation/ai_qa_agent.py",
+      "target": "automation/ai_qa_agent.py:main",
+      "type": "contains"
+    },
+    {
+      "source": "automation/ai_agent.py",
+      "target": "automation/ai_agent.py:load_file_content",
+      "type": "contains"
+    },
+    {
+      "source": "automation/ai_agent.py",
+      "target": "automation/ai_agent.py:generate_docs",
+      "type": "contains"
+    },
+    {
+      "source": "automation/ai_agent.py",
+      "target": "automation/ai_agent.py:main",
+      "type": "contains"
+    },
+    {
+      "source": "automation/ai_maintainer.py",
+      "target": "automation/ai_maintainer.py:get_event_data",
+      "type": "contains"
+    },
+    {
+      "source": "automation/ai_maintainer.py",
+      "target": "automation/ai_maintainer.py:generate_ai_response",
+      "type": "contains"
+    },
+    {
+      "source": "automation/ai_maintainer.py",
+      "target": "automation/ai_maintainer.py:post_comment",
+      "type": "contains"
+    },
+    {
+      "source": "automation/ai_maintainer.py",
+      "target": "automation/ai_maintainer.py:parse_event",
+      "type": "contains"
+    },
+    {
+      "source": "automation/ai_maintainer.py",
+      "target": "automation/ai_maintainer.py:main",
+      "type": "contains"
+    },
+    {
+      "source": "automation/diagrams.py",
+      "target": "automation/diagrams.py:generate_mermaid_graph",
+      "type": "contains"
+    },
+    {
+      "source": "automation/diagrams.py",
+      "target": "automation/diagrams.py:main",
+      "type": "contains"
+    },
+    {
+      "source": "automation/health_dashboard.py",
+      "target": "automation/health_dashboard.py:run_command",
+      "type": "contains"
+    },
+    {
+      "source": "automation/health_dashboard.py",
+      "target": "automation/health_dashboard.py:generate_health_dashboard",
+      "type": "contains"
+    },
+    {
+      "source": "automation/knowledge_graph.py",
+      "target": "automation/knowledge_graph.py:extract_python_entities",
+      "type": "contains"
+    },
+    {
+      "source": "automation/knowledge_graph.py",
+      "target": "automation/knowledge_graph.py:build_knowledge_graph",
+      "type": "contains"
+    }
+  ]
 }
