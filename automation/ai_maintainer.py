@@ -1,5 +1,6 @@
-import os
 import json
+import os
+
 import requests
 from openai import OpenAI
 
@@ -29,7 +30,7 @@ def generate_ai_response(prompt):
         )
         return response.choices[0].message.content
     except Exception as e:
-        return f"AI Maintainer: Error generating response: {str(e)}"
+        return f"AI Maintainer: Error generating response: {e!s}"
 
 
 def post_comment(repo, issue_number, token, body):
@@ -39,13 +40,64 @@ def post_comment(repo, issue_number, token, body):
         "Accept": "application/vnd.github.v3+json",
     }
     data = {"body": body}
-    response = requests.post(url, headers=headers, json=data)
-    if response.status_code == 201:
+    try:
+        response = requests.post(url, headers=headers, json=data, timeout=10)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print(f"Failed to post comment: {e}")
+        return
+
+    if response.status_code in [200, 201]:
         print("Successfully posted comment.")
     else:
         print(
             f"Failed to post comment. Status: {response.status_code}, Response: {response.text}"
         )
+
+
+def _parse_pr(event_data):
+    return {
+        "issue_number": event_data["pull_request"]["number"],
+        "title": event_data["pull_request"]["title"],
+        "body": event_data["pull_request"]["body"] or "",
+        "event_type": "Pull Request",
+    }
+
+
+def _parse_issue(event_data):
+    return {
+        "issue_number": event_data["issue"]["number"],
+        "title": event_data["issue"]["title"],
+        "body": event_data["issue"]["body"] or "",
+        "event_type": "Issue",
+    }
+
+
+def _parse_comment(event_data):
+    if event_data["comment"]["user"]["login"] == "github-actions[bot]":
+        return None
+    return {
+        "issue_number": event_data["issue"]["number"],
+        "title": event_data["issue"]["title"],
+        "body": event_data["comment"]["body"],
+        "event_type": "Comment",
+    }
+
+
+def parse_event(event_data):
+    action = event_data.get("action")
+    if "pull_request" in event_data and action in ["opened", "edited"]:
+        return _parse_pr(event_data)
+    elif (
+        "issue" in event_data
+        and action in ["opened", "edited"]
+        and "pull_request" not in event_data["issue"]
+        and "comment" not in event_data
+    ):
+        return _parse_issue(event_data)
+    elif "comment" in event_data and action == "created":
+        return _parse_comment(event_data)
+    return None
 
 
 def main():
@@ -58,40 +110,16 @@ def main():
         return
 
     event_data = get_event_data(event_path)
+    parsed = parse_event(event_data)
 
-    action = event_data.get("action")
-
-    issue_number = None
-    title = ""
-    body = ""
-    event_type = ""
-
-    if "pull_request" in event_data and action in ["opened", "edited"]:
-        issue_number = event_data["pull_request"]["number"]
-        title = event_data["pull_request"]["title"]
-        body = event_data["pull_request"]["body"] or ""
-        event_type = "Pull Request"
-    elif (
-        "issue" in event_data
-        and action in ["opened", "edited"]
-        and "pull_request" not in event_data["issue"]
-    ):
-        issue_number = event_data["issue"]["number"]
-        title = event_data["issue"]["title"]
-        body = event_data["issue"]["body"] or ""
-        event_type = "Issue"
-    elif "comment" in event_data and action == "created":
-        issue_number = event_data["issue"]["number"]
-        comment_body = event_data["comment"]["body"]
-        # Skip responding to ourselves
-        if event_data["comment"]["user"]["login"] == "github-actions[bot]":
-            return
-        title = event_data["issue"]["title"]
-        body = comment_body
-        event_type = "Comment"
-    else:
-        print("Unsupported event or action.")
+    if not parsed:
+        print("Unsupported event or action, or bot self-comment.")
         return
+
+    issue_number = parsed.get("issue_number")
+    title = parsed.get("title")
+    body = parsed.get("body")
+    event_type = parsed.get("event_type")
 
     if not issue_number:
         print("Could not determine issue number.")
