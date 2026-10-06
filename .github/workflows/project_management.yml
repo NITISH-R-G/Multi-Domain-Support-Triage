@@ -1,0 +1,25 @@
+name: Project Management
+
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Apply initial labels
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "${{ github.event_name }}" = "issues" ]; then
+            gh issue edit "${{ github.event.issue.number }}" --add-label "issue:triage" --repo "${{ github.repository }}"
+          elif [ "${{ github.event_name }}" = "pull_request" ]; then
+            gh pr edit "${{ github.event.pull_request.number }}" --add-label "pr:needs-review" --repo "${{ github.repository }}"
+          fi
