@@ -7,7 +7,6 @@ import re
 from corpus import tokenize
 from retrieve import Retrieved
 
-
 _STOP = {
     "the",
     "and",
