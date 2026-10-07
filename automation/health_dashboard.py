@@ -1,20 +1,16 @@
-import json
 import os
-import shlex
+import json
 import subprocess
 from datetime import datetime
-
+import shlex
 
 def run_command(command, cwd=None):
     try:
         args = shlex.split(command)
-        result = subprocess.run(
-            args, shell=False, capture_output=True, text=True, cwd=cwd
-        )
+        result = subprocess.run(args, shell=False, capture_output=True, text=True, cwd=cwd)
         return result.stdout, result.returncode
     except Exception as e:
         return str(e), 1
-
 
 def run_bandit_check(code_dir):
     bandit_cmd = "bandit -r . -f json"
@@ -33,7 +29,6 @@ def run_bandit_check(code_dir):
         pass
     return bandit_issues, bandit_high
 
-
 def run_safety_check(code_dir):
     req_file = os.path.join(code_dir, "requirements.txt")
     safety_issues = 0
@@ -50,7 +45,6 @@ def run_safety_check(code_dir):
         except Exception:
             pass
     return safety_issues
-
 
 def run_test_check(code_dir):
     test_cmd = "python -m pytest tests -q"

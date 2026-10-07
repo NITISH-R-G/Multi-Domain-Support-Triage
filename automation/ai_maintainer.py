@@ -1,6 +1,5 @@
-import json
 import os
-
+import json
 import requests
 from openai import OpenAI
 
@@ -30,7 +29,7 @@ def generate_ai_response(prompt):
         )
         return response.choices[0].message.content
     except Exception as e:
-        return f"AI Maintainer: Error generating response: {e!s}"
+        return f"AI Maintainer: Error generating response: {str(e)}"
 
 
 def post_comment(repo, issue_number, token, body):
@@ -49,6 +48,56 @@ def post_comment(repo, issue_number, token, body):
         )
 
 
+def _parse_pull_request(event_data, action):
+    if "pull_request" in event_data and action in ["opened", "edited"]:
+        return (
+            event_data["pull_request"]["number"],
+            event_data["pull_request"]["title"],
+            event_data["pull_request"]["body"] or "",
+            "Pull Request",
+        )
+    return None
+
+def _parse_issue(event_data, action):
+    if (
+        "issue" in event_data
+        and action in ["opened", "edited"]
+        and "pull_request" not in event_data["issue"]
+        and "comment" not in event_data
+    ):
+        return (
+            event_data["issue"]["number"],
+            event_data["issue"]["title"],
+            event_data["issue"]["body"] or "",
+            "Issue",
+        )
+    return None
+
+def _parse_comment(event_data, action):
+    if "comment" in event_data and action == "created":
+        if event_data["comment"]["user"]["login"] == "github-actions[bot]":
+            return None
+        return (
+            event_data["issue"]["number"],
+            event_data["issue"]["title"],
+            event_data["comment"]["body"],
+            "Comment",
+        )
+    return None
+
+def _parse_event_data(event_data, action):
+    res = _parse_pull_request(event_data, action)
+    if res:
+        return res
+    res = _parse_issue(event_data, action)
+    if res:
+        return res
+    res = _parse_comment(event_data, action)
+    if res:
+        return res
+    return None, "", "", ""
+
+
 def main():
     event_path = os.environ.get("GITHUB_EVENT_PATH")
     repo = os.environ.get("GITHUB_REPOSITORY")
@@ -59,44 +108,12 @@ def main():
         return
 
     event_data = get_event_data(event_path)
-
     action = event_data.get("action")
 
-    issue_number = None
-    title = ""
-    body = ""
-    event_type = ""
-
-    if "pull_request" in event_data and action in ["opened", "edited"]:
-        issue_number = event_data["pull_request"]["number"]
-        title = event_data["pull_request"]["title"]
-        body = event_data["pull_request"]["body"] or ""
-        event_type = "Pull Request"
-    elif (
-        "issue" in event_data
-        and action in ["opened", "edited"]
-        and "pull_request" not in event_data["issue"]
-        and "comment" not in event_data
-    ):
-        issue_number = event_data["issue"]["number"]
-        title = event_data["issue"]["title"]
-        body = event_data["issue"]["body"] or ""
-        event_type = "Issue"
-    elif "comment" in event_data and action == "created":
-        issue_number = event_data["issue"]["number"]
-        comment_body = event_data["comment"]["body"]
-        # Skip responding to ourselves
-        if event_data["comment"]["user"]["login"] == "github-actions[bot]":
-            return
-        title = event_data["issue"]["title"]
-        body = comment_body
-        event_type = "Comment"
-    else:
-        print("Unsupported event or action.")
-        return
+    issue_number, title, body, event_type = _parse_event_data(event_data, action)
 
     if not issue_number:
-        print("Could not determine issue number.")
+        print("Could not determine issue number or unsupported event.")
         return
 
     prompt = f"Review the following {event_type}:\n\nTitle: {title}\n\nBody: {body}\n\nPlease provide a helpful response as the AI Maintainer."
