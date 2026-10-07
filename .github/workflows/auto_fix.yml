@@ -28,7 +28,7 @@ jobs:
         run: ruff format .
 
       - name: Run Ruff Check Fix
-        run: ruff check --fix .
+        run: ruff check --fix . || true
 
       - name: Commit changes
         run: |

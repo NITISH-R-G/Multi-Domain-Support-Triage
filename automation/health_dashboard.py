@@ -13,7 +13,7 @@ def run_command(command, cwd=None):
         return str(e), 1
 
 def run_bandit_check(code_dir):
-    bandit_cmd = f"bandit -r . -f json"
+    bandit_cmd = "bandit -r . -f json"
     bandit_out, _ = run_command(bandit_cmd, cwd=code_dir)
     bandit_issues = 0
     bandit_high = 0
@@ -34,7 +34,7 @@ def run_safety_check(code_dir):
     safety_issues = 0
     if os.path.exists(req_file):
         # We can just point safety to the file directly since it handles absolute paths
-        safety_cmd = f"safety check -r requirements.txt --json"
+        safety_cmd = "safety check -r requirements.txt --json"
         safety_out, _ = run_command(safety_cmd, cwd=code_dir)
         try:
             safety_data = json.loads(safety_out)
@@ -47,7 +47,7 @@ def run_safety_check(code_dir):
     return safety_issues
 
 def run_test_check(code_dir):
-    test_cmd = f"python -m pytest tests -q"
+    test_cmd = "python -m pytest tests -q"
     _, test_rc = run_command(test_cmd, cwd=code_dir)
     return "Pass" if test_rc == 0 else "Fail"
 
