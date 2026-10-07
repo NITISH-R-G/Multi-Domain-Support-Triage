@@ -4,6 +4,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+
 _CODE = Path(__file__).resolve().parents[1]
 
 

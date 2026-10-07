@@ -1,6 +1,5 @@
-import json
 import os
-
+import json
 import requests
 from openai import OpenAI
 
@@ -30,7 +29,7 @@ def generate_ai_response(prompt):
         )
         return response.choices[0].message.content
     except Exception as e:
-        return f"AI Maintainer: Error generating response: {e!s}"
+        return f"AI Maintainer: Error generating response: {str(e)}"
 
 
 def post_comment(repo, issue_number, token, body):
@@ -40,13 +39,13 @@ def post_comment(repo, issue_number, token, body):
         "Accept": "application/vnd.github.v3+json",
     }
     data = {"body": body}
-    response = requests.post(url, headers=headers, json=data, timeout=10)
-    if response.status_code == 201:
-        print("Successfully posted comment.")
-    else:
-        print(
-            f"Failed to post comment. Status: {response.status_code}, Response: {response.text}"
-        )
+    try:
+        response = requests.post(url, headers=headers, json=data, timeout=10)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed: {e}")
+        return
+    print("Successfully posted comment.")
 
 
 def _parse_pull_request(event_data, action):
@@ -58,7 +57,6 @@ def _parse_pull_request(event_data, action):
             "Pull Request",
         )
     return None
-
 
 def _parse_issue(event_data, action):
     if (
@@ -75,7 +73,6 @@ def _parse_issue(event_data, action):
         )
     return None
 
-
 def _parse_comment(event_data, action):
     if "comment" in event_data and action == "created":
         if event_data["comment"]["user"]["login"] == "github-actions[bot]":
@@ -87,7 +84,6 @@ def _parse_comment(event_data, action):
             "Comment",
         )
     return None
-
 
 def _parse_event_data(event_data, action):
     res = _parse_pull_request(event_data, action)

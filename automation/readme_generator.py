@@ -1,5 +1,5 @@
-import json
 import os
+import json
 
 
 def generate_readme():
