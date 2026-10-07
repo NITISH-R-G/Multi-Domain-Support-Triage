@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-
 import pytest
-
 from cross_ecosystem import cross_ecosystem_escalation_reason
 
 
