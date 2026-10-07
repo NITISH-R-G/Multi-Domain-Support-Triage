@@ -2,26 +2,19 @@ import os
 import json
 import subprocess
 from datetime import datetime
+import shlex
 
-
-def run_command(command):
+def run_command(command, cwd=None):
     try:
-        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        args = shlex.split(command)
+        result = subprocess.run(args, shell=False, capture_output=True, text=True, cwd=cwd)
         return result.stdout, result.returncode
     except Exception as e:
         return str(e), 1
 
-
-def generate_health_dashboard():
-    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    code_dir = os.path.join(root_dir, "code")
-
-    print("Running security and dependency checks...")
-
-    # Run bandit
-    bandit_cmd = f"bandit -r {code_dir} -f json"
-    bandit_out, _ = run_command(bandit_cmd)
-
+def run_bandit_check(code_dir):
+    bandit_cmd = "bandit -r . -f json"
+    bandit_out, _ = run_command(bandit_cmd, cwd=code_dir)
     bandit_issues = 0
     bandit_high = 0
     try:
@@ -34,28 +27,40 @@ def generate_health_dashboard():
         )
     except Exception:
         pass
+    return bandit_issues, bandit_high
 
-    # Run safety
+def run_safety_check(code_dir):
     req_file = os.path.join(code_dir, "requirements.txt")
     safety_issues = 0
     if os.path.exists(req_file):
-        safety_cmd = f"safety check -r {req_file} --json"
-        safety_out, _ = run_command(safety_cmd)
+        # We can just point safety to the file directly since it handles absolute paths
+        safety_cmd = "safety check -r requirements.txt --json"
+        safety_out, _ = run_command(safety_cmd, cwd=code_dir)
         try:
             safety_data = json.loads(safety_out)
-            # safety output structure can vary, typically vulnerabilities is a list
             if isinstance(safety_data, dict) and "vulnerabilities" in safety_data:
                 safety_issues = len(safety_data["vulnerabilities"])
             elif isinstance(safety_data, list):
                 safety_issues = len(safety_data)
         except Exception:
             pass
+    return safety_issues
 
-    # Run tests to get count
-    test_cmd = f"cd {code_dir} && python -m pytest tests -q"
-    test_out, test_rc = run_command(test_cmd)
+def run_test_check(code_dir):
+    test_cmd = "python -m pytest tests -q"
+    _, test_rc = run_command(test_cmd, cwd=code_dir)
+    return "Pass" if test_rc == 0 else "Fail"
 
-    test_status = "Pass" if test_rc == 0 else "Fail"
+
+def generate_health_dashboard():
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    code_dir = os.path.join(root_dir, "code")
+
+    print("Running security and dependency checks...")
+
+    bandit_issues, bandit_high = run_bandit_check(code_dir)
+    safety_issues = run_safety_check(code_dir)
+    test_status = run_test_check(code_dir)
 
     # Calculate simple health score
     health_score = 100
