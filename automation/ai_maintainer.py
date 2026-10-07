@@ -1,5 +1,6 @@
-import os
 import json
+import os
+
 import requests
 from openai import OpenAI
 
@@ -29,7 +30,7 @@ def generate_ai_response(prompt):
         )
         return response.choices[0].message.content
     except Exception as e:
-        return f"AI Maintainer: Error generating response: {str(e)}"
+        return f"AI Maintainer: Error generating response: {e!s}"
 
 
 def post_comment(repo, issue_number, token, body):
@@ -58,6 +59,7 @@ def _parse_pull_request(event_data, action):
         )
     return None
 
+
 def _parse_issue(event_data, action):
     if (
         "issue" in event_data
@@ -73,6 +75,7 @@ def _parse_issue(event_data, action):
         )
     return None
 
+
 def _parse_comment(event_data, action):
     if "comment" in event_data and action == "created":
         if event_data["comment"]["user"]["login"] == "github-actions[bot]":
@@ -84,6 +87,7 @@ def _parse_comment(event_data, action):
             "Comment",
         )
     return None
+
 
 def _parse_event_data(event_data, action):
     res = _parse_pull_request(event_data, action)
