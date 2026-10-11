@@ -11,7 +11,7 @@ echo "== CLI --help =="
 (cd "$ROOT/code" && python main.py --help >/dev/null)
 
 echo "== pytest =="
-(cd "$ROOT/code" && python -m pytest tests -q)
+(cd "$ROOT/code" && mkdir -p .cache && python -m pytest tests -q)
 
 echo "== sample regression (offline) =="
 (cd "$ROOT/code" && ORCHESTRATE_DISABLE_LLM=1 python run_eval.py --offline)
