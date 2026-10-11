@@ -33,20 +33,41 @@ def generate_ai_response(prompt):
 
 
 def post_comment(repo, issue_number, token, body):
+    if not repo.replace("/", "").replace("-", "").replace("_", "").isalnum() or not str(issue_number).isdigit():
+        print("Invalid repo or issue_number")
+        return
     url = f"https://api.github.com/repos/{repo}/issues/{issue_number}/comments"
     headers = {
-        "Authorization": f"token {token}",
+        "Authorization": f"Bearer {token}",
         "Accept": "application/vnd.github.v3+json",
     }
     data = {"body": body}
-    response = requests.post(url, headers=headers, json=data)
-    if response.status_code == 201:
-        print("Successfully posted comment.")
-    else:
-        print(
-            f"Failed to post comment. Status: {response.status_code}, Response: {response.text}"
-        )
+    try:
+        response = requests.post(url, headers=headers, json=data, timeout=10, verify=True)
+        response.raise_for_status()
+        if response.status_code == 201:
+            print("Successfully posted comment.")
+        else:
+            print(f"Failed to post comment. Status: {response.status_code}")
+    except requests.exceptions.RequestException as e:
+        print(f"Error posting comment: {e}")
 
+
+def determine_event_type(event_data, action):
+    if "pull_request" in event_data and action in ["opened", "edited"]:
+        return "Pull Request", event_data["pull_request"]["number"], event_data["pull_request"]["title"], event_data["pull_request"]["body"] or ""
+    elif (
+        "issue" in event_data
+        and action in ["opened", "edited"]
+        and "pull_request" not in event_data["issue"]
+        and "comment" not in event_data
+    ):
+        return "Issue", event_data["issue"]["number"], event_data["issue"]["title"], event_data["issue"]["body"] or ""
+    elif "comment" in event_data and action == "created":
+        if event_data["comment"]["user"]["login"] == "github-actions[bot]":
+            return None, None, None, None
+        return "Comment", event_data["issue"]["number"], event_data["issue"]["title"], event_data["comment"]["body"]
+    return None, None, None, None
 
 def main():
     event_path = os.environ.get("GITHUB_EVENT_PATH")
@@ -58,39 +79,12 @@ def main():
         return
 
     event_data = get_event_data(event_path)
-
     action = event_data.get("action")
 
-    issue_number = None
-    title = ""
-    body = ""
-    event_type = ""
+    event_type, issue_number, title, body = determine_event_type(event_data, action)
 
-    if "pull_request" in event_data and action in ["opened", "edited"]:
-        issue_number = event_data["pull_request"]["number"]
-        title = event_data["pull_request"]["title"]
-        body = event_data["pull_request"]["body"] or ""
-        event_type = "Pull Request"
-    elif (
-        "issue" in event_data
-        and action in ["opened", "edited"]
-        and "pull_request" not in event_data["issue"]
-    ):
-        issue_number = event_data["issue"]["number"]
-        title = event_data["issue"]["title"]
-        body = event_data["issue"]["body"] or ""
-        event_type = "Issue"
-    elif "comment" in event_data and action == "created":
-        issue_number = event_data["issue"]["number"]
-        comment_body = event_data["comment"]["body"]
-        # Skip responding to ourselves
-        if event_data["comment"]["user"]["login"] == "github-actions[bot]":
-            return
-        title = event_data["issue"]["title"]
-        body = comment_body
-        event_type = "Comment"
-    else:
-        print("Unsupported event or action.")
+    if not event_type:
+        print("Unsupported event or action, or bot comment.")
         return
 
     if not issue_number:
