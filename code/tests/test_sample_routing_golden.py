@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+
 import pandas as pd
 import pytest
+
 from config import REPO_ROOT
 from csv_io import canonicalize_ticket_columns, read_tickets_csv
 from main import process_row

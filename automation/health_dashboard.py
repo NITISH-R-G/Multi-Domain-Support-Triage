@@ -1,15 +1,13 @@
-import json
 import os
-import shlex
+import json
 import subprocess
+import shlex
 from datetime import datetime
 
 
 def run_command(command, cwd=None):
     try:
-        result = subprocess.run(
-            shlex.split(command), shell=False, capture_output=True, text=True, cwd=cwd
-        )
+        result = subprocess.run(shlex.split(command), shell=False, check=False, capture_output=True, text=True, cwd=cwd)
         return result.stdout, result.returncode
     except Exception as e:
         return str(e), 1
@@ -23,15 +21,10 @@ def run_bandit(code_dir):
     try:
         bandit_data = json.loads(bandit_out)
         bandit_issues = len(bandit_data.get("results", []))
-        bandit_high = sum(
-            1
-            for r in bandit_data.get("results", [])
-            if r.get("issue_severity") == "HIGH"
-        )
-    except Exception:
+        bandit_high = sum(1 for r in bandit_data.get("results", []) if r.get("issue_severity") == "HIGH")
+    except Exception as e:
         pass
     return bandit_issues, bandit_high
-
 
 def run_safety(code_dir):
     req_file = os.path.join(code_dir, "requirements.txt")
@@ -45,10 +38,9 @@ def run_safety(code_dir):
             return len(safety_data["vulnerabilities"])
         elif isinstance(safety_data, list):
             return len(safety_data)
-    except Exception:
+    except Exception as e:
         pass
     return 0
-
 
 def generate_health_dashboard():
     root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -59,8 +51,8 @@ def generate_health_dashboard():
     bandit_issues, bandit_high = run_bandit(code_dir)
     safety_issues = run_safety(code_dir)
 
-    test_cmd = "python -m pytest tests -q"
-    test_out, test_rc = run_command(test_cmd, cwd=code_dir)
+    test_cmd = f"python -m pytest tests -q"
+    _, test_rc = run_command(test_cmd, cwd=code_dir)
     test_status = "Pass" if test_rc == 0 else "Fail"
 
     health_score = 100

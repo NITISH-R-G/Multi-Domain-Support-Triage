@@ -7,7 +7,7 @@ import os
 import re
 import subprocess
 import sys
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
@@ -82,7 +82,7 @@ def main() -> int:
             rows_line = line.strip()
             break
 
-    ts = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     body = f"""# Competitive baseline snapshot (Orchestrate)
 
