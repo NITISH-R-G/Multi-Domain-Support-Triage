@@ -22,7 +22,7 @@ def run_bandit(code_dir):
         bandit_data = json.loads(bandit_out)
         bandit_issues = len(bandit_data.get("results", []))
         bandit_high = sum(1 for r in bandit_data.get("results", []) if r.get("issue_severity") == "HIGH")
-    except Exception:
+    except Exception as e:
         pass
     return bandit_issues, bandit_high
 
@@ -38,7 +38,7 @@ def run_safety(code_dir):
             return len(safety_data["vulnerabilities"])
         elif isinstance(safety_data, list):
             return len(safety_data)
-    except Exception:
+    except Exception as e:
         pass
     return 0
 
