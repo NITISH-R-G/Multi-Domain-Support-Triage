@@ -33,7 +33,8 @@ def test_eval_sample_exits_2_on_zero_merge(tmp_path: Path) -> None:
             "--report",
             str(tmp_path / "r.csv"),
         ],
-        check=False, cwd=str(_CODE),
+        check=False,
+        cwd=str(_CODE),
         capture_output=True,
         text=True,
     )
@@ -55,7 +56,8 @@ def test_compare_outputs_exits_2_on_zero_merge(tmp_path: Path) -> None:
             "--pred",
             str(pred),
         ],
-        check=False, cwd=str(_CODE),
+        check=False,
+        cwd=str(_CODE),
         capture_output=True,
         text=True,
     )

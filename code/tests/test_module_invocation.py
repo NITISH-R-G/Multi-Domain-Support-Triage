@@ -12,7 +12,8 @@ _CODE_DIR = Path(__file__).resolve().parents[1]
 def test_main_py_help_from_code_directory() -> None:
     r = subprocess.run(
         [sys.executable, "main.py", "--help"],
-        check=False, cwd=str(_CODE_DIR),
+        check=False,
+        cwd=str(_CODE_DIR),
         capture_output=True,
         text=True,
     )
