@@ -5,14 +5,12 @@ from __future__ import annotations
 import json
 import os
 import re
-from typing import Any, Literal
-
 from pathlib import Path
-
-from dotenv import load_dotenv
+from typing import Any, Literal
 
 from answer_synthesis import synthesize_reply_from_hits
 from config import OPENAI_MODEL
+from dotenv import load_dotenv
 from retrieve import Retrieved, format_context
 
 load_dotenv(Path(__file__).resolve().parent.parent / ".env")
@@ -151,7 +149,7 @@ Writing constraints:
             ],
         )
         raw = resp.choices[0].message.content or "{}"
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         # Never fail the whole run due to transient API issues (rate limit/quota/network).
         msg = f"LLM call failed ({type(e).__name__}). Falling back to offline answer."
         return fallback_from_hits(
