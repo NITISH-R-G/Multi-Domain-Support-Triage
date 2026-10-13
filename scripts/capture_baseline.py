@@ -7,7 +7,7 @@ import os
 import re
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
@@ -20,7 +20,7 @@ def _run(
 ) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         cmd,
-        cwd=str(cwd),
+        check=False, cwd=str(cwd),
         capture_output=True,
         text=True,
         env={**os.environ, **(env or {})},
@@ -31,7 +31,7 @@ def main() -> int:
     git_sha = (
         subprocess.run(
             ["git", "rev-parse", "--short", "HEAD"],
-            cwd=str(REPO),
+            check=False, cwd=str(REPO),
             capture_output=True,
             text=True,
         ).stdout.strip()
@@ -41,7 +41,7 @@ def main() -> int:
     branch = (
         subprocess.run(
             ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-            cwd=str(REPO),
+            check=False, cwd=str(REPO),
             capture_output=True,
             text=True,
         ).stdout.strip()
@@ -82,7 +82,7 @@ def main() -> int:
             rows_line = line.strip()
             break
 
-    ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    ts = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     body = f"""# Competitive baseline snapshot (Orchestrate)
 

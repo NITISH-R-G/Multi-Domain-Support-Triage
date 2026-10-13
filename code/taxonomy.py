@@ -26,7 +26,7 @@ class LabelRule:
     text_rx: re.Pattern[str] | None = None
 
 
-def _rx(pat: str, flags: int = re.I) -> re.Pattern[str]:
+def _rx(pat: str, flags: int = re.IGNORECASE) -> re.Pattern[str]:
     return re.compile(pat, flags)
 
 
@@ -115,9 +115,7 @@ def looks_like_invalid_small_talk(subject: str, issue: str) -> bool:
         low,
     ):
         return True
-    if looks_like_off_topic_general_knowledge(subject, issue):
-        return True
-    return False
+    return bool(looks_like_off_topic_general_knowledge(subject, issue))
 
 
 def map_product_area(brand: str, issue: str, subject: str, top: Chunk | None) -> str:
