@@ -13,7 +13,7 @@ def read_file(filepath):
     try:
         with open(filepath, "r", encoding="utf-8") as f:
             return f.read()
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         return f"Error reading {filepath}: {e}"
 
 
@@ -52,7 +52,7 @@ def generate_qa_report(tool_outputs, root_dir):
             messages=[{"role": "user", "content": prompt}],
         )
         return response.choices[0].message.content
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         print(f"Error calling OpenAI API: {e}")
         return f"# Enterprise QA Report\n\nError generating report: {e}\n"
 

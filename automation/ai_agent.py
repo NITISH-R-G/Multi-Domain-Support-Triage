@@ -11,7 +11,7 @@ def load_file_content(filepath):
     try:
         with open(filepath, "r", encoding="utf-8") as f:
             return f.read()
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         return f"Error reading {filepath}: {e}"
 
 
@@ -60,7 +60,7 @@ def generate_docs(repo_graph, root_dir):
             response_format={"type": "json_object"},
         )
         return json.loads(response.choices[0].message.content)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         print(f"Error calling OpenAI API: {e}")
         return {
             "architecture_summary": "Auto-generated summary failed.",

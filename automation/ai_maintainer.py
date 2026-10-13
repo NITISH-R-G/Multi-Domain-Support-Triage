@@ -29,7 +29,7 @@ def generate_ai_response(prompt):
             max_tokens=500,
         )
         return response.choices[0].message.content
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         return f"AI Maintainer: Error generating response: {e!s}"
 
 

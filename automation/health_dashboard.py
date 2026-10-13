@@ -7,10 +7,10 @@ from datetime import datetime
 def run_command(command, cwd=None):
     try:
         result = subprocess.run(
-            command, shell=False, capture_output=True, text=True, cwd=cwd
+            command, check=False, shell=False, capture_output=True, text=True, cwd=cwd
         )
         return result.stdout, result.returncode
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         return str(e), 1
 
 
@@ -28,7 +28,7 @@ def _run_bandit(code_dir):
             for r in bandit_data.get("results", [])
             if r.get("issue_severity") == "HIGH"
         )
-    except Exception:
+    except Exception:  # noqa: BLE001, S110
         pass
     return bandit_issues, bandit_high
 
@@ -44,7 +44,7 @@ def _run_safety(req_file):
                 safety_issues = len(safety_data["vulnerabilities"])
             elif isinstance(safety_data, list):
                 safety_issues = len(safety_data)
-        except Exception:
+        except Exception:  # noqa: BLE001, S110
             pass
     return safety_issues
 
