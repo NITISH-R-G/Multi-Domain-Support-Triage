@@ -1,0 +1,57 @@
+name: Bug report
+description: Create a report to help us improve
+title: ''
+labels: []
+assignees: []
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: To Reproduce
+      description: Steps to reproduce the behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain your problem.
+  - type: textarea
+    id: desktop
+    attributes:
+      label: Desktop
+      description: Please complete the following information (OS, Browser, Version).
+  - type: textarea
+    id: smartphone
+    attributes:
+      label: Smartphone
+      description: Please complete the following information (Device, OS, Browser, Version).
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here.
+  - type: textarea
+    id: priority
+    attributes:
+      label: Expected priority
+      description: A clear and concise description of the priority and impact of the bug.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs/Traces
+      description: If applicable, paste any related logs or stack traces.

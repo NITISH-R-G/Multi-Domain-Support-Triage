@@ -1,11 +1,11 @@
 from __future__ import annotations
 
+from corpus import Chunk
 from taxonomy import (
-    looks_like_off_topic_general_knowledge,
     looks_like_invalid_small_talk,
+    looks_like_off_topic_general_knowledge,
     map_product_area,
 )
-from corpus import Chunk
 
 
 def test_off_topic_movie_trivia_detected() -> None:
