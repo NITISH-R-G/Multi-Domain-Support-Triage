@@ -4,9 +4,13 @@ import subprocess
 from datetime import datetime
 
 
-def run_command(command):
+import shlex
+
+def run_command(command, cwd=None):
     try:
-        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        if isinstance(command, str):
+            command = shlex.split(command)
+        result = subprocess.run(command, shell=False, capture_output=True, text=True, cwd=cwd)
         return result.stdout, result.returncode
     except Exception as e:
         return str(e), 1
@@ -20,7 +24,7 @@ def generate_health_dashboard():
 
     # Run bandit
     bandit_cmd = f"bandit -r {code_dir} -f json"
-    bandit_out, _ = run_command(bandit_cmd)
+    bandit_out, _ = run_command(bandit_cmd, cwd=root_dir)
 
     bandit_issues = 0
     bandit_high = 0
@@ -52,8 +56,8 @@ def generate_health_dashboard():
             pass
 
     # Run tests to get count
-    test_cmd = f"cd {code_dir} && python -m pytest tests -q"
-    test_out, test_rc = run_command(test_cmd)
+    test_cmd = ["python", "-m", "pytest", "tests", "-q"]
+    test_out, test_rc = run_command(test_cmd, cwd=code_dir)
 
     test_status = "Pass" if test_rc == 0 else "Fail"
 
