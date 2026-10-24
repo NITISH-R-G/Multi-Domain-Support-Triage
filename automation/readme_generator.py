@@ -1,5 +1,32 @@
 import os
 import json
+import ast
+
+
+def extract_docstrings(root_dir):
+    api_docs = []
+    for dirpath, _, filenames in os.walk(os.path.join(root_dir, "code")):
+        for filename in filenames:
+            if filename.endswith(".py") and not filename.startswith("__"):
+                filepath = os.path.join(dirpath, filename)
+                try:
+                    with open(filepath, "r", encoding="utf-8") as f:
+                        tree = ast.parse(f.read(), filename=filepath)
+
+                    module_doc = ast.get_docstring(tree)
+                    if module_doc:
+                        rel_path = os.path.relpath(filepath, root_dir)
+                        api_docs.append(f"### `{rel_path}`\n\n{module_doc}\n")
+
+                    for node in tree.body:
+                        if isinstance(node, (ast.FunctionDef, ast.ClassDef)):
+                            doc = ast.get_docstring(node)
+                            if doc:
+                                prefix = "Class" if isinstance(node, ast.ClassDef) else "Function"
+                                api_docs.append(f"#### {prefix} `{node.name}`\n\n{doc}\n")
+                except Exception:
+                    pass
+    return "\n".join(api_docs)
 
 
 def generate_readme():
@@ -39,6 +66,8 @@ def generate_readme():
         with open(readme_path, "r", encoding="utf-8") as f:
             original_readme = f.read()
 
+    api_docs_content = extract_docstrings(root_dir)
+
     # Define the automation section
     automation_section = f"""
 ---
@@ -58,6 +87,10 @@ def generate_readme():
 - Generates interactive Mermaid architectures and documentation.
 
 {diagrams}
+
+## API Documentation
+*Auto-generated from docstrings by AST parser.*
+{api_docs_content}
 
 ## Automation Onboarding & Contribution
 {ai_docs.get("onboarding_guide", "Contributions are welcome! Please run the automation scripts or let GitHub Actions update docs on PRs.")}
