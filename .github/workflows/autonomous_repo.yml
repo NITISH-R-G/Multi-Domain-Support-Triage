@@ -17,10 +17,10 @@ jobs:
   validate-and-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.0
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5.2.0
         with:
           python-version: "3.11"
           cache: "pip"
@@ -56,12 +56,12 @@ jobs:
     # but the instructions say "Scans the entire repository on every push, pull request, merge, release, and scheduled interval."
     # So we'll run the automation scripts.
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.0
         with:
           fetch-depth: 0 # Full history for git diffs and graph building
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5.2.0
         with:
           python-version: "3.11"
           cache: "pip"
@@ -108,4 +108,4 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add README.md docs/ repo_graph.json || true
-          git diff --quiet && git diff --staged --quiet || (git commit -m "docs: auto-update repository documentation, health dashboard, and architecture graphs" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "docs: auto-update repository documentation, health dashboard, and architecture graphs" && git pull --rebase origin ${GITHUB_REF#refs/heads/} && git push)
