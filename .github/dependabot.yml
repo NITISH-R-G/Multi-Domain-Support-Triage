@@ -4,11 +4,17 @@ updates:
     directory: "/code"
     schedule:
       interval: "weekly"
+    ignore:
+      - update-types: ["version-update:semver-major"]
   - package-ecosystem: "pip"
     directory: "/automation"
     schedule:
       interval: "weekly"
+    ignore:
+      - update-types: ["version-update:semver-major"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      - update-types: ["version-update:semver-major"]

@@ -1,24 +1,20 @@
 import os
 import json
 import subprocess
+import shlex
 from datetime import datetime
 
 
-def run_command(command):
+def run_command(command, cwd=None):
     try:
-        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        args = shlex.split(command)
+        result = subprocess.run(args, shell=False, capture_output=True, text=True, cwd=cwd)
         return result.stdout, result.returncode
     except Exception as e:
         return str(e), 1
 
 
-def generate_health_dashboard():
-    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    code_dir = os.path.join(root_dir, "code")
-
-    print("Running security and dependency checks...")
-
-    # Run bandit
+def run_bandit_check(code_dir):
     bandit_cmd = f"bandit -r {code_dir} -f json"
     bandit_out, _ = run_command(bandit_cmd)
 
@@ -34,8 +30,10 @@ def generate_health_dashboard():
         )
     except Exception:
         pass
+    return bandit_issues, bandit_high
 
-    # Run safety
+
+def run_safety_check(code_dir):
     req_file = os.path.join(code_dir, "requirements.txt")
     safety_issues = 0
     if os.path.exists(req_file):
@@ -43,21 +41,22 @@ def generate_health_dashboard():
         safety_out, _ = run_command(safety_cmd)
         try:
             safety_data = json.loads(safety_out)
-            # safety output structure can vary, typically vulnerabilities is a list
             if isinstance(safety_data, dict) and "vulnerabilities" in safety_data:
                 safety_issues = len(safety_data["vulnerabilities"])
             elif isinstance(safety_data, list):
                 safety_issues = len(safety_data)
         except Exception:
             pass
+    return safety_issues
 
-    # Run tests to get count
-    test_cmd = f"cd {code_dir} && python -m pytest tests -q"
-    test_out, test_rc = run_command(test_cmd)
 
-    test_status = "Pass" if test_rc == 0 else "Fail"
+def run_pytest(code_dir):
+    test_cmd = "python -m pytest tests -q"
+    test_out, test_rc = run_command(test_cmd, cwd=code_dir)
+    return "Pass" if test_rc == 0 else "Fail"
 
-    # Calculate simple health score
+
+def calculate_health_score(bandit_high, bandit_issues, safety_issues, test_status):
     health_score = 100
     if bandit_high > 0:
         health_score -= 30
@@ -65,8 +64,20 @@ def generate_health_dashboard():
     health_score -= safety_issues * 10
     if test_status == "Fail":
         health_score -= 40
+    return max(0, min(100, health_score))
 
-    health_score = max(0, min(100, health_score))
+
+def generate_health_dashboard():
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    code_dir = os.path.join(root_dir, "code")
+
+    print("Running security and dependency checks...")
+
+    bandit_issues, bandit_high = run_bandit_check(code_dir)
+    safety_issues = run_safety_check(code_dir)
+    test_status = run_pytest(code_dir)
+
+    health_score = calculate_health_score(bandit_high, bandit_issues, safety_issues, test_status)
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
