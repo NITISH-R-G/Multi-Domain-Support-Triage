@@ -1,6 +1,6 @@
-import os
 import ast
 import json
+import os
 
 
 def get_python_files(root_dir):
