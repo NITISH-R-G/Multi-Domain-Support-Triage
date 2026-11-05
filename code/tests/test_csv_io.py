@@ -5,7 +5,6 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
-
 from csv_io import (
     TicketCsvError,
     canonicalize_ticket_columns,

@@ -10,14 +10,20 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
-
-from config import DATA_DIR, INPUT_CSV, MAX_FIELD_CHARS, OUTPUT_CSV, SEED, TOP_K
+from config import (
+    CACHE_PATH,
+    DATA_DIR,
+    INPUT_CSV,
+    MAX_FIELD_CHARS,
+    OUTPUT_CSV,
+    SEED,
+    TOP_K,
+)
 from cross_ecosystem import cross_ecosystem_escalation_reason
 from csv_io import TicketCsvError, canonicalize_ticket_columns, read_tickets_csv
 from openai_agent import decide_with_openai, fallback_from_hits
 from postprocess import finalize_decision
 from retrieve import BM25Index, rerank_hits, should_escalate_low_retrieval
-from config import CACHE_PATH
 from risk import assess_risk
 from taxonomy import looks_like_invalid_small_talk
 from ticket_hints import maybe_append_multi_topic_justification
