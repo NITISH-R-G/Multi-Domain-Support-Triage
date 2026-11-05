@@ -1,5 +1,44 @@
 import os
 import json
+import ast
+
+
+def extract_api_docs(code_dir):
+    api_docs = []
+    for root, _, files in os.walk(code_dir):
+        if "__pycache__" in root or ".pytest_cache" in root or "tests" in root:
+            continue
+        for file in files:
+            if file.endswith(".py") and file != "__init__.py":
+                file_path = os.path.join(root, file)
+                try:
+                    with open(file_path, "r", encoding="utf-8") as f:
+                        tree = ast.parse(f.read(), filename=file)
+
+                    file_docs = []
+                    for node in tree.body:
+                        if isinstance(node, ast.FunctionDef):
+                            docstring = ast.get_docstring(node)
+                            if docstring:
+                                file_docs.append(f"#### `def {node.name}(...)`\n{docstring}\n")
+                        elif isinstance(node, ast.ClassDef):
+                            docstring = ast.get_docstring(node)
+                            if docstring:
+                                file_docs.append(f"#### `class {node.name}`\n{docstring}\n")
+                                for child in node.body:
+                                    if isinstance(child, ast.FunctionDef):
+                                        child_doc = ast.get_docstring(child)
+                                        if child_doc:
+                                            file_docs.append(f"##### `def {child.name}(...)`\n{child_doc}\n")
+                    if file_docs:
+                        rel_path = os.path.relpath(file_path, code_dir)
+                        api_docs.append(f"### `{rel_path}`\n\n" + "\n".join(file_docs))
+                except Exception as e:
+                    print(f"Failed to parse {file_path}: {e}")
+
+    if not api_docs:
+        return "No API documentation found."
+    return "\n".join(api_docs)
 
 
 def generate_readme():
@@ -32,6 +71,10 @@ def generate_readme():
         else "Not detected"
     )
 
+    # Generate API Docs
+    code_dir = os.path.join(root_dir, "code")
+    api_docs_str = extract_api_docs(code_dir)
+
     # Load existing README to preserve it
     readme_path = os.path.join(root_dir, "README.md")
     original_readme = ""
@@ -58,6 +101,10 @@ def generate_readme():
 - Generates interactive Mermaid architectures and documentation.
 
 {diagrams}
+
+## API Documentation
+
+{api_docs_str}
 
 ## Automation Onboarding & Contribution
 {ai_docs.get("onboarding_guide", "Contributions are welcome! Please run the automation scripts or let GitHub Actions update docs on PRs.")}

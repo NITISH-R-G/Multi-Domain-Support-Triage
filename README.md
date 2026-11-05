@@ -255,6 +255,7 @@ See [`evaluation_criteria.md`](./evaluation_criteria.md) for the full rubric. De
 
 
 
+
 <!-- AUTONOMOUS_SECTION_START -->
 
 ---
@@ -456,6 +457,85 @@ graph TD
     node_29 --> node_3
     node_30 --> node_14
 ```
+
+
+## API Documentation
+
+### `retrieve.py`
+
+#### `def _tfidf_vectors(...)`
+Tiny TF-IDF implementation (no sklearn), cosine-normalized per doc.
+
+#### `def rerank_hits(...)`
+Lexical overlap rerank on top of BM25 scores.
+
+### `eval_metrics.py`
+
+#### `def token_set_f1(...)`
+Token-overlap F1 (bag of words; labels normalized).
+
+#### `def compact_overlap_ratio(...)`
+Dice-like overlap on character bags (cheap fuzzy signal vs exact match).
+
+### `taxonomy.py`
+
+#### `def looks_like_off_topic_general_knowledge(...)`
+Entertainment / trivia / general-knowledge questions unlikely to be product support.
+
+#### `def map_product_area(...)`
+Map evidence to one of CANONICAL_PRODUCT_AREAS when possible.
+
+### `main.py`
+
+#### `def _truncate_row_fields(...)`
+Copy row with Issue/Subject truncated if over max_chars (stderr warning).
+
+### `answer_synthesis.py`
+
+#### `def extract_steps(...)`
+Pull readable steps from support article bodies.
+
+#### `def synthesize_reply_from_hits(...)`
+Return (user_response, source_paths_used).
+
+### `ticket_hints.py`
+
+#### `def ticket_may_span_multiple_topics(...)`
+Heuristic: message might bundle several distinct asks (no NLP; best-effort).
+
+#### `def maybe_append_multi_topic_justification(...)`
+Append a transparency note to justification only (does not change response body).
+
+### `grounding.py`
+
+#### `def lexical_overlap(...)`
+Return fraction of non-trivial response tokens present in retrieved chunk text.
+
+#### `def has_unsupported_numbers(...)`
+Flag digit-heavy claims not present in evidence (rough guardrail).
+
+### `cross_ecosystem.py`
+
+#### `def cross_ecosystem_escalation_reason(...)`
+Return human-readable escalate reason, or None.
+
+Conservative pairwise checks avoid false positives such as "HackerRank visa sponsorship"
+(mentions Visa immigration language without Visa-the-network product context).
+Disable entirely with ``ORCHESTRATE_DISABLE_CROSS_ECOSYSTEM_ESCALATE=1``.
+
+### `csv_io.py`
+
+#### `class TicketCsvError`
+User-fixable CSV / path issues (exit code 2).
+
+#### `def read_tickets_csv(...)`
+Read UTF-8 / UTF-8-BOM; raise clear errors for missing path or encoding.
+
+#### `def rename_prediction_columns(...)`
+Case-insensitive rename of agent output columns to Pred_* names for gold merges.
+
+#### `def canonicalize_ticket_columns(...)`
+Ensure Issue / Subject / Company column names (case-insensitive).
 
 
 ## Automation Onboarding & Contribution
