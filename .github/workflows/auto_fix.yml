@@ -12,12 +12,12 @@ jobs:
   auto-fix:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.0
         with:
           ref: ${{ github.head_ref }}
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5.2.0
         with:
           python-version: "3.11"
 
@@ -35,4 +35,4 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add -A
-          git diff --quiet && git diff --staged --quiet || (git commit -m "style: auto fix linting and formatting issues [skip ci]" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "style: auto fix linting and formatting issues [skip ci]" && git pull --rebase origin ${GITHUB_REF#refs/heads/} && git push)

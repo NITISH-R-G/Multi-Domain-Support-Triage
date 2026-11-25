@@ -7,7 +7,6 @@ import re
 
 from retrieve import Retrieved
 
-
 _BULLET_LINE = re.compile(r"(?m)^\s*(?:[-*•]|\d+\.)\s+(.*)$")
 
 # Lines that usually aren't helpful as user-facing steps.
