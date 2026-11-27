@@ -39,7 +39,7 @@ def post_comment(repo, issue_number, token, body):
         "Accept": "application/vnd.github.v3+json",
     }
     data = {"body": body}
-    response = requests.post(url, headers=headers, json=data)
+    response = requests.post(url, headers=headers, json=data, timeout=10)
     if response.status_code == 201:
         print("Successfully posted comment.")
     else:
@@ -48,19 +48,7 @@ def post_comment(repo, issue_number, token, body):
         )
 
 
-def main():
-    event_path = os.environ.get("GITHUB_EVENT_PATH")
-    repo = os.environ.get("GITHUB_REPOSITORY")
-    token = os.environ.get("GITHUB_TOKEN")
-
-    if not event_path or not repo or not token:
-        print("Missing required environment variables.")
-        return
-
-    event_data = get_event_data(event_path)
-
-    action = event_data.get("action")
-
+def extract_event_info(event_data, action):
     issue_number = None
     title = ""
     body = ""
@@ -75,24 +63,24 @@ def main():
         "issue" in event_data
         and action in ["opened", "edited"]
         and "pull_request" not in event_data["issue"]
+        and "comment" not in event_data
     ):
         issue_number = event_data["issue"]["number"]
         title = event_data["issue"]["title"]
         body = event_data["issue"]["body"] or ""
         event_type = "Issue"
     elif "comment" in event_data and action == "created":
-        issue_number = event_data["issue"]["number"]
-        comment_body = event_data["comment"]["body"]
-        # Skip responding to ourselves
         if event_data["comment"]["user"]["login"] == "github-actions[bot]":
-            return
+            return None, "", "", ""
+        issue_number = event_data["issue"]["number"]
         title = event_data["issue"]["title"]
-        body = comment_body
+        body = event_data["comment"]["body"]
         event_type = "Comment"
-    else:
-        print("Unsupported event or action.")
-        return
 
+    return issue_number, title, body, event_type
+
+
+def process_event(repo, token, issue_number, title, body, event_type):
     if not issue_number:
         print("Could not determine issue number.")
         return
@@ -103,6 +91,27 @@ def main():
 
     formatted_response = f"🤖 **AI Maintainer**\n\n{ai_response}"
     post_comment(repo, issue_number, token, formatted_response)
+
+
+def main():
+    event_path = os.environ.get("GITHUB_EVENT_PATH")
+    repo = os.environ.get("GITHUB_REPOSITORY")
+    token = os.environ.get("GITHUB_TOKEN")
+
+    if not event_path or not repo or not token:
+        print("Missing required environment variables.")
+        return
+
+    event_data = get_event_data(event_path)
+    action = event_data.get("action")
+
+    issue_number, title, body, event_type = extract_event_info(event_data, action)
+
+    if not event_type:
+        print("Unsupported event or action, or ignoring self-comment.")
+        return
+
+    process_event(repo, token, issue_number, title, body, event_type)
 
 
 if __name__ == "__main__":
